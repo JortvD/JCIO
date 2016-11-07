@@ -2,26 +2,21 @@ package nl.jortenmilo.main;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Scanner;
 
 import nl.jortenmilo.command.Command;
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.command.CommandExecutor;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.error.InvalidParameterError;
+import nl.jortenmilo.input.KeyboardInput;
 import nl.jortenmilo.plugin.PluginLoader;
 import nl.jortenmilo.plugin.PluginManager;
-import nl.jortenmilo.settings.Settings;
 import nl.jortenmilo.settings.SettingsLoader;
-import nl.jortenmilo.utils.SystemUtils;
 
 public class Launcher {
 	
 	private File[] files = {new File("plugins"), new File("settings.jcio")};
 	private boolean running = true;
-	
 	private CommandManager cm;
 	private PluginManager pm;
 	
@@ -29,27 +24,19 @@ public class Launcher {
 		Console.init();
 		
 		//Initialize the program
-		Console.println("<- JCIO Loading  ->");
+		Console.println("<- JCIO Loading->");
 		init();
 		Console.clear();
 		
 		//Start the program
-		Console.println("<- JCIO [Jortenmilo (c) 2016]  ->");
+		Console.println("<- JCIO [Jortenmilo (c) 2016]->");
 		start();
+		
 	}
 	
 	private void start() {
-		Scanner in = new Scanner(System.in);
 		while(running) {
-			String[] args = null;
-			if(Settings.get("time").equals("true")) {
-				System.out.print("[YOU " + SystemUtils.getTime() + "]: ");
-				args = CommandDecoder.getParameters(in.nextLine());
-			}
-			else if(Settings.get("time").equals("false")) {
-				System.out.print("[YOU]: ");
-				args = CommandDecoder.getParameters(in.nextLine());
-			}
+			String[] args = CommandDecoder.getParameters(Console.readln());
 			cm.executeCommand(args);
 		}
 	}
@@ -96,6 +83,12 @@ public class Launcher {
 		c2.setDescription("This displays all the commands.");
 		c2.setCommandExecutor(dc);
 		cm.addCommand(c2);
+		
+		Command c3 = new Command();
+		c3.setCommand("clear");
+		c3.setDescription("Clears the display.");
+		c3.setCommandExecutor(dc);
+		cm.addCommand(c3);
 	}
 	
 	class DefaultCommands implements CommandExecutor {
@@ -103,27 +96,38 @@ public class Launcher {
 		@Override
 		public void execute(String command, Command cmd, String[] params) {
 			if(command.equalsIgnoreCase("exit")) {
-				Console.println("Exiting the program. Bye!");
+				Console.println("Exiting the program. Press any key to continue!");
+				KeyboardInput.waitUntilTyped();
 				CloseManager.close();
 			}
 			else if(command.equalsIgnoreCase("help")) {
 				Console.println("This are all the possible commands:");
 				int l = 0;
+				
 				for(Command c : cm.getCommands()) {
 					if(c.getCommand().length() > l) {
 						l = c.getCommand().length();
 					}
 				}
+				
 				for(Command c : cm.getCommands()) {
 					String text = c.getCommand();
 					int a = l-text.length();
+					
 					for(int i = 0; i < a; i++) {
 						text += " ";
 					}
+					
 					text += " - " + c.getDescription();
 					Console.println(text);
 				}
+				
 				Console.println("So, what do you want to do?");
+			}
+			else if(command.equalsIgnoreCase("clear")) {
+				Console.println("Clearing the screen. Press any key to continue!");
+				KeyboardInput.waitUntilTyped();
+				Console.clear();
 			}
 		}
 		
@@ -142,15 +146,18 @@ public class Launcher {
 	private void checkForInstall() {
 		boolean install = false;
 		int missing = 0;
+		
 		for(File file : files) {
 			if(!file.exists()) {
 				install = true;
 				missing++;
 			}
 		}
+		
 		if(install) {
 			Console.println("There are " + missing + " files missing. Installing them now!");
 			Installer i = new Installer(files);
+			
 			try {
 				i.install();
 			} catch (IOException e) {

@@ -16,6 +16,7 @@ public class Settings {
 		if(!settings.containsKey(key)) {
 			new UnknownSettingError(key).print();
 		}
+		
 		return settings.get(key);
 	}
 	
@@ -27,6 +28,7 @@ public class Settings {
 		if(!keys.contains(key)) {
 			new UnknownSettingError(key).print();
 		}
+		
 		settings.put(key, value);
 	}
 	
@@ -48,9 +50,11 @@ public class Settings {
 	
 	public static void reset() {
 		saved.clear();
+		
 		add("time");
 		set("time", "true");
 		save("time");
+		
 		add("log");
 		set("log", "true");
 		save("log");

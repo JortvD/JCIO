@@ -20,12 +20,14 @@ public class Command {
 	}
 	
 	public void setCommand(String command) {
-		if(command==null) {
+		if(command == null) {
 			new InvalidParameterError(command).print();
 		}
+		
 		if(command.equals("")) {
 			new InvalidParameterError(command).print();
 		}
+		
 		this.command = command;
 	}
 	

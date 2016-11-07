@@ -8,7 +8,6 @@ public abstract class Plugin {
 	private CommandManager cm;
 	
 	public abstract void enable();
-	
 	public abstract void disable();
 
 	public PluginManager getPluginManager() {
