@@ -26,6 +26,8 @@ public class Launcher {
 	private PluginManager pm;
 	
 	public Launcher() {
+		Console.init();
+		
 		//Initialize the program
 		Console.println("<- JCIO Loading  ->");
 		init();
