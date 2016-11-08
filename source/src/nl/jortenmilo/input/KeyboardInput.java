@@ -3,6 +3,7 @@ package nl.jortenmilo.input;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -15,6 +16,7 @@ public class KeyboardInput implements KeyListener {
 	private static HashMap<Integer, Boolean> pressed = new HashMap<Integer, Boolean>();
 	private static List<Integer> wait = new ArrayList<Integer>();
 	private static CountDownLatch latch;
+	private static int typed = -1;
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -30,6 +32,7 @@ public class KeyboardInput implements KeyListener {
 	public void keyTyped(KeyEvent e) {
 		if(wait.size()==1) {
 			if(wait.get(0) == 0) {
+				typed = e.getKeyChar();
 				latch.countDown();
 				wait.clear();
 				latch = null;
@@ -47,10 +50,10 @@ public class KeyboardInput implements KeyListener {
 		}
 	}
 	
-	public static void waitUntilTyped() {
+	public static int waitUntilTyped() {
 		if(latch != null) {
 			Console.println(ConsoleUser.Error, "There is already a latch waiting for a key to be pressed!");
-			return;
+			return -1;
 		}
 		
 		latch = new CountDownLatch(1);
@@ -62,6 +65,10 @@ public class KeyboardInput implements KeyListener {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		int typed2 = typed;
+		typed = -1;
+		return typed2;
 	}
 	
 	public static void waitUntilTyped(int key) {
@@ -88,6 +95,25 @@ public class KeyboardInput implements KeyListener {
 		}
 		
 		return false;
+	}
+	
+	public static int waitUntilTyped(int[] keys) {
+		int t = waitUntilTyped();
+		boolean a = false;
+		
+		for(int i = 0; i < keys.length; i++) {
+			if(keys[i] == t) {
+				a = true;
+			}
+		}
+		
+		if(!a) {
+			t = waitUntilTyped(keys);
+		}
+		
+		
+		
+		return t;
 	}
 
 }

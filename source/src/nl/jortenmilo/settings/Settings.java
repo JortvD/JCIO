@@ -38,6 +38,7 @@ public class Settings {
 	
 	public static void remove(String key) {
 		keys.remove(key);
+		if(saved.contains(key)) saved.remove(key);
 	}
 	
 	public static void save(String key) {

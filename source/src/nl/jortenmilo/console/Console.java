@@ -235,7 +235,11 @@ public class Console {
 			if((byte)e.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
 				if(presses > 0) {
 					t.setText(t.getText().substring(0,t.getText().length()-1));
-					waitText = waitText.substring(0, waitText.length()-1);
+					
+					if(waitText.length() > 0) {
+						waitText = waitText.substring(0, waitText.length()-1);
+					}
+					
 					c = 8;
 					presses--;
 					
@@ -254,7 +258,9 @@ public class Console {
 				}
 			} else {
 				presses++;
-				Console.write(Character.toString(e.getKeyChar()));
+				if(Waiting) {
+					Console.write(Character.toString(e.getKeyChar()));
+				}
 			}
 			
 			if((byte)e.getKeyChar() == KeyEvent.VK_ENTER) {
@@ -278,6 +284,7 @@ public class Console {
 		
 		public String waitUntilDone() {
 			waitText = "";
+			Waiting = true;
 			synchronized (lock) {
 			    while (!WakeupNeeded) {
 			        try {
@@ -288,12 +295,14 @@ public class Console {
 			    }
 			}
 			WakeupNeeded = false;
+			Waiting = false;
 			String tts = waitText;
 			waitText = "";
 			return tts;
 		}
 		
 		private boolean WakeupNeeded = false;
+		private boolean Waiting = false;
 	}
 	
 	public static void println(String user, String s) {
