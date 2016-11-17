@@ -5,11 +5,13 @@ import java.util.List;
 
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.console.Console;
+import nl.jortenmilo.event.EventManager;
 
 public class PluginManager {
 	
 	private List<LoadedPlugin> plugins = new ArrayList<LoadedPlugin>();
 	private CommandManager cm;
+	private EventManager em;
 	
 	protected void addPlugin(LoadedPlugin plugin) {
 		Console.println("Loaded: " + plugin.getName());
@@ -25,6 +27,8 @@ public class PluginManager {
 			Console.println("Enabling: " + plugin.getName());
 			plugin.getPlugin().setCommandManager(cm);
 			plugin.getPlugin().setPluginManager(this);
+			plugin.getPlugin().setEventManager(em);
+			plugin.getPlugin().setLoadedPlugin(plugin);
 			plugin.getPlugin().enable();
 			Console.println("Enabled: " + plugin.getName());
 		}
@@ -33,6 +37,8 @@ public class PluginManager {
 	public void enable(LoadedPlugin plugin) {
 		plugin.getPlugin().setCommandManager(cm);
 		plugin.getPlugin().setPluginManager(this);
+		plugin.getPlugin().setEventManager(em);
+		plugin.getPlugin().setLoadedPlugin(plugin);
 		plugin.getPlugin().enable();
 	}
 	
@@ -45,7 +51,6 @@ public class PluginManager {
 			plugin.getPlugin().disable();
 		}
 	}
-	
 	
 	public class LoadedPlugin {
 		private Plugin plugin;
@@ -79,5 +84,9 @@ public class PluginManager {
 
 	public void setCommandManager(CommandManager cm) {
 		this.cm = cm;
+	}
+	
+	public void setEventManager(EventManager em) {
+		this.em = em;
 	}
 }

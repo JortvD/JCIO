@@ -10,18 +10,21 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.util.Scanner;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -29,7 +32,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
+import nl.jortenmilo.event.KeyboardEventListener;
+import nl.jortenmilo.event.KeyboardReleasedEvent;
+import nl.jortenmilo.event.WindowClosedEvent;
+import nl.jortenmilo.event.WindowEventListener;
+import nl.jortenmilo.event.WindowHiddenEvent;
+import nl.jortenmilo.event.WindowMovedEvent;
+import nl.jortenmilo.event.WindowOpenedEvent;
+import nl.jortenmilo.event.WindowResizedEvent;
+import nl.jortenmilo.event.WindowShownEvent;
 import nl.jortenmilo.input.KeyboardInput;
+import nl.jortenmilo.input.MouseInput;
+import nl.jortenmilo.main.CloseManager;
 import nl.jortenmilo.settings.Settings;
 import nl.jortenmilo.utils.SystemUtils;
 
@@ -38,8 +52,15 @@ public class Console {
 	private static boolean inited = false;
 	private static JFrame frame;
 	private static JTextArea t;
-	private static PrintStream d;
 	private static ConsoleInputStream cis;
+	private static ConsolePrintStream cps;
+	private static BufferedWriter bw;
+	private static KeyboardInput ki;
+	private static MouseInput mi;
+	private static List<WindowEventListener> wels = new ArrayList<WindowEventListener>();
+	
+	public static PrintStream dout; //DEBUG
+	public static InputStream din; //DEBUG
 	
 	public static void init() {
 		if(!inited) {
@@ -52,8 +73,8 @@ public class Console {
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);
 			
-			KeyboardInput ki = new KeyboardInput();
-			frame.addKeyListener(ki);
+			ki = new KeyboardInput();
+			mi = new MouseInput();
 			
 			JPanel p = new JPanel();
 			p.setSize(frame.getWidth(), frame.getHeight());
@@ -73,6 +94,11 @@ public class Console {
 			t.setFocusable(false);
 			p.add(s);
 			
+			frame.addKeyListener(ki);
+			t.addMouseListener(mi);
+			t.addMouseMotionListener(mi);
+			t.addMouseWheelListener(mi);
+			
 			frame.addComponentListener(new ComponentListener() {
 				@Override
 				public void componentResized(ComponentEvent e) {
@@ -80,28 +106,112 @@ public class Console {
 					s.setBounds(0, 0, p.getWidth()-16, p.getHeight()-46);
 					t.setBounds(0, 0, s.getWidth(), s.getHeight());
 					frame.repaint();
+					
+					for(WindowEventListener wel : wels) {
+						WindowResizedEvent event = new WindowResizedEvent();
+						event.setWidth(e.getComponent().getWidth());
+						event.setHeight(e.getComponent().getHeight());
+						event.setX(e.getComponent().getX());
+						event.setY(e.getComponent().getY());
+						wel.onResized(event);
+					}
 				}
 				@Override
-				public void componentHidden(ComponentEvent arg0) {}
+				public void componentHidden(ComponentEvent e) {
+					for(WindowEventListener wel : wels) {
+						WindowHiddenEvent event = new WindowHiddenEvent();
+						event.setWidth(e.getComponent().getWidth());
+						event.setHeight(e.getComponent().getHeight());
+						event.setX(e.getComponent().getX());
+						event.setY(e.getComponent().getY());
+						wel.onHidden(event);
+					}
+				}
 				@Override
-				public void componentMoved(ComponentEvent arg0) {}
+				public void componentMoved(ComponentEvent e) {
+					for(WindowEventListener wel : wels) {
+						WindowMovedEvent event = new WindowMovedEvent();
+						event.setWidth(e.getComponent().getWidth());
+						event.setHeight(e.getComponent().getHeight());
+						event.setX(e.getComponent().getX());
+						event.setY(e.getComponent().getY());
+						wel.onMoved(event);
+					}
+				}
 				@Override
-				public void componentShown(ComponentEvent arg0) {}
+				public void componentShown(ComponentEvent e) {
+					for(WindowEventListener wel : wels) {
+						WindowShownEvent event = new WindowShownEvent();
+						event.setWidth(e.getComponent().getWidth());
+						event.setHeight(e.getComponent().getHeight());
+						event.setX(e.getComponent().getX());
+						event.setY(e.getComponent().getY());
+						wel.onShown(event);
+					}
+				}
+			});
+			frame.addWindowListener(new WindowListener() {
+				@Override
+				public void windowActivated(WindowEvent e) {}
+				@Override
+				public void windowClosed(WindowEvent e) {
+					for(WindowEventListener wel : wels) {
+						WindowClosedEvent event = new WindowClosedEvent();
+						event.setWidth(e.getComponent().getWidth());
+						event.setHeight(e.getComponent().getHeight());
+						event.setX(e.getComponent().getX());
+						event.setY(e.getComponent().getY());
+						wel.onClosed(event);
+					}
+					
+					CloseManager.close();
+				}
+				@Override
+				public void windowClosing(WindowEvent e) {}
+				@Override
+				public void windowDeactivated(WindowEvent e) {}
+				@Override
+				public void windowDeiconified(WindowEvent e) {}
+				@Override
+				public void windowIconified(WindowEvent e) {}
+				@Override
+				public void windowOpened(WindowEvent e) {
+					for(WindowEventListener wel : wels) {
+						WindowOpenedEvent event = new WindowOpenedEvent();
+						event.setWidth(e.getComponent().getWidth());
+						event.setHeight(e.getComponent().getHeight());
+						event.setX(e.getComponent().getX());
+						event.setY(e.getComponent().getY());
+						wel.onOpened(event);
+					}
+				}
 			});
 			frame.getContentPane().add(p);
 			frame.repaint();
 			
-			d = System.out;
+			dout = System.out;
+			din = System.in;
+			System.setOut(null);
+			System.setErr(null);
 			
 			ConsoleOutputStream cos = new ConsoleOutputStream();
-			ConsolePrintStream cps = new ConsolePrintStream(cos);
+			cps = new ConsolePrintStream(cos);
 			cis = new ConsoleInputStream(cos);
-			System.setOut(cps);
-			System.setErr(cps);
 			frame.addKeyListener(cis);
-			System.setIn(cis);
+			
+			if(new File("logs").exists()) {
+				File f = new File("logs/" + new SimpleDateFormat("MM-dd-yyyy HH-mm-ss").format(System.currentTimeMillis()) + ".log");
+				try {
+					f.createNewFile();
+					bw = new BufferedWriter(new PrintWriter(f));
+				} catch (FileNotFoundException e1) {
+					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
+				} catch (IOException e1) {
+					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
+				}
+			}
 		} else {
-			Console.println(ConsoleUser.Error, "Console is already inited!");
+			Console.println(ConsoleUser.Error, "Console is already created!");
 		}
 	}
 	
@@ -116,34 +226,67 @@ public class Console {
 		
 		private String lineText = "";
 		private String fullLine = "";
+		private FontRenderContext frc = new FontRenderContext(new AffineTransform(),true,true);
 		
 		private ConsoleOutputStream() {}
 		
 		@Override
 		public void write(int b) throws IOException {
-			int l = (int)(t.getFont().getStringBounds(lineText, new FontRenderContext(new AffineTransform(),true,true)).getWidth()+30);
+			int l = (int)(t.getFont().getStringBounds(lineText, frc).getWidth()+30);
+			String text = new String(new byte[]{(byte)b});
 			
-			if((l > t.getWidth()) && !new String(new byte[]{(byte)b}).equals("\n")) {
+			if((l > t.getWidth()) && !text.equals("\n")) {
 				t.append("\n");
 				lineText = "";
+				
+				if(Settings.contains("log")) {
+					if(Settings.get("log").equals("true") && bw!=null) {
+						bw.newLine();
+					}
+				}
 			}
 			
-			if(new String(new byte[]{(byte)b}).equals("\n")) {
+			if(text.equals("\n")) {
 				t.append("\n");
 				lineText = "";
 				fullLine = "";
+				if(Settings.contains("log")) {
+					if(Settings.get("log").equals("true") && bw!=null) {
+						bw.newLine();
+					}
+				}
 				return;
 			}
 			
-			lineText += new String(new byte[]{(byte)b});
-			fullLine += new String(new byte[]{(byte)b});
-			t.append(new String(new byte[]{(byte)b}));
+			lineText += text;
+			fullLine += text;
+			t.append(text);
+			
+			if(Settings.contains("log")) {
+				if(Settings.get("log").equals("true") && bw!=null) {
+					bw.write(text);
+				}
+			}
+		}
+		
+		public void println(String s) throws IOException {
+			byte[] bytes = s.getBytes();
+			for(int i = 0; i < s.length(); i++) {
+				write(bytes[i]);
+			}
+			write((byte)'\n');
+		}
+		
+		public void print(String s) throws IOException {
+			byte[] bytes = s.getBytes();
+			for(int i = 0; i < s.length(); i++) {
+				write(bytes[i]);
+			}
 		}
 	}
 	
-	static class ConsoleInputStream extends InputStream implements KeyListener {
+	static class ConsoleInputStream implements KeyListener {
 		
-		private ArrayBlockingQueue<Integer> queue;
 		private ConsoleOutputStream cos;
 		private int presses = 0;
 		
@@ -151,60 +294,7 @@ public class Console {
 		private Object lock = new Object();
 		
 		private ConsoleInputStream(ConsoleOutputStream cos) {
-			 queue = new ArrayBlockingQueue<Integer>(1024);
 			 this.cos = cos;
-		}
-		
-		@Override
-		public int read() throws IOException {
-			Integer i = null;
-			
-			try {
-				i = queue.take();
-			} catch (InterruptedException ex) {
-				Console.println(ConsoleUser.Error, "Error: InterruptedException");
-			}
-			
-			if(i != null)
-				return i;
-			return -1;
-		}
-		
-		@Override
-		public int read(byte[] b, int off, int len) throws IOException {
-			if (b == null) {
-				throw new NullPointerException();
-			} else if (off < 0 || len < 0 || len > b.length - off) {
-				throw new IndexOutOfBoundsException();
-			} else if (len == 0) {
-				return 0;
-			}
-			
-			int c = read();
-			
-			if (c == -1) {
-				return -1;
-			}
-			
-			b[off] = (byte)c;
-			int i = 1;
-			
-			try {
-				for (; i < len && available() > 0 ; i++) {
-					c = read();
-					if (c == -1) {
-						break;
-					}
-					b[off + i] = (byte)c;
-				}
-			} catch (IOException ee) {}
-			
-			return i;
-		}
-		
-		@Override
-		public int available(){
-			return queue.size();
 		}
 
 		@Override
@@ -223,11 +313,11 @@ public class Console {
 					Console.write(text);
 					presses += text.length();
 				} catch (HeadlessException e1) {
-					e1.printStackTrace();
+					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
 				} catch (UnsupportedFlavorException e1) {
-					e1.printStackTrace();
+					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
 				}
 				return;
 			}
@@ -273,13 +363,6 @@ public class Console {
 			else if(c!=8) {
 				waitText += new String(new char[]{(char) c});
 			}
-			
-			try {
-				queue.put(c);
-				
-			} catch (InterruptedException ex) {
-				Console.println(ConsoleUser.Error, "Error: InterruptedException");
-			}
 		}
 		
 		public String waitUntilDone() {
@@ -290,7 +373,7 @@ public class Console {
 			        try {
 						lock.wait();
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
 					}
 			    }
 			}
@@ -306,20 +389,21 @@ public class Console {
 	}
 	
 	public static void println(String user, String s) {
+		update();
 		if(!Settings.contains("time")) {
 			String time = SystemUtils.getTime();
 			
 			if(user.equals(ConsoleUser.System)) {
-				System.out.println("[SYS " + time + "]: " + s);
+				cps.println("[SYS " + time + "]: " + s);
 			}
 			else if(user.equals(ConsoleUser.User)) {
-				System.out.println("[YOU " + time + "]: " + s);
+				cps.println("[YOU " + time + "]: " + s);
 			}
 			else if(user.equals(ConsoleUser.Error)) {
-				System.out.println("[ERR " + time + "]: " + s);
+				cps.println("[ERR " + time + "]: " + s);
 			}
 			else if(user.equals(ConsoleUser.Empty)) {
-				System.out.println("[" + time + "]: " + s);
+				cps.println("[" + time + "]: " + s);
 			}
 			return;
 		}
@@ -328,75 +412,76 @@ public class Console {
 			String time = SystemUtils.getTime();
 			
 			if(user.equals(ConsoleUser.System)) {
-				System.out.println("[SYS " + time + "]: " + s);
+				cps.println("[SYS " + time + "]: " + s);
 			}
 			else if(user.equals(ConsoleUser.User)) {
-				System.out.println("[YOU " + time + "]: " + s);
+				cps.println("[YOU " + time + "]: " + s);
 			}
 			else if(user.equals(ConsoleUser.Error)) {
-				System.out.println("[ERR " + time + "]: " + s);
+				cps.println("[ERR " + time + "]: " + s);
 			}
 			else if(user.equals(ConsoleUser.Empty)) {
-				System.out.println("[" + time + "]: " + s);
+				cps.println("[" + time + "]: " + s);
 			}
 		}
 		else if(Settings.get("time").equals("false")) {
 			if(user == ConsoleUser.System) {
-				System.out.println("[SYS]: " + s);
+				cps.println("[SYS]: " + s);
 			}
 			else if(user == ConsoleUser.User) {
-				System.out.println("[YOU]: " + s);
+				cps.println("[YOU]: " + s);
 			}
 			else if(user == ConsoleUser.Error) {
-				System.out.println("[ERR]: " + s);
+				cps.println("[ERR]: " + s);
 			}
 			else if(user == ConsoleUser.Empty) {
-				System.out.println("[]: " + s);
+				cps.println("[]: " + s);
 			}
 		}
 	}
 	
 	public static void println(String s) {
+		update();
 		if(!Settings.contains("time")) {
-			System.out.println("[SYS " + SystemUtils.getTime() + "]: " + s);
+			cps.println("[SYS " + SystemUtils.getTime() + "]: " + s);
 			return;
 		}
 		
 		if(Settings.get("time").equals("true")) {
-			System.out.println("[SYS " + SystemUtils.getTime() + "]: " + s);
+			cps.println("[SYS " + SystemUtils.getTime() + "]: " + s);
 		}
 		else if(Settings.get("time").equals("false")) {
-			System.out.println("[SYS]: " + s);
+			cps.println("[SYS]: " + s);
 		}
 	}
 	
 	public static void write(String s) {
-		System.out.print(s);
+		update();
+		cps.print(s);
 	}
 	
 	public static void writeln(String s) {
-		System.out.println(s);
+		update();
+		cps.println(s);
 	}
 	
 	public static String readln() {
-		Scanner scr = new Scanner(System.in);
-		
+		update();
 		if(Settings.get("time").equals("true")) {
-			System.out.print("[YOU " + SystemUtils.getTime() + "]: ");
-			//return scr.nextLine();
+			cps.print("[YOU " + SystemUtils.getTime() + "]: ");
 			return cis.waitUntilDone();
 		}
 		else if(Settings.get("time").equals("false")) {
-			System.out.print("[YOU]: ");
-			return scr.nextLine();
+			cps.print("[YOU]: ");
+			return cis.waitUntilDone();
 		}
 		
 		return "";
 	}
 	
 	public static String read() {
-		Scanner scr = new Scanner(System.in);
-		return scr.nextLine();
+		update();
+		return cis.waitUntilDone();
 	}
 	
 	public static class ConsoleUser {
@@ -408,6 +493,26 @@ public class Console {
 
 	public static void clear() {
 		t.setText("");
+	}
+	
+	public static void update() {
+		
+	}
+
+	public static void close() throws IOException {
+		bw.close();
+	}
+
+	public static KeyboardInput getKeyboardInput() {
+		return ki;
+	}
+	
+	public static MouseInput getMouseInput() {
+		return mi;
+	}
+
+	public static void addEventListener(WindowEventListener e) {
+		wels.add(e);
 	}
 	
 }

@@ -7,6 +7,7 @@ public class CloseManager {
 	public static void setLauncher(Launcher l) {
 		CloseManager.l = l;
 	}
+	
 	public static void close() {
 		l.close();
 	}

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import nl.jortenmilo.console.Console;
+import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.input.KeyboardInput;
 import nl.jortenmilo.settings.Settings;
 import nl.jortenmilo.settings.SettingsLoader;
 
@@ -23,6 +25,11 @@ public class Installer {
 					file.mkdirs();
 				}
 				
+				if(file.getPath().equals("logs")) {
+					Console.println("Installing: " + file.getPath());
+					file.mkdirs();
+				}
+				
 				if(file.getPath().equals("settings.jcio")) {
 					Console.println("Installing: " + file.getPath());
 					file.createNewFile();
@@ -31,13 +38,15 @@ public class Installer {
 					try {
 						SettingsLoader.save(files[1]);
 					} catch (IOException e) {
-						e.printStackTrace();
+						Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
 					}
 				}
 			}
 		}
 		
-		Console.println("Restart the program to finish the installment!");
+		Console.println("Restart the program to finish the installment.");
+		Console.println("Press any key to continue...");
+		KeyboardInput.waitUntilTyped();
 		System.exit(0);
 	}
 	

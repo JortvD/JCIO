@@ -13,6 +13,8 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import nl.jortenmilo.console.Console;
+import nl.jortenmilo.console.Console.ConsoleUser;
 import nl.jortenmilo.error.MissingFileError;
 import nl.jortenmilo.error.SyntaxError;
 import nl.jortenmilo.plugin.PluginManager.LoadedPlugin;
@@ -85,13 +87,13 @@ public class PluginLoader {
 					pm.addPlugin(lp);
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
 			} catch (InstantiationException e) {
-				e.printStackTrace();
+				Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
 			} catch (IllegalAccessException e) {
-				e.printStackTrace();
+				Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
 			}
 		}
 	}

@@ -3,16 +3,20 @@ package nl.jortenmilo.input;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.event.KeyboardEventListener;
+import nl.jortenmilo.event.KeyboardPressedEvent;
+import nl.jortenmilo.event.KeyboardReleasedEvent;
+import nl.jortenmilo.event.KeyboardTypedEvent;
 
 public class KeyboardInput implements KeyListener {
 	
+	private List<KeyboardEventListener> kels = new ArrayList<KeyboardEventListener>();
 	private static HashMap<Integer, Boolean> pressed = new HashMap<Integer, Boolean>();
 	private static List<Integer> wait = new ArrayList<Integer>();
 	private static CountDownLatch latch;
@@ -20,22 +24,51 @@ public class KeyboardInput implements KeyListener {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
+		for(KeyboardEventListener kel : kels) {
+			KeyboardPressedEvent event = new KeyboardPressedEvent();
+			event.setKeyChar(e.getKeyChar());
+			event.setKeyCode(e.getKeyCode());
+			event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
+			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
+			kel.onPressed(event);
+		}
+		
 		pressed.put(e.getKeyCode(), true);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		for(KeyboardEventListener kel : kels) {
+			KeyboardReleasedEvent event = new KeyboardReleasedEvent();
+			event.setKeyChar(e.getKeyChar());
+			event.setKeyCode(e.getKeyCode());
+			event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
+			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
+			kel.onReleased(event);
+		}
+		
 		pressed.put(e.getKeyCode(), false);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+		for(KeyboardEventListener kel : kels) {
+			KeyboardTypedEvent event = new KeyboardTypedEvent();
+			event.setKeyChar(e.getKeyChar());
+			event.setKeyCode(e.getKeyCode());
+			event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
+			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
+			kel.onTyped(event);
+		}
+		
+		Console.dout.println("Test2");
+		
 		if(wait.size()==1) {
 			if(wait.get(0) == 0) {
 				typed = e.getKeyChar();
-				latch.countDown();
+				countDown();
 				wait.clear();
-				latch = null;
+				return;
 			}
 		}
 		
@@ -43,13 +76,28 @@ public class KeyboardInput implements KeyListener {
 			int n = wait.get(i);
 			
 			if(n == e.getKeyCode()) {
-				latch.countDown();
+				typed = e.getKeyChar();
+				countDown();
 				wait.clear();
-				latch = null;
 			}
 		}
 	}
 	
+	private void countDown() {
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				latch.countDown();
+			}
+		});
+		t.start();
+	}
+	
+	public void addEventListener(KeyboardEventListener e) {
+		kels.add(e);
+	}
+	
+	//STATIC
 	public static int waitUntilTyped() {
 		if(latch != null) {
 			Console.println(ConsoleUser.Error, "There is already a latch waiting for a key to be pressed!");
@@ -86,7 +134,6 @@ public class KeyboardInput implements KeyListener {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public static boolean isPressed(int key) {
@@ -98,22 +145,23 @@ public class KeyboardInput implements KeyListener {
 	}
 	
 	public static int waitUntilTyped(int[] keys) {
-		int t = waitUntilTyped();
-		boolean a = false;
-		
 		for(int i = 0; i < keys.length; i++) {
-			if(keys[i] == t) {
-				a = true;
-			}
+			wait.add(keys[i]);
 		}
 		
-		if(!a) {
-			t = waitUntilTyped(keys);
+		latch = new CountDownLatch(1);
+		
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 		
-		
-		
-		return t;
+		int typed2 = typed;
+		typed = -1;
+		return typed2;
 	}
+	
+	
 
 }

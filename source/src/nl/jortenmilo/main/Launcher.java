@@ -7,18 +7,23 @@ import nl.jortenmilo.command.Command;
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.command.CommandExecutor;
 import nl.jortenmilo.command.CommandManager;
+import nl.jortenmilo.command.defaults.DefaultCommands;
 import nl.jortenmilo.console.Console;
+import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.input.KeyboardInput;
 import nl.jortenmilo.plugin.PluginLoader;
 import nl.jortenmilo.plugin.PluginManager;
 import nl.jortenmilo.settings.SettingsLoader;
+import nl.jortenmilo.utils.StringUtils;
 
 public class Launcher {
 	
-	private File[] files = {new File("plugins"), new File("settings.jcio")};
+	private File[] files = {new File("plugins"), new File("settings.jcio"), new File("logs")};
 	private boolean running = true;
 	private CommandManager cm;
 	private PluginManager pm;
+	private EventManager em;
 	
 	public Launcher() {
 		Console.init();
@@ -27,6 +32,7 @@ public class Launcher {
 		Console.println("<- JCIO Loading->");
 		init();
 		Console.clear();
+		
 		
 		//Start the program
 		Console.println("<- JCIO [Jortenmilo (c) 2016]->");
@@ -51,12 +57,16 @@ public class Launcher {
 		try {
 			SettingsLoader.load(files[1]);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
 		}
 
 		pm = new PluginManager();
 		cm = new CommandManager();
 		pm.setCommandManager(cm);
+		em = new EventManager();
+		em.setKeyboardInput(Console.getKeyboardInput());
+		em.setMouseInput(Console.getMouseInput());
+		pm.setEventManager(em);
 		
 		Console.println("Loading all the default commands.");
 		initCommands();
@@ -68,81 +78,7 @@ public class Launcher {
 		Console.println("Enabling all the plugins.");
 		pm.enableAll();
 	}
-
-	private void initCommands() {
-		DefaultCommands dc = new DefaultCommands();
-		
-		Command c1 = new Command();
-		c1.setCommand("exit");
-		c1.setDescription("This exits the program.");
-		c1.setCommandExecutor(dc);
-		cm.addCommand(c1);
-		
-		Command c2 = new Command();
-		c2.setCommand("help");
-		c2.setDescription("This displays all the commands.");
-		c2.setCommandExecutor(dc);
-		cm.addCommand(c2);
-		
-		Command c3 = new Command();
-		c3.setCommand("clear");
-		c3.setDescription("Clears the display.");
-		c3.setCommandExecutor(dc);
-		cm.addCommand(c3);
-	}
 	
-	class DefaultCommands implements CommandExecutor {
-
-		@Override
-		public void execute(String command, Command cmd, String[] params) {
-			if(command.equalsIgnoreCase("exit")) {
-				Console.println("Exiting the program. Press any key to continue!");
-				KeyboardInput.waitUntilTyped();
-				CloseManager.close();
-			}
-			else if(command.equalsIgnoreCase("help")) {
-				Console.println("This are all the possible commands:");
-				int l = 0;
-				
-				for(Command c : cm.getCommands()) {
-					if(c.getCommand().length() > l) {
-						l = c.getCommand().length();
-					}
-				}
-				
-				for(Command c : cm.getCommands()) {
-					String text = c.getCommand();
-					int a = l-text.length();
-					
-					for(int i = 0; i < a; i++) {
-						text += " ";
-					}
-					
-					text += " - " + c.getDescription();
-					Console.println(text);
-				}
-				
-				Console.println("So, what do you want to do?");
-			}
-			else if(command.equalsIgnoreCase("clear")) {
-				Console.println("Clearing the screen. Press any key to continue!");
-				KeyboardInput.waitUntilTyped();
-				Console.clear();
-			}
-		}
-		
-	}
-	
-	public void close() {
-		try {
-			SettingsLoader.save(files[1]);
-			pm.disableAll();
-			System.exit(0);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	private void checkForInstall() {
 		boolean install = false;
 		int missing = 0;
@@ -155,16 +91,32 @@ public class Launcher {
 		}
 		
 		if(install) {
-			Console.println("There are " + missing + " files missing. Installing them now!");
+			Console.println("There are " + missing + " file(s) missing. Installing them now.");
 			Installer i = new Installer(files);
 			
 			try {
 				i.install();
 			} catch (IOException e) {
-				e.printStackTrace();
+				Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
 			}
 		} else {
-			Console.println("All files are installed!");
+			Console.println("All files are installed.");
+		}
+	}
+
+	private void initCommands() {
+		DefaultCommands dc = new DefaultCommands();
+		dc.create(cm);
+	}
+	
+	public void close() {
+		try {
+			SettingsLoader.save(files[1]);
+			pm.disableAll();
+			Console.close();
+			System.exit(0);
+		} catch (IOException e) {
+			Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
 		}
 	}
 
