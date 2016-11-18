@@ -12,8 +12,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.AffineTransform;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -224,7 +222,6 @@ public class Console {
 		
 		private String lineText = "";
 		private String fullLine = "";
-		private FontRenderContext frc = new FontRenderContext(new AffineTransform(),true,true);
 		
 		private ConsoleOutputStream() {}
 		

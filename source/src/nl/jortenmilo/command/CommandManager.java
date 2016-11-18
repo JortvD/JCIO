@@ -21,8 +21,32 @@ public class CommandManager {
 		boolean exists = false;
 		
 		for(Command command : commands) {
+			//Check: command == command
 			if(command.getCommand().equals(c.getCommand())) {
 				exists = true;
+			}
+			
+			//Check: command == aliasses
+			for(String s : command.getAliasses()) {
+				if(s.equalsIgnoreCase(c.getCommand())) {
+					exists = true;
+				}
+			}
+			
+			//Check: aliasses == command
+			for(String s : c.getAliasses()) {
+				if(s.equalsIgnoreCase(command.getCommand())) {
+					c.getAliasses().remove(s);
+				}
+			}
+			
+			//Check: aliasses == aliasses
+			for(String s1 : c.getAliasses()) {
+				for(String s2 : command.getAliasses()) {
+					if(s1.equalsIgnoreCase(s2)) {
+						c.getAliasses().remove(s1);
+					}
+				}
 			}
 		}
 		
@@ -39,7 +63,6 @@ public class CommandManager {
 	
 	public void executeCommand(String[] args) {
 		String command = args[0];
-		boolean executed = false;
 		
 		for(Command c : commands) {
 			if(c.getCommand().equalsIgnoreCase(command)) {
@@ -50,13 +73,24 @@ public class CommandManager {
 				}
 				
 				c.getCommandExecutor().execute(command, c, params);
-				executed = true;
+				
+				return;
+			}
+			for(String s : c.getAliasses()) {
+				if(s.equalsIgnoreCase(command)) {
+					String[] params = new String[args.length-1];
+					
+					for(int i = 0; i < args.length-1; i++) {
+						params[i] = args[i+1];
+					}
+					
+					c.getCommandExecutor().execute(command, c, params);
+					
+					return;
+				}
 			}
 		}
-		
-		if(!executed) {
-			Console.println(ConsoleUser.Error, "Unknown command. Try 'help' for a list of all the commands. " + Arrays.toString(args));
-		}
+		Console.println(ConsoleUser.Error, "Unknown command. Try 'help' for a list of all the commands. " + Arrays.toString(args));
 	}
 	
 }

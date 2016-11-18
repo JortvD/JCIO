@@ -1,5 +1,8 @@
 package nl.jortenmilo.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import nl.jortenmilo.error.InvalidParameterError;
 
 public class Command {
@@ -7,6 +10,7 @@ public class Command {
 	private String command;
 	private String desc = "";
 	private CommandExecutor ce;
+	private List<String> aliasses = new ArrayList<String>();
 	
 	public Command() {}
 	
@@ -45,6 +49,22 @@ public class Command {
 
 	public void setDescription(String desc) {
 		this.desc = desc;
+	}
+	
+	public void addAlias(String alias) {
+		if(alias == null) {
+			new InvalidParameterError(command).print();
+		}
+		
+		if(alias.equals("")) {
+			new InvalidParameterError(command).print();
+		}
+		
+		aliasses.add(alias);
+	}
+	
+	public List<String> getAliasses() {
+		return aliasses;
 	}
 	
 }

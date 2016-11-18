@@ -8,7 +8,6 @@ import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.jortenmilo.console.Console;
 import nl.jortenmilo.event.MouseClickedEvent;
 import nl.jortenmilo.event.MouseEventListener;
 import nl.jortenmilo.event.MouseMovedEvent;
