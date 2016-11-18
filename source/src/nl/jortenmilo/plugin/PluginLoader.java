@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
@@ -49,8 +51,8 @@ public class PluginLoader {
 							JarFile jarFile = new JarFile(f.getPath());
 							Enumeration<JarEntry> e = jarFile.entries();
 							URL[] urls = { new URL("jar:file:" + f.getPath() +"!/") };
-							URLClassLoader cl = URLClassLoader.newInstance(urls);
-
+							URLClassLoader cl = new URLClassLoader(urls, this.getClass().getClassLoader());;
+							
 							while (e.hasMoreElements()) {
 								JarEntry je = e.nextElement();
 							
@@ -61,9 +63,11 @@ public class PluginLoader {
 								String className = je.getName().substring(0,je.getName().length()-6);
 								className = className.replace('/', '.');
 								Class<?> c = cl.loadClass(className);
-							
+								
 								if(c.getName().equals(path)) {
-									lp.setPlugin((Plugin)c.newInstance());
+									Constructor<?> ctor = c.getConstructor();
+									
+									lp.setPlugin((Plugin)ctor.newInstance());
 								}
 							}
 						}
@@ -86,14 +90,8 @@ public class PluginLoader {
 					
 					pm.addPlugin(lp);
 				}
-			} catch (IOException e) {
-				Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
-			} catch (ClassNotFoundException e) {
-				Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
-			} catch (InstantiationException e) {
-				Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
-			} catch (IllegalAccessException e) {
-				Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
+			} catch (Exception e) {
+				Console.dout.println("Unknown Error: " + e.getMessage());
 			}
 		}
 	}

@@ -32,8 +32,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
-import nl.jortenmilo.event.KeyboardEventListener;
-import nl.jortenmilo.event.KeyboardReleasedEvent;
 import nl.jortenmilo.event.WindowClosedEvent;
 import nl.jortenmilo.event.WindowEventListener;
 import nl.jortenmilo.event.WindowHiddenEvent;
@@ -155,6 +153,10 @@ public class Console {
 				public void windowActivated(WindowEvent e) {}
 				@Override
 				public void windowClosed(WindowEvent e) {
+					
+				}
+				@Override
+				public void windowClosing(WindowEvent e) {
 					for(WindowEventListener wel : wels) {
 						WindowClosedEvent event = new WindowClosedEvent();
 						event.setWidth(e.getComponent().getWidth());
@@ -166,8 +168,6 @@ public class Console {
 					
 					CloseManager.close();
 				}
-				@Override
-				public void windowClosing(WindowEvent e) {}
 				@Override
 				public void windowDeactivated(WindowEvent e) {}
 				@Override
@@ -191,8 +191,6 @@ public class Console {
 			
 			dout = System.out;
 			din = System.in;
-			System.setOut(null);
-			System.setErr(null);
 			
 			ConsoleOutputStream cos = new ConsoleOutputStream();
 			cps = new ConsolePrintStream(cos);
@@ -232,41 +230,30 @@ public class Console {
 		
 		@Override
 		public void write(int b) throws IOException {
-			int l = (int)(t.getFont().getStringBounds(lineText, frc).getWidth()+30);
+			int l = t.getGraphics().getFontMetrics().stringWidth(lineText)+12;
 			String text = new String(new byte[]{(byte)b});
+			
+			if(Settings.contains("log")) {
+				if(Settings.get("log").equals("true") && bw!=null) {
+					bw.write(b);
+				}
+			}
 			
 			if((l > t.getWidth()) && !text.equals("\n")) {
 				t.append("\n");
 				lineText = "";
-				
-				if(Settings.contains("log")) {
-					if(Settings.get("log").equals("true") && bw!=null) {
-						bw.newLine();
-					}
-				}
 			}
 			
 			if(text.equals("\n")) {
 				t.append("\n");
 				lineText = "";
 				fullLine = "";
-				if(Settings.contains("log")) {
-					if(Settings.get("log").equals("true") && bw!=null) {
-						bw.newLine();
-					}
-				}
 				return;
 			}
 			
 			lineText += text;
 			fullLine += text;
 			t.append(text);
-			
-			if(Settings.contains("log")) {
-				if(Settings.get("log").equals("true") && bw!=null) {
-					bw.write(text);
-				}
-			}
 		}
 		
 		public void println(String s) throws IOException {

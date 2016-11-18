@@ -61,8 +61,6 @@ public class KeyboardInput implements KeyListener {
 			kel.onTyped(event);
 		}
 		
-		Console.dout.println("Test2");
-		
 		if(wait.size()==1) {
 			if(wait.get(0) == 0) {
 				typed = e.getKeyChar();

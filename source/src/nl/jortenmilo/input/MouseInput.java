@@ -38,7 +38,6 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		Console.dout.println("Test1");
 		for(MouseEventListener mel : mels) {
 			MouseWheelMovedEvent event = new MouseWheelMovedEvent();
 			event.setModifiers(e.getModifiers());
@@ -56,7 +55,6 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		Console.dout.println("Test");
 		for(MouseEventListener mel : mels) {
 			MouseClickedEvent event = new MouseClickedEvent();
 			event.setModifiers(e.getModifiers());

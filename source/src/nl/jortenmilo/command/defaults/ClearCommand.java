@@ -5,7 +5,6 @@ import nl.jortenmilo.command.CommandExecutor;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 import nl.jortenmilo.input.KeyboardInput;
-import nl.jortenmilo.utils.StringUtils;
 
 public class ClearCommand implements CommandExecutor {
 

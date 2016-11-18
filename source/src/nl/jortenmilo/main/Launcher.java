@@ -3,19 +3,15 @@ package nl.jortenmilo.main;
 import java.io.File;
 import java.io.IOException;
 
-import nl.jortenmilo.command.Command;
 import nl.jortenmilo.command.CommandDecoder;
-import nl.jortenmilo.command.CommandExecutor;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.command.defaults.DefaultCommands;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 import nl.jortenmilo.event.EventManager;
-import nl.jortenmilo.input.KeyboardInput;
 import nl.jortenmilo.plugin.PluginLoader;
 import nl.jortenmilo.plugin.PluginManager;
 import nl.jortenmilo.settings.SettingsLoader;
-import nl.jortenmilo.utils.StringUtils;
 
 public class Launcher {
 	

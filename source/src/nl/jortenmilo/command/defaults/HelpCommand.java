@@ -5,8 +5,6 @@ import nl.jortenmilo.command.CommandExecutor;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
-import nl.jortenmilo.input.KeyboardInput;
-import nl.jortenmilo.main.CloseManager;
 import nl.jortenmilo.utils.StringUtils;
 
 public class HelpCommand implements CommandExecutor {

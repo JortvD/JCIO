@@ -12,7 +12,7 @@ public abstract class Plugin {
 	private CommandManager cm;
 	private EventManager em;
 	private LoadedPlugin lp;
-	private File sf = new File("plugins/" + lp.getName());
+	private File sf;
 	
 	public abstract void enable();
 	public abstract void disable();
@@ -43,6 +43,7 @@ public abstract class Plugin {
 	
 	protected void setLoadedPlugin(LoadedPlugin lp) {
 		this.lp = lp;
+		sf = new File("plugins/" + lp.getName());
 	}
 	
 	public LoadedPlugin getLoadedPlugin() {
