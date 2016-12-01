@@ -398,7 +398,7 @@ public class Console {
 	public static void println(String user, String s) {
 		update();
 		if(!settings.contains("time")) {
-			String time = SystemUtils.getTime();
+			String time = new SystemUtils().getTime();
 			
 			if(user.equals(ConsoleUser.System)) {
 				cps.println("[SYS " + time + "]: " + s);
@@ -416,7 +416,7 @@ public class Console {
 		}
 		
 		if(settings.get("time").equals("true")) {
-			String time = SystemUtils.getTime();
+			String time = new SystemUtils().getTime();
 			
 			if(user.equals(ConsoleUser.System)) {
 				cps.println("[SYS " + time + "]: " + s);
@@ -450,12 +450,12 @@ public class Console {
 	public static void println(String s) {
 		update();
 		if(!settings.contains("time")) {
-			cps.println("[SYS " + SystemUtils.getTime() + "]: " + s);
+			cps.println("[SYS " + new SystemUtils().getTime() + "]: " + s);
 			return;
 		}
 		
 		if(settings.get("time").equals("true")) {
-			cps.println("[SYS " + SystemUtils.getTime() + "]: " + s);
+			cps.println("[SYS " + new SystemUtils().getTime() + "]: " + s);
 		}
 		else if(settings.get("time").equals("false")) {
 			cps.println("[SYS]: " + s);
@@ -475,7 +475,7 @@ public class Console {
 	public static String readln() {
 		update();
 		if(settings.get("time").equals("true")) {
-			cps.print("[YOU " + SystemUtils.getTime() + "]: ");
+			cps.print("[YOU " + new SystemUtils().getTime() + "]: ");
 			return cis.waitUntilDone();
 		}
 		else if(settings.get("time").equals("false")) {
