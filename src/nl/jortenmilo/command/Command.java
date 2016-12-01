@@ -51,7 +51,7 @@ public class Command {
 		this.desc = desc;
 	}
 	
-	public void addAlias(String alias) {
+	public void addAlias(String alias) { 
 		if(alias == null) {
 			new InvalidParameterError(command).print();
 		}
