@@ -32,22 +32,13 @@ public class SettingsLoader {
 				} 
 			}
 			
-			settings.add(key);
+			settings.create(key);
 			settings.set(key, value);
 			amount++;
 		}
 		
 		br.close();
 		Console.println("There were " + amount + " settings loaded.");
-		
-		//Auto-Saving System Settings
-		settings.save("time");
-		settings.save("log");
-		settings.save("foreground");
-		settings.save("background");
-		settings.save("default_width");
-		settings.save("default_height");
-		settings.save("default_title");
 	}
 	
 	public void save(File f, SettingsManager settings) throws IOException {
