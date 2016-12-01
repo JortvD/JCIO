@@ -31,6 +31,7 @@ public class SettingsManager {
 		}
 		
 		settings.put(key, value);
+		for(SettingsEventListener listener : listeners) {
 	}
 	
 	public void create(String key) {
