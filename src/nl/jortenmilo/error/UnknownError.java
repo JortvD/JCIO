@@ -3,17 +3,17 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 
-public class InvalidParameterError extends Error {
+public class UnknownError extends Error {
 
-	private String value;
+	private String value1;
 	
-	public InvalidParameterError(String value) {
-		this.value = value;
+	public UnknownError(String value1) {
+		this.value1 = value1;
 	}
 	
 	@Override
 	public void print() {
-		Console.println(ConsoleUser.Error, "InvalidParameterError: '" + value + "' is an invalid value for this method!");
+		Console.println(ConsoleUser.Error, value1);
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();
 		StackTraceElement[] es2 = new StackTraceElement[es.length-2];
@@ -27,5 +27,5 @@ public class InvalidParameterError extends Error {
 		}
 		Console.println(ConsoleUser.Error, "If you don't know what to do, please contact me!");
 	}
-
+	
 }

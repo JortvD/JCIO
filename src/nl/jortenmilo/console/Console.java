@@ -14,7 +14,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,17 +29,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
-import nl.jortenmilo.event.WindowClosedEvent;
-import nl.jortenmilo.event.WindowEventListener;
-import nl.jortenmilo.event.WindowHiddenEvent;
-import nl.jortenmilo.event.WindowMovedEvent;
-import nl.jortenmilo.event.WindowOpenedEvent;
-import nl.jortenmilo.event.WindowResizedEvent;
-import nl.jortenmilo.event.WindowShownEvent;
-import nl.jortenmilo.input.KeyboardInput;
-import nl.jortenmilo.input.MouseInput;
+import nl.jortenmilo.keyboard.KeyboardInput;
 import nl.jortenmilo.main.CloseManager;
-import nl.jortenmilo.settings.Settings;
+import nl.jortenmilo.mouse.MouseInput;
+import nl.jortenmilo.settings.SettingsManager;
 import nl.jortenmilo.utils.SystemUtils;
 
 public class Console {
@@ -53,7 +45,8 @@ public class Console {
 	private static BufferedWriter bw;
 	private static KeyboardInput ki;
 	private static MouseInput mi;
-	private static List<WindowEventListener> wels = new ArrayList<WindowEventListener>();
+	private static List<ConsoleEventListener> wels = new ArrayList<ConsoleEventListener>();
+	private static SettingsManager settings;
 	
 	public static PrintStream dout; //DEBUG
 	public static InputStream din; //DEBUG
@@ -103,46 +96,68 @@ public class Console {
 					t.setBounds(0, 0, s.getWidth(), s.getHeight());
 					frame.repaint();
 					
-					for(WindowEventListener wel : wels) {
-						WindowResizedEvent event = new WindowResizedEvent();
+					for(ConsoleEventListener wel : wels) {
+						ConsoleResizedEvent event = new ConsoleResizedEvent();
 						event.setWidth(e.getComponent().getWidth());
 						event.setHeight(e.getComponent().getHeight());
 						event.setX(e.getComponent().getX());
 						event.setY(e.getComponent().getY());
-						wel.onResized(event);
+						
+						try {
+							wel.onResized(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						}
 					}
 				}
 				@Override
 				public void componentHidden(ComponentEvent e) {
-					for(WindowEventListener wel : wels) {
-						WindowHiddenEvent event = new WindowHiddenEvent();
+					for(ConsoleEventListener wel : wels) {
+						ConsoleHiddenEvent event = new ConsoleHiddenEvent();
 						event.setWidth(e.getComponent().getWidth());
 						event.setHeight(e.getComponent().getHeight());
 						event.setX(e.getComponent().getX());
 						event.setY(e.getComponent().getY());
-						wel.onHidden(event);
+						
+						try {
+							wel.onHidden(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						}
 					}
 				}
 				@Override
 				public void componentMoved(ComponentEvent e) {
-					for(WindowEventListener wel : wels) {
-						WindowMovedEvent event = new WindowMovedEvent();
+					for(ConsoleEventListener wel : wels) {
+						ConsoleMovedEvent event = new ConsoleMovedEvent();
 						event.setWidth(e.getComponent().getWidth());
 						event.setHeight(e.getComponent().getHeight());
 						event.setX(e.getComponent().getX());
 						event.setY(e.getComponent().getY());
 						wel.onMoved(event);
+						
+						try {
+							wel.onMoved(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						}
 					}
 				}
 				@Override
 				public void componentShown(ComponentEvent e) {
-					for(WindowEventListener wel : wels) {
-						WindowShownEvent event = new WindowShownEvent();
+					for(ConsoleEventListener wel : wels) {
+						ConsoleShownEvent event = new ConsoleShownEvent();
 						event.setWidth(e.getComponent().getWidth());
 						event.setHeight(e.getComponent().getHeight());
 						event.setX(e.getComponent().getX());
 						event.setY(e.getComponent().getY());
 						wel.onShown(event);
+						
+						try {
+							wel.onShown(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						}
 					}
 				}
 			});
@@ -155,13 +170,18 @@ public class Console {
 				}
 				@Override
 				public void windowClosing(WindowEvent e) {
-					for(WindowEventListener wel : wels) {
-						WindowClosedEvent event = new WindowClosedEvent();
+					for(ConsoleEventListener wel : wels) {
+						ConsoleClosedEvent event = new ConsoleClosedEvent();
 						event.setWidth(e.getComponent().getWidth());
 						event.setHeight(e.getComponent().getHeight());
 						event.setX(e.getComponent().getX());
 						event.setY(e.getComponent().getY());
-						wel.onClosed(event);
+						
+						try {
+							wel.onClosed(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						}
 					}
 					
 					CloseManager.close();
@@ -174,13 +194,18 @@ public class Console {
 				public void windowIconified(WindowEvent e) {}
 				@Override
 				public void windowOpened(WindowEvent e) {
-					for(WindowEventListener wel : wels) {
-						WindowOpenedEvent event = new WindowOpenedEvent();
+					for(ConsoleEventListener wel : wels) {
+						ConsoleOpenedEvent event = new ConsoleOpenedEvent();
 						event.setWidth(e.getComponent().getWidth());
 						event.setHeight(e.getComponent().getHeight());
 						event.setX(e.getComponent().getX());
 						event.setY(e.getComponent().getY());
-						wel.onOpened(event);
+						
+						try {
+							wel.onOpened(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						}
 					}
 				}
 			});
@@ -200,10 +225,8 @@ public class Console {
 				try {
 					f.createNewFile();
 					bw = new BufferedWriter(new PrintWriter(f));
-				} catch (FileNotFoundException e1) {
-					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
-				} catch (IOException e1) {
-					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
+				} catch(Error | Exception e) {
+					new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 				}
 			}
 		} else {
@@ -230,8 +253,8 @@ public class Console {
 			int l = t.getGraphics().getFontMetrics().stringWidth(lineText)+12;
 			String text = new String(new byte[]{(byte)b});
 			
-			if(Settings.contains("log")) {
-				if(Settings.get("log").equals("true") && bw!=null) {
+			if(settings.contains("log")) {
+				if(settings.get("log").equals("true") && bw!=null) {
 					bw.write(b);
 				}
 			}
@@ -356,8 +379,8 @@ public class Console {
 			    while (!WakeupNeeded) {
 			        try {
 						lock.wait();
-					} catch (InterruptedException e) {
-						Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
+					} catch(Error | Exception e) {
+						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 					}
 			    }
 			}
@@ -374,7 +397,7 @@ public class Console {
 	
 	public static void println(String user, String s) {
 		update();
-		if(!Settings.contains("time")) {
+		if(!settings.contains("time")) {
 			String time = SystemUtils.getTime();
 			
 			if(user.equals(ConsoleUser.System)) {
@@ -392,7 +415,7 @@ public class Console {
 			return;
 		}
 		
-		if(Settings.get("time").equals("true")) {
+		if(settings.get("time").equals("true")) {
 			String time = SystemUtils.getTime();
 			
 			if(user.equals(ConsoleUser.System)) {
@@ -408,7 +431,7 @@ public class Console {
 				cps.println("[" + time + "]: " + s);
 			}
 		}
-		else if(Settings.get("time").equals("false")) {
+		else if(settings.get("time").equals("false")) {
 			if(user == ConsoleUser.System) {
 				cps.println("[SYS]: " + s);
 			}
@@ -426,15 +449,15 @@ public class Console {
 	
 	public static void println(String s) {
 		update();
-		if(!Settings.contains("time")) {
+		if(!settings.contains("time")) {
 			cps.println("[SYS " + SystemUtils.getTime() + "]: " + s);
 			return;
 		}
 		
-		if(Settings.get("time").equals("true")) {
+		if(settings.get("time").equals("true")) {
 			cps.println("[SYS " + SystemUtils.getTime() + "]: " + s);
 		}
-		else if(Settings.get("time").equals("false")) {
+		else if(settings.get("time").equals("false")) {
 			cps.println("[SYS]: " + s);
 		}
 	}
@@ -451,11 +474,11 @@ public class Console {
 	
 	public static String readln() {
 		update();
-		if(Settings.get("time").equals("true")) {
+		if(settings.get("time").equals("true")) {
 			cps.print("[YOU " + SystemUtils.getTime() + "]: ");
 			return cis.waitUntilDone();
 		}
-		else if(Settings.get("time").equals("false")) {
+		else if(settings.get("time").equals("false")) {
 			cps.print("[YOU]: ");
 			return cis.waitUntilDone();
 		}
@@ -495,8 +518,12 @@ public class Console {
 		return mi;
 	}
 
-	public static void addEventListener(WindowEventListener e) {
+	protected static void addEventListener(ConsoleEventListener e) {
 		wels.add(e);
+	}
+
+	public static void setSettingsManager(SettingsManager settings) {
+		Console.settings = settings;
 	}
 	
 }
