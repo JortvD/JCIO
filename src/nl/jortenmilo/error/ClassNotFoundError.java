@@ -17,7 +17,7 @@ public class ClassNotFoundError extends Error {
 	public void print() {
 		Console.println(ConsoleUser.Error, "ClassNotFound: The class '" + value1 + "' is not found!");
 		Console.println(ConsoleUser.Error, "Caused by: " + value2);
-		Console.println(ConsoleUser.Error, "If you don't know what to do, please contact me!");
+		Console.println(ConsoleUser.Error, "If you don't know what to do, please contact us at: goo.gl/1ROGMh.");
 	}
 
 }

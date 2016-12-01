@@ -3,17 +3,17 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 
-public class UnknownError extends Error {
-
-	private String value1;
+public class ExistingSettingError extends Error {
 	
-	public UnknownError(String value1) {
-		this.value1 = value1;
+	private String value;
+	
+	public ExistingSettingError(String value) {
+		this.value = value;
 	}
 	
 	@Override
 	public void print() {
-		Console.println(ConsoleUser.Error, value1);
+		Console.println(ConsoleUser.Error, "ExistingSettingError: The setting '" + value + "' already exists!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();
 		StackTraceElement[] es2 = new StackTraceElement[es.length-2];

@@ -25,7 +25,7 @@ public class UnknownSettingError extends Error{
 		for(StackTraceElement e : es2) {
 			Console.println(ConsoleUser.Error, " at: " + e.getClassName() + "." + e.getMethodName() + " (Line: " + e.getLineNumber() + " in " + e.getFileName() + ")");
 		}
-		Console.println(ConsoleUser.Error, "If you don't know what to do, please contact me!");
+		Console.println(ConsoleUser.Error, "If you don't know what to do, please contact us at: goo.gl/1ROGMh.");
 	}
 	
 }

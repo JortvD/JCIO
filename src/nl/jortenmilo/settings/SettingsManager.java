@@ -11,7 +11,6 @@ public class SettingsManager {
 	
 	private HashMap<String, String> settings = new HashMap<String, String>();
 	private List<String> keys = new ArrayList<String>();
-	private List<String> saved = new ArrayList<String>();
 	private SettingsLoader loader = new SettingsLoader();
 	
 	public String get(String key) {
@@ -34,53 +33,41 @@ public class SettingsManager {
 		settings.put(key, value);
 	}
 	
-	public void add(String key) {
+	public void create(String key) {
+		if(keys.contains(key)) {
+			
+		}
 		keys.add(key);
 	}
 	
 	public void remove(String key) {
 		keys.remove(key);
-		if(saved.contains(key)) saved.remove(key);
-	}
-	
-	public void save(String key) {
-		saved.add(key);
-	}
-	
-	public List<String> getSaved() {
-		return saved;
 	}
 	
 	public void reset() {
-		saved.clear();
+		keys.clear();
+		settings.clear();
 		
-		add("time");
+		create("time");
 		set("time", "true");
-		save("time");
 		
-		add("log");
+		create("log");
 		set("log", "true");
-		save("log");
 		
-		add("foreground");
+		create("foreground");
 		set("foreground", "light_gray");
-		save("foreground");
 		
-		add("background");
+		create("background");
 		set("background", "black");
-		save("background");
 		
-		add("default_width");
+		create("default_width");
 		set("default_width", "1600");
-		save("default_width");
 		
-		add("default_height");
+		create("default_height");
 		set("default_height", "800");
-		save("default_height");
 		
-		add("default_title");
+		create("default_title");
 		set("default_title", "JCIO");
-		save("default_title");
 	}
 	
 	public void save() {
