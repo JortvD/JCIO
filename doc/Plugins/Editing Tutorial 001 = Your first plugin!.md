@@ -38,6 +38,7 @@ You now have to add some unimplemented methods. This are `enable()` and `disable
 Now, create a new file in your project. Right click the project folder > Hover over: "New" > Click: "File". A window will pop up. You have to select your project folder and type `plugin.jcio` in "File name". Than click "Finish". In the file you have to write the following things:
 <br />
 `name: <THIS IS THE NAME OF YOUR PLUGIN>
+
 path: <THIS IS THE PATH OF YOUR MAIN PLUGIN FOLDER>`
 <br />
 For example:
