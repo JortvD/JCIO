@@ -21,11 +21,15 @@ Than, Right click the "src" folder > Hover over: "New" > Click: "Class". A windo
 **Step 4:**
 Now, your class has to extend "Plugin":
 <br />
-`public class NAME extends Plugin {}`
+```java
+public class NAME extends Plugin {}
+```
 <br />
 Than import "Plugin" from "nl.jortenmilo.plugin":
 <br />
-`import nl.jortenmilo.plugin.Plugin;`
+```java
+import nl.jortenmilo.plugin.Plugin;
+```
 <br />
 You now have to add some unimplemented methods. This are `enable()` and `disable()`. `enable()` is called when the plugin is enabled and `disable()` is called when the plugin is disabled. Write whatever you like in this methods.
 <br />
