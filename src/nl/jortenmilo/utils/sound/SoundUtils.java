@@ -23,7 +23,7 @@ public class SoundUtils {
 	private boolean paused = false;
 	private long CurrentTime = 0;
 	
-	private SoundUtils(File file, Mixer m) {
+	public SoundUtils(File file, Mixer m) {
 		this.file = file;
 		
 		this.m = m;
@@ -118,35 +118,16 @@ public class SoundUtils {
 		return file;
 	}
 	
+	public Mixer getMixer() {
+		return m;
+	}
+	
 	public void sleepUntilDone() {
 		try {
 			Thread.sleep(getSoundLenght()-getSoundPosition());
 		} catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 		}
-	}
-	
-	
-	//STATIC
-	
-	public static void playSound(File file, Mixer m) {
-		SoundUtils sound = SoundUtils.getInstance(file, m);
-		sound.start();
-		sound.sleepUntilDone();
-	}
-	
-	public static void playSound(String file, Mixer m) {
-		SoundUtils sound = SoundUtils.getInstance(file, m);
-		sound.start();
-		sound.sleepUntilDone();
-	}
-	
-	public static SoundUtils getInstance(File file, Mixer m) {
-		return new SoundUtils(file, m);
-	}
-	
-	public static SoundUtils getInstance(String file, Mixer m) {
-		return new SoundUtils(new File(file), m);
 	}
 	
 }
