@@ -21,7 +21,9 @@ public class RandomUtils {
 	public double randomDouble(double min, double max) {
 		return (Math.random() * (max - min)) + min;
 	}
-	
-	
-	
+
+	public String getData() {
+		return "";
+	}
+
 }

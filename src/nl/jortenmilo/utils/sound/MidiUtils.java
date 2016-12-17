@@ -52,12 +52,20 @@ public class MidiUtils {
 		return null;
 	}
 	
-	public Instrument[] getInstuments() {
+	public Instrument[] getInstruments() {
 		return synth.getLoadedInstruments();
 	}
 	
+	public void setInstruments(Instrument[] instruments) {
+		for(Instrument instrument : instruments) {
+			synth.loadInstrument(instrument);
+		}
+	}
 	
-	//Play Sound
+	public Synthesizer getSynthesizer() {
+		return synth;
+	}
+	
 	public void playSound(int channel, int time, int velocity, int tone) throws InterruptedException {
 		channels[channel].noteOn(tone, velocity);
         Thread.sleep(time);
@@ -88,8 +96,6 @@ public class MidiUtils {
 		t.start();
 	}
 	
-	
-	//Get Data
 	public Soundbank getDefaultSoundbank() {
 		return synth.getDefaultSoundbank();
 	}
@@ -100,6 +106,10 @@ public class MidiUtils {
 	
 	public long getLatency() {
 		return synth.getLatency();
+	}
+
+	public String getData() {
+		return "[Latency: " + synth.getLatency() + ", Info: " + synth.getDeviceInfo().getName() + "/" +  synth.getDeviceInfo().getDescription() + "/" +  synth.getDeviceInfo().getVersion()  + "/" +  synth.getDeviceInfo().getVendor() + "]";
 	}
 	
 }

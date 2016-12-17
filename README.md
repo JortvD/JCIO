@@ -3,7 +3,7 @@ This is JCIO, a moddable command line. JCIO can be used as a regular command lin
 This Github repository contains not only the source code, but also a Wiki. But if you still have any questions, feel free to ask! I'd also love to hear suggestions for possible features and feedback is really appreciated.
 
 ###Note:
-The current version starts with a zero, this means things will change. Such changes may break your plugin.
+The current version is in alpha, this means things will change. Such changes may break your plugin.
 
 ### Features:
 * Moddable - Making a plugin is really easy and you don't need a lot of knowledge about Java.

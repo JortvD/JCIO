@@ -204,47 +204,158 @@ public class UtilsManager {
 	}
 	
 	public StringUtils cloneStringUtils(StringUtils u) {
-		return new StringUtils();
+		StringUtils nu = new StringUtils();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("StringUtils");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public SystemUtils cloneSystemUtils(SystemUtils u) {
-		return new SystemUtils();
+		SystemUtils nu = new SystemUtils();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("SystemUtils");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public MathUtils cloneMathUtils(MathUtils u) {
-		return new MathUtils();
+		MathUtils nu = new MathUtils();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("MathUtils");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public CalculatorUtils cloneCalculatorUtils(CalculatorUtils u) {
-		return new CalculatorUtils();
+		CalculatorUtils nu = new CalculatorUtils();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("CalculatorUtils");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public RandomUtils cloneRandomUtils(RandomUtils u) {
-		return new RandomUtils();
+		RandomUtils nu = new RandomUtils();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("RandomUtils");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public NetBot cloneNetBot(NetBot u) {
-		return new NetBot();
+		NetBot nu = new NetBot();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("RandomUtils");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public SocketClient cloneSocketClient(SocketClient u) {
-		return new SocketClient();
+		SocketClient nu = new SocketClient();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("SocketClient");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public SocketServer cloneSocketServer(SocketServer u) {
-		return new SocketServer();
+		SocketServer nu = new SocketServer();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("SocketServer");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public WebClient cloneWebClient(WebClient u) {
-		return new WebClient();
+		WebClient nu = new WebClient();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("WebClient");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public WebServer cloneWebServer(WebServer u) {
-		return new WebServer();
+		WebServer nu = new WebServer();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("WebServer");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public MidiUtils cloneMidiUtils(MidiUtils u) {
-		return new MidiUtils();
+		MidiUtils nu = new MidiUtils();
+		nu.setInstruments(u.getInstruments());
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("WebServer");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public MixerUtils cloneMixerUtils(MixerUtils u) {

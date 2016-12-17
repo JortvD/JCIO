@@ -27,7 +27,7 @@ public class IDUtils {
 	}
 
 	public String getData() {
-		return "[UUIDS:" + Arrays.toString(uuids.toArray()) + "]";
+		return "[UUIDS: " + Arrays.toString(uuids.toArray()) + "]";
 	}
 
 	public List<UUID> getUUIDs() {

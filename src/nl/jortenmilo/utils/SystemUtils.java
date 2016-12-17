@@ -33,5 +33,9 @@ public class SystemUtils {
 		Solaris,
 		Unknown
 	}
+
+	public String getData() {
+		return "";
+	}
 	
 }

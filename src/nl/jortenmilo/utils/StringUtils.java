@@ -8,5 +8,9 @@ public class StringUtils {
 		}
 		return string;
 	}
+
+	public String getData() {
+		return "";
+	}
 	
 }
