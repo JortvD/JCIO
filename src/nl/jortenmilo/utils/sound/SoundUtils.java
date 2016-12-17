@@ -129,5 +129,17 @@ public class SoundUtils {
 			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 		}
 	}
+
+	public String getData() {
+		return "[File: " + file.getPath() + ", "
+			  + "Mixer: " + m.getMixerInfo().getName() + "/" + m.getMixerInfo().getDescription() + "/" + m.getMixerInfo().getVersion()  + "/" + m.getMixerInfo().getVendor() + ", "
+			  + "Volume: " + gainControlV.getValue() + ", "
+			  + "Muted: " + gainControlM.getValue() + ", "
+			  + "Balance: " + gainControlS.getValue() + ", "
+			  + "Pan: " + gainControlP.getValue() + ", "
+			  + "Paused: " + paused + ", "
+			  + "Length: " + clip.getMicrosecondLength() + ", "
+			  + "Position: " + clip.getMicrosecondPosition() + "]";
+	}
 	
 }

@@ -39,6 +39,10 @@ public class MixerUtils {
 		return null;
 	}
 	
+	public String getData() {
+		return "";
+	}
+	
 	public static class AudioMixer {
 		
 		private Mixer  m;

@@ -346,6 +346,8 @@ public class UtilsManager {
 	public MidiUtils cloneMidiUtils(MidiUtils u) {
 		MidiUtils nu = new MidiUtils();
 		nu.setInstruments(u.getInstruments());
+		nu.setSynthesizer(u.getSynthesizer());
+		nu.setChannels(u.getChannels());
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
 		event.setName("WebServer");
@@ -359,14 +361,56 @@ public class UtilsManager {
 	}
 	
 	public MixerUtils cloneMixerUtils(MixerUtils u) {
-		return new MixerUtils();
+		MixerUtils nu = new MixerUtils();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("MixerUtils");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public RecorderUtils cloneRecorderUtils(RecorderUtils u) {
-		return new RecorderUtils();
+		RecorderUtils nu = new RecorderUtils();
+		nu.setBigEndian(u.isBigEndian());
+		nu.setSigned(u.isSigned());
+		nu.setChannels(u.getChannels());
+		nu.setFileType(u.getFileType());
+		nu.setRecordTime(u.getRecordTime());
+		nu.setSampleRate(u.getSampleRate());
+		nu.setSampleSizeInBits(u.getSampleSizeInBits());
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("RecorderUtils");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 	
 	public SoundUtils cloneSoundUtils(SoundUtils u) {
-		return new SoundUtils(u.getFile(), u.getMixer());
+		SoundUtils nu = new SoundUtils(u.getFile(), u.getMixer());
+		nu.setBalance(u.getBalance());
+		nu.setMute(u.isMuted());
+		nu.setPan(u.getPan());
+		nu.setPosition(u.getSoundPosition());
+		nu.setVolume(u.getVolume());
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("SoundUtils");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
 	}
 }

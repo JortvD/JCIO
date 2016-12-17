@@ -13,7 +13,7 @@ import javax.sound.sampled.TargetDataLine;
 
 public class RecorderUtils {
 	
-private long RECORD_TIME = 5000;
+	private long RECORD_TIME = 5000;
     
     private AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
     private TargetDataLine line;
@@ -135,6 +135,10 @@ private long RECORD_TIME = 5000;
 
 	public void setFileType(AudioFileFormat.Type fileType) {
 		this.fileType = fileType;
+	}
+
+	public String getData() {
+		return "[Record_Time: " + RECORD_TIME + ", FileType: " + fileType + ", Signed: " + signed + ", BigEndian: " + bigEndian + ", SampleRate: " + sampleRate + ", SampleSize: " + sampleSizeInBits + ", Channels: " + channels + "]";
 	}
 	
 }

@@ -66,6 +66,18 @@ public class MidiUtils {
 		return synth;
 	}
 	
+	public void setSynthesizer(Synthesizer synth) {
+		this.synth = synth;
+	}
+	
+	public MidiChannel[] getChannels() {
+		return channels;
+	}
+	
+	public void setChannels(MidiChannel[] channels) {
+		this.channels = channels;
+	}
+	
 	public void playSound(int channel, int time, int velocity, int tone) throws InterruptedException {
 		channels[channel].noteOn(tone, velocity);
         Thread.sleep(time);
@@ -111,5 +123,5 @@ public class MidiUtils {
 	public String getData() {
 		return "[Latency: " + synth.getLatency() + ", Info: " + synth.getDeviceInfo().getName() + "/" +  synth.getDeviceInfo().getDescription() + "/" +  synth.getDeviceInfo().getVersion()  + "/" +  synth.getDeviceInfo().getVendor() + "]";
 	}
-	
+
 }
