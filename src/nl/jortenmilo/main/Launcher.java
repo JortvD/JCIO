@@ -1,28 +1,41 @@
 package nl.jortenmilo.main;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.command.defaults.DefaultCommands;
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.console.Console.ConsoleUser;
-import nl.jortenmilo.event.EventManager;
+import nl.jortenmilo.console.ConsoleManager;
+import nl.jortenmilo.keyboard.KeyboardManager;
+import nl.jortenmilo.mouse.MouseManager;
 import nl.jortenmilo.plugin.PluginLoader;
 import nl.jortenmilo.plugin.PluginManager;
-import nl.jortenmilo.settings.SettingsLoader;
+import nl.jortenmilo.settings.SettingsManager;
 
 public class Launcher {
 	
 	private File[] files = {new File("plugins"), new File("settings.jcio"), new File("logs")};
 	private boolean running = true;
-	private CommandManager cm;
-	private PluginManager pm;
-	private EventManager em;
+	
+	private CommandManager command;
+	private PluginManager plugin;
+	private KeyboardManager keyboard;
+	private MouseManager mouse;
+	private ConsoleManager console;
+	private SettingsManager settings;
 	
 	public Launcher() {
-		Console.init();
+		preInit();
 		
 		//Initialize the program
 		Console.println("<- JCIO Loading->");
@@ -39,8 +52,16 @@ public class Launcher {
 	private void start() {
 		while(running) {
 			String[] args = CommandDecoder.getParameters(Console.readln());
-			cm.executeCommand(args);
+			command.executeCommand(args);
 		}
+	}
+	
+	private void preInit() {
+		Console.init();
+		keyboard = new KeyboardManager(Console.getKeyboardInput());
+		settings = new SettingsManager();
+		settings.load();
+		Console.setSettingsManager(settings);
 	}
 	
 	private void init() {
@@ -49,30 +70,26 @@ public class Launcher {
 		Console.println("Checking if all the files are installed.");
 		checkForInstall();
 		
-		Console.println("Loading all the settings.");
-		try {
-			SettingsLoader.load(files[1]);
-		} catch (IOException e) {
-			Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
-		}
-
-		pm = new PluginManager();
-		cm = new CommandManager();
-		pm.setCommandManager(cm);
-		em = new EventManager();
-		em.setKeyboardInput(Console.getKeyboardInput());
-		em.setMouseInput(Console.getMouseInput());
-		pm.setEventManager(em);
+		plugin = new PluginManager();
+		PluginLoader pl = new PluginLoader();
+		plugin.setPluginLoader(pl);
+		command = new CommandManager();
+		mouse = new MouseManager(Console.getMouseInput());
+		console = new ConsoleManager();
+		
+		plugin.setMouseManager(mouse);
+		plugin.setConsoleManager(console);
+		plugin.setKeyboardManager(keyboard);
+		plugin.setCommandManager(command);
 		
 		Console.println("Loading all the default commands.");
 		initCommands();
 		
 		Console.println("Loading all the plugins.");
-		PluginLoader pl = new PluginLoader();
-		pl.load(pm);
+		plugin.loadAll();
 		
 		Console.println("Enabling all the plugins.");
-		pm.enableAll();
+		plugin.enableAll();
 	}
 	
 	private void checkForInstall() {
@@ -88,12 +105,12 @@ public class Launcher {
 		
 		if(install) {
 			Console.println("There are " + missing + " file(s) missing. Installing them now.");
-			Installer i = new Installer(files);
+			Installer i = new Installer(files, keyboard, settings);
 			
 			try {
 				i.install();
-			} catch (IOException e) {
-				Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
+			} catch(Error | Exception e) {
+				new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 			}
 		} else {
 			Console.println("All files are installed.");
@@ -102,22 +119,90 @@ public class Launcher {
 
 	private void initCommands() {
 		DefaultCommands dc = new DefaultCommands();
-		dc.create(cm);
+		dc.create(command, keyboard);
 	}
 	
 	public void close() {
 		try {
-			SettingsLoader.save(files[1]);
-			pm.disableAll();
+			settings.save();
+			plugin.disableAll();
 			Console.close();
 			System.exit(0);
-		} catch (IOException e) {
-			Console.println(ConsoleUser.Error, "Unknown Error: " + e.getMessage());
+		} catch(Error | Exception e) {
+			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 		}
 	}
 
-	public static void main(String[] args) {
-		//new Launcher();
+	public static void main(String[] args) throws Exception {
+		final boolean DEBUG = true;
+		final String VERSION = "0.0.7";
+		
+		if(DEBUG) {
+			Thread t = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						BufferedReader br = new BufferedReader(new FileReader(new File("version.txt")));
+						int v = Integer.parseInt(br.readLine());
+						BufferedWriter bw = new BufferedWriter(new FileWriter(new File("version.txt")));
+						bw.write((v+1)+"");
+						br.close();
+						bw.close();
+						
+						File src = new File("src/");
+						File dst = new File("../Auto_Builds/Build " + VERSION + " - " + v);
+						if(!src.exists()){
+							System.out.println("Directory does not exist.");
+						} else {
+							try{
+								System.out.println("Starting the DEBUG backup: " + VERSION + " - " + v);
+								copyFolder(src, dst);
+							} catch(IOException e){
+								e.printStackTrace();
+							}
+						}
+
+						System.out.println("Done with the backup!");
+					} catch(Error | Exception e) {
+						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+					}
+				}
+				
+				public void copyFolder(File src, File dest) throws IOException {
+					if(src.isDirectory()){
+						if(!dest.exists()){
+							dest.mkdir();
+							System.out.println("Copied [DIR]: " + src.getCanonicalPath() + " > " + dest.getCanonicalPath());
+						}
+						String files[] = src.list();
+
+						for (String file : files) {
+							File srcFile = new File(src, file);
+							File destFile = new File(dest, file);
+							copyFolder(srcFile, destFile);
+						}
+					} else{
+						InputStream in = new FileInputStream(src);
+						OutputStream out = new FileOutputStream(dest);
+
+						byte[] buffer = new byte[1024];
+
+						int length;
+						while ((length = in.read(buffer)) > 0){
+							out.write(buffer, 0, length);
+						}
+
+						in.close();
+						out.close();
+						System.out.println("Copied [FIL]: " + src.getCanonicalPath() + " > " + dest.getCanonicalPath());
+					}
+				}
+			});
+			t.start();
+			
+		}
+		
+		new Launcher();
 	}
 
 }

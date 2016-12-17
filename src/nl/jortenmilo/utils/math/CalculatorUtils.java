@@ -2,7 +2,7 @@ package nl.jortenmilo.utils.math;
 
 public class CalculatorUtils {
 	
-	public static int calculateInt(String str) {
+	public int calculateInt(String str) {
 	    return new Object() {
 	        int pos = -1, ch;
 
@@ -79,7 +79,7 @@ public class CalculatorUtils {
 	    }.parse();
 	}
 	
-	public static double calculateDouble(String str) {
+	public double calculateDouble(String str) {
 	    return new Object() {
 	        int pos = -1, ch;
 

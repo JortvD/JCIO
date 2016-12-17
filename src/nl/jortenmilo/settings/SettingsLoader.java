@@ -11,7 +11,7 @@ import nl.jortenmilo.console.Console;
 
 public class SettingsLoader {
 
-	public static void load(File f) throws IOException {
+	public void load(File f, SettingsManager settings) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		String line = "";
 		int amount = 0;
@@ -32,24 +32,20 @@ public class SettingsLoader {
 				} 
 			}
 			
-			Settings.add(key);
-			Settings.set(key, value);
+			settings.create(key);
+			settings.set(key, value);
 			amount++;
 		}
 		
 		br.close();
 		Console.println("There were " + amount + " settings loaded.");
-		
-		//Auto-Saving System Settings
-		Settings.save("time");
-		Settings.save("log");
 	}
 	
-	public static void save(File f) throws IOException {
+	public void save(File f, SettingsManager settings) throws IOException {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(f));
 		
-		for(String key : Settings.getSettings().keySet()) {
-			String value = Settings.get(key);
+		for(String key : settings.getSettings().keySet()) {
+			String value = settings.get(key);
 			bw.write(key + ": " + value);
 			bw.newLine();
 		}

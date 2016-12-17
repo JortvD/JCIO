@@ -2,7 +2,6 @@ package nl.jortenmilo.error;
 
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
-import nl.jortenmilo.main.CloseManager;
 
 public class CommandUsedError extends Error {
 	
@@ -26,8 +25,7 @@ public class CommandUsedError extends Error {
 		for(StackTraceElement e : es2) {
 			Console.println(ConsoleUser.Error, " at: " + e.getClassName() + "." + e.getMethodName() + " (Line: " + e.getLineNumber() + " in " + e.getFileName() + ")");
 		}
-		
-		CloseManager.close();
+		Console.println(ConsoleUser.Error, "If you don't know what to do, please contact us at: goo.gl/1ROGMh.");
 	}
 	
 }

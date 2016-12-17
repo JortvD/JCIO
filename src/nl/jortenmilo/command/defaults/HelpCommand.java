@@ -31,7 +31,7 @@ public class HelpCommand implements CommandExecutor {
 				String text = c.getCommand();
 				int a = l - text.length();
 				
-				text = StringUtils.addChars(text, ' ', a);
+				text = new StringUtils().addChars(text, ' ', a);
 				
 				text += " - " + c.getDescription();
 				Console.println(text);

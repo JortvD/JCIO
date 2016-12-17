@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 
 public class SystemUtils {
 	
-	public static Platform getPlatform() {
+	public Platform getPlatform() {
 		Platform p = Platform.Unknown;
 		String operSys = System.getProperty("os.name").toLowerCase();
 		
@@ -21,7 +21,7 @@ public class SystemUtils {
 		return p;
 	}
 	
-	public static String getTime() {
+	public String getTime() {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
 		return sdf.format(System.currentTimeMillis());
 	}

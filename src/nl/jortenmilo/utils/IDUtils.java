@@ -6,9 +6,9 @@ import java.util.UUID;
 
 public class IDUtils {
 	
-	private static List<UUID> uuids = new ArrayList<UUID>();
+	private List<UUID> uuids = new ArrayList<UUID>();
 	
-	public static UUID getRandomUUID() {
+	public UUID getRandomUUID() {
 		UUID uuid = UUID.randomUUID();
 		if(uuids.contains(uuid)) {
 			return getRandomUUID();
@@ -17,11 +17,11 @@ public class IDUtils {
 		return uuid;
 	}
 	
-	public static String UUIDtoString(UUID uuid) {
+	public String UUIDtoString(UUID uuid) {
 		return uuid.toString();
 	}
 	
-	public static UUID StringtoUUID(String uuid) {
+	public UUID StringtoUUID(String uuid) {
 		return UUID.fromString(uuid);
 	}
 	

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="plugins/SettingsIO/src"/>
-	<classpathentry kind="src" path="source/src"/>
-	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="plugins/SettingsIO/SettingsIO.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

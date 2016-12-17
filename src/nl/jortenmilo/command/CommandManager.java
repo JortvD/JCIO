@@ -12,6 +12,7 @@ import nl.jortenmilo.error.InvalidParameterError;
 public class CommandManager {
 	
 	private List<Command> commands = new ArrayList<Command>();
+	private List<CommandEventListener> listeners = new ArrayList<CommandEventListener>();
 	
 	public void addCommand(Command c) {
 		if(c.getCommand()==null) {
@@ -61,6 +62,21 @@ public class CommandManager {
 		return commands;
 	}
 	
+	public void addListener(CommandEventListener listener) {
+		listeners.add(listener);
+	}
+	
+	public void executeCommand(Command cmd, String[] args) {
+		String[] a = new String[args.length+1];
+		
+		a[0] = cmd.getCommand();
+		
+		for(int i = 0; i < 0; i++){
+			a[i+1] = args[i];
+		}
+		executeCommand(a);
+	}
+	
 	public void executeCommand(String[] args) {
 		String command = args[0];
 		
@@ -72,7 +88,35 @@ public class CommandManager {
 					params[i] = args[i+1];
 				}
 				
-				c.getCommandExecutor().execute(command, c, params);
+				for(CommandEventListener listener : listeners) {
+					CommandPreExecuteEvent event = new CommandPreExecuteEvent();
+					event.setArguments(args);
+					event.setCommand(c);
+					
+					try {
+						listener.onPreExecute(event);
+					} catch(Error | Exception e) {
+						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+					}
+				}
+				
+				try {
+					c.getCommandExecutor().execute(command, c, params);
+				} catch(Error | Exception e) {
+					new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+				}
+				
+				for(CommandEventListener listener : listeners) {
+					CommandPostExecuteEvent event = new CommandPostExecuteEvent();
+					event.setArguments(args);
+					event.setCommand(c);
+					
+					try {
+						listener.onPostExecute(event);
+					} catch(Error | Exception e) {
+						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+					}
+				}
 				
 				return;
 			}
@@ -84,7 +128,35 @@ public class CommandManager {
 						params[i] = args[i+1];
 					}
 					
-					c.getCommandExecutor().execute(command, c, params);
+					for(CommandEventListener listener : listeners) {
+						CommandPreExecuteEvent event = new CommandPreExecuteEvent();
+						event.setArguments(args);
+						event.setCommand(c);
+						
+						try {
+							listener.onPreExecute(event);
+						} catch(Error | Exception e) {
+							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+						}
+					}
+					
+					try {
+						c.getCommandExecutor().execute(command, c, params);
+					} catch(Error | Exception e) {
+						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+					}
+					
+					for(CommandEventListener listener : listeners) {
+						CommandPostExecuteEvent event = new CommandPostExecuteEvent();
+						event.setArguments(args);
+						event.setCommand(c);
+						
+						try {
+							listener.onPostExecute(event);
+						} catch(Error | Exception e) {
+							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+						}
+					}
 					
 					return;
 				}
