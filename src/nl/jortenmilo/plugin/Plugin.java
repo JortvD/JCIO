@@ -9,7 +9,7 @@ import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
 import nl.jortenmilo.plugin.PluginManager.LoadedPlugin;
 import nl.jortenmilo.settings.SettingsManager;
-import nl.jortenmilo.utils.math.UtilsManager;
+import nl.jortenmilo.utils.UtilsManager;
 
 public abstract class Plugin {
 	
