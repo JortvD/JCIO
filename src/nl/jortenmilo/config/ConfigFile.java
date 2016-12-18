@@ -1,5 +1,18 @@
 package nl.jortenmilo.config;
 
-public class ConfigFile {
+import java.io.File;
 
+public class ConfigFile {
+	
+	private File file;
+	private List<ConfigObject> tesrt;
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
 }

@@ -25,10 +25,12 @@ public class Command {
 	
 	public void setCommand(String command) {
 		if(command == null) {
+			//Throw an error because the command is null.
 			new InvalidParameterError(command).print();
 		}
 		
 		if(command.equals("")) {
+			//Throw an error because the command is null.
 			new InvalidParameterError(command).print();
 		}
 		
@@ -53,13 +55,16 @@ public class Command {
 	
 	public void addAlias(String alias) {
 		if(alias == null) {
+			//Throw an error because the alias is null.
 			new InvalidParameterError(command).print();
 		}
 		
 		if(alias.equals("")) {
+			//Throw an error because the alias is null.
 			new InvalidParameterError(command).print();
 		}
 		
+		//Add the alias to the list of aliasses.
 		aliasses.add(alias);
 	}
 	

@@ -6,10 +6,12 @@ public class CommandDecoder {
 		String[] params = null;
 		int amount = 1;
 		
+		//Remove all spaces at the end of the sentence.
 		s = removeLastSpaces(s);
 		
 		byte[] bytes = s.getBytes();
 		
+		//Check how many parameters there are.
 		for(int i = 0; i < bytes.length; i++) {
 			if(bytes[i] == 32) {
 				amount++;
@@ -20,6 +22,7 @@ public class CommandDecoder {
 		String param = "";
 		int n = 0;
 		
+		//Add all parameters in a list of Strings.
 		for(int i = 0; i < bytes.length; i++) {
 			if(bytes[i] == 32) {
 				params[n] = param;
