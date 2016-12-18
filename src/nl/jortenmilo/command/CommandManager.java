@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import nl.jortenmilo.command.CommandEvent.CommandEventListener;
-import nl.jortenmilo.command.CommandPostExecuteEvent.CommandPostExecuteEventListener;
-import nl.jortenmilo.command.CommandPreExecuteEvent.CommandPreExecuteEventListener;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 import nl.jortenmilo.error.CommandUsedError;
@@ -96,12 +94,11 @@ public class CommandManager {
 				event.setCommand(c);
 				
 				for(CommandEventListener listener : listeners) {
-					if(listener instanceof CommandPreExecuteEventListener || listener.getClass().getInterfaces().length==0) {
-						try {
-							listener.onCommandPreExecute(event);
-						} catch(Error | Exception e) {
-							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
-						}
+					try {
+						listener.onCommandPreExecute(event);
+					} catch(Error | Exception e) {
+						if(e instanceof NoSuchMethodException) return;
+						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 					}
 				}
 				
@@ -116,12 +113,10 @@ public class CommandManager {
 				event2.setCommand(c);
 				
 				for(CommandEventListener listener : listeners) {
-					if(listener instanceof CommandPostExecuteEventListener) {
-						try {
-							listener.onCommandPostExecute(event2);
-						} catch(Error | Exception e) {
-							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
-						}
+					try {
+						listener.onCommandPostExecute(event2);
+					} catch(Error | Exception e) {
+						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 					}
 				}
 				
@@ -140,12 +135,10 @@ public class CommandManager {
 					event.setCommand(c);
 					
 					for(CommandEventListener listener : listeners) {
-						if(listener instanceof CommandPreExecuteEventListener) {
-							try {
-								listener.onCommandPreExecute(event);
-							} catch(Error | Exception e) {
-								new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
-							}
+						try {
+							listener.onCommandPreExecute(event);
+						} catch(Error | Exception e) {
+							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 						}
 					}
 					
@@ -160,12 +153,10 @@ public class CommandManager {
 					event2.setCommand(c);
 					
 					for(CommandEventListener listener : listeners) {
-						if(listener instanceof CommandPostExecuteEventListener) {
-							try {
-								listener.onCommandPostExecute(event2);
-							} catch(Error | Exception e) {
-								new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
-							}
+						try {
+							listener.onCommandPostExecute(event2);
+						} catch(Error | Exception e) {
+							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 						}
 					}
 					

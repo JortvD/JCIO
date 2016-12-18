@@ -3,6 +3,8 @@ package nl.jortenmilo.mouse;
 import java.awt.AWTException;
 import java.awt.Robot;
 
+import nl.jortenmilo.mouse.MouseEvent.MouseEventListener;
+
 public class MouseManager {
 	
 	private MouseInput mouse;

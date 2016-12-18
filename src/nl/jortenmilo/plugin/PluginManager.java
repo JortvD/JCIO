@@ -10,6 +10,7 @@ import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.ConsoleManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
+import nl.jortenmilo.plugin.PluginEvent.PluginEventListener;
 import nl.jortenmilo.settings.SettingsManager;
 import nl.jortenmilo.utils.UtilsManager;
 
@@ -58,6 +59,7 @@ public class PluginManager {
 		
 		PluginEnabledEvent event = new PluginEnabledEvent();
 		event.setPlugin(plugin);
+		
 		for(PluginEventListener listener : listeners) {
 			try {
 				listener.onPluginEnabled(event);
@@ -72,6 +74,7 @@ public class PluginManager {
 		
 		PluginDisabledEvent event = new PluginDisabledEvent();
 		event.setPlugin(plugin);
+		
 		for(PluginEventListener listener : listeners) {
 			try {
 				listener.onPluginDisabled(event);
@@ -92,6 +95,7 @@ public class PluginManager {
 		
 		PluginLoadedEvent event = new PluginLoadedEvent();
 		event.setPlugin(plugin);
+		
 		for(PluginEventListener listener : listeners) {
 			try {
 				listener.onPluginLoaded(event);
@@ -110,6 +114,7 @@ public class PluginManager {
 		
 		PluginUnloadedEvent event = new PluginUnloadedEvent();
 		event.setPlugin(plugin);
+		
 		for(PluginEventListener listener : listeners) {
 			try {
 				listener.onPluginUnloaded(event);

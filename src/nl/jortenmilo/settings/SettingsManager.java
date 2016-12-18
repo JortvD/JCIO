@@ -7,6 +7,7 @@ import java.util.List;
 
 import nl.jortenmilo.error.ExistingSettingError;
 import nl.jortenmilo.error.UnknownSettingError;
+import nl.jortenmilo.settings.SettingsEvent.SettingsEventListener;
 
 public class SettingsManager {
 	
@@ -33,6 +34,7 @@ public class SettingsManager {
 		SettingsChangedEvent event = new SettingsChangedEvent();
 		event.setKey(key);
 		event.setValue(value);
+		
 		for(SettingsEventListener listener : listeners) {
 			listener.onSettingsChanged(event);
 		}
@@ -49,6 +51,7 @@ public class SettingsManager {
 		SettingsCreatedEvent event = new SettingsCreatedEvent();
 		event.setKey(key);
 		event.setValue(settings.get(key));
+		
 		for(SettingsEventListener listener : listeners) {
 			listener.onSettingsCreated(event);
 		}
@@ -68,6 +71,7 @@ public class SettingsManager {
 		SettingsRemovedEvent event = new SettingsRemovedEvent();
 		event.setKey(key);
 		event.setValue(settings.get(key));
+		
 		for(SettingsEventListener listener : listeners) {
 			listener.onSettingsRemoved(event);
 		}
@@ -105,6 +109,7 @@ public class SettingsManager {
 		SettingsResetEvent event = new SettingsResetEvent();
 		event.setKey(null);
 		event.setValue(null);
+		
 		for(SettingsEventListener listener : listeners) {
 			listener.onSettingsReset(event);
 		}

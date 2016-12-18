@@ -29,13 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
-import nl.jortenmilo.console.ConsoleClosedEvent.ConsoleClosedEventListener;
 import nl.jortenmilo.console.ConsoleEvent.ConsoleEventListener;
-import nl.jortenmilo.console.ConsoleHiddenEvent.ConsoleHiddenEventListener;
-import nl.jortenmilo.console.ConsoleMovedEvent.ConsoleMovedEventListener;
-import nl.jortenmilo.console.ConsoleOpenedEvent.ConsoleOpenedEventListener;
-import nl.jortenmilo.console.ConsoleResizedEvent.ConsoleResizedEventListener;
-import nl.jortenmilo.console.ConsoleShownEvent.ConsoleShownEventListener;
 import nl.jortenmilo.keyboard.KeyboardInput;
 import nl.jortenmilo.main.CloseManager;
 import nl.jortenmilo.mouse.MouseInput;
@@ -110,12 +104,10 @@ public class Console {
 					event.setY(e.getComponent().getY());
 					
 					for(ConsoleEventListener wel : wels) {
-						if(wel instanceof ConsoleResizedEventListener) {
-							try {
-								wel.onConsoleResized(event);
-							} catch(Error | Exception e2) {
-								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-							}
+						try {
+							wel.onConsoleResized(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
 						}
 					}
 				}
@@ -128,12 +120,10 @@ public class Console {
 					event.setY(e.getComponent().getY());
 					
 					for(ConsoleEventListener wel : wels) {
-						if(wel instanceof ConsoleHiddenEventListener) {
-							try {
-								wel.onConsoleHidden(event);
-							} catch(Error | Exception e2) {
-								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-							}
+						try {
+							wel.onConsoleHidden(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
 						}
 					}
 				}
@@ -146,12 +136,10 @@ public class Console {
 					event.setY(e.getComponent().getY());
 					
 					for(ConsoleEventListener wel : wels) {
-						if(wel instanceof ConsoleMovedEventListener) {
-							try {
-								wel.onConsoleMoved(event);
-							} catch(Error | Exception e2) {
-								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-							}
+						try {
+							wel.onConsoleMoved(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
 						}
 					}
 				}
@@ -164,12 +152,10 @@ public class Console {
 					event.setY(e.getComponent().getY());
 					
 					for(ConsoleEventListener wel : wels) {
-						if(wel instanceof ConsoleShownEventListener) {
-							try {
-								wel.onConsoleShown(event);
-							} catch(Error | Exception e2) {
-								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-							}
+						try {
+							wel.onConsoleShown(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
 						}
 					}
 				}
@@ -188,12 +174,10 @@ public class Console {
 					event.setY(e.getComponent().getY());
 					
 					for(ConsoleEventListener wel : wels) {
-						if(wel instanceof ConsoleClosedEventListener) {
-							try {
-								wel.onConsoleClosed(event);
-							} catch(Error | Exception e2) {
-								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-							}
+						try {
+							wel.onConsoleClosed(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
 						}
 					}
 					
@@ -214,12 +198,10 @@ public class Console {
 					event.setY(e.getComponent().getY());
 					
 					for(ConsoleEventListener wel : wels) {
-						if(wel instanceof ConsoleOpenedEventListener) {
-							try {
-								wel.onConsoleOpened(event);
-							} catch(Error | Exception e2) {
-								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-							}
+						try {
+							wel.onConsoleOpened(event);
+						} catch(Error | Exception e2) {
+							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
 						}
 					}
 				}

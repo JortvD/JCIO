@@ -12,4 +12,9 @@ public class UtilsEvent {
 		this.name = name;
 	}
 	
+	public class UtilsEventListener {
+		public void onUtilsCreated(UtilsCreatedEvent event) {}
+		public void onUtilsCloned(UtilsClonedEvent event) {}
+	}
+	
 }

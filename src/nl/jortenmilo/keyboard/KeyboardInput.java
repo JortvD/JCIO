@@ -21,13 +21,13 @@ public class KeyboardInput implements KeyListener {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
+		KeyboardPressedEvent event = new KeyboardPressedEvent();
+		event.setKeyChar(e.getKeyChar());
+		event.setKeyCode(e.getKeyCode());
+		event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
+		event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
+		
 		for(KeyboardEventListener kel : kels) {
-			KeyboardPressedEvent event = new KeyboardPressedEvent();
-			event.setKeyChar(e.getKeyChar());
-			event.setKeyCode(e.getKeyCode());
-			event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
-			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
-			
 			try {
 				kel.onKeyboardPressed(event);
 			} catch(Error | Exception e2) {
@@ -40,13 +40,13 @@ public class KeyboardInput implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		KeyboardReleasedEvent event = new KeyboardReleasedEvent();
+		event.setKeyChar(e.getKeyChar());
+		event.setKeyCode(e.getKeyCode());
+		event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
+		event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
+		
 		for(KeyboardEventListener kel : kels) {
-			KeyboardReleasedEvent event = new KeyboardReleasedEvent();
-			event.setKeyChar(e.getKeyChar());
-			event.setKeyCode(e.getKeyCode());
-			event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
-			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
-			
 			try {
 				kel.onKeyboardReleased(event);
 			} catch(Error | Exception e2) {
@@ -59,13 +59,13 @@ public class KeyboardInput implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+		KeyboardTypedEvent event = new KeyboardTypedEvent();
+		event.setKeyChar(e.getKeyChar());
+		event.setKeyCode(e.getKeyCode());
+		event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
+		event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
+		
 		for(KeyboardEventListener kel : kels) {
-			KeyboardTypedEvent event = new KeyboardTypedEvent();
-			event.setKeyChar(e.getKeyChar());
-			event.setKeyCode(e.getKeyCode());
-			event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
-			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
-			
 			try {
 				kel.onKeyboardTyped(event);
 			} catch(Error | Exception e2) {
