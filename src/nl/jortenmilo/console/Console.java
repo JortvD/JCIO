@@ -29,6 +29,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
+import nl.jortenmilo.console.ConsoleClosedEvent.ConsoleClosedEventListener;
+import nl.jortenmilo.console.ConsoleEvent.ConsoleEventListener;
+import nl.jortenmilo.console.ConsoleHiddenEvent.ConsoleHiddenEventListener;
+import nl.jortenmilo.console.ConsoleMovedEvent.ConsoleMovedEventListener;
+import nl.jortenmilo.console.ConsoleOpenedEvent.ConsoleOpenedEventListener;
+import nl.jortenmilo.console.ConsoleResizedEvent.ConsoleResizedEventListener;
+import nl.jortenmilo.console.ConsoleShownEvent.ConsoleShownEventListener;
 import nl.jortenmilo.keyboard.KeyboardInput;
 import nl.jortenmilo.main.CloseManager;
 import nl.jortenmilo.mouse.MouseInput;
@@ -96,67 +103,73 @@ public class Console {
 					t.setBounds(0, 0, s.getWidth(), s.getHeight());
 					frame.repaint();
 					
+					ConsoleResizedEvent event = new ConsoleResizedEvent();
+					event.setWidth(e.getComponent().getWidth());
+					event.setHeight(e.getComponent().getHeight());
+					event.setX(e.getComponent().getX());
+					event.setY(e.getComponent().getY());
+					
 					for(ConsoleEventListener wel : wels) {
-						ConsoleResizedEvent event = new ConsoleResizedEvent();
-						event.setWidth(e.getComponent().getWidth());
-						event.setHeight(e.getComponent().getHeight());
-						event.setX(e.getComponent().getX());
-						event.setY(e.getComponent().getY());
-						
-						try {
-							wel.onResized(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						if(wel instanceof ConsoleResizedEventListener) {
+							try {
+								wel.onConsoleResized(event);
+							} catch(Error | Exception e2) {
+								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							}
 						}
 					}
 				}
 				@Override
 				public void componentHidden(ComponentEvent e) {
+					ConsoleHiddenEvent event = new ConsoleHiddenEvent();
+					event.setWidth(e.getComponent().getWidth());
+					event.setHeight(e.getComponent().getHeight());
+					event.setX(e.getComponent().getX());
+					event.setY(e.getComponent().getY());
+					
 					for(ConsoleEventListener wel : wels) {
-						ConsoleHiddenEvent event = new ConsoleHiddenEvent();
-						event.setWidth(e.getComponent().getWidth());
-						event.setHeight(e.getComponent().getHeight());
-						event.setX(e.getComponent().getX());
-						event.setY(e.getComponent().getY());
-						
-						try {
-							wel.onHidden(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						if(wel instanceof ConsoleHiddenEventListener) {
+							try {
+								wel.onConsoleHidden(event);
+							} catch(Error | Exception e2) {
+								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							}
 						}
 					}
 				}
 				@Override
 				public void componentMoved(ComponentEvent e) {
+					ConsoleMovedEvent event = new ConsoleMovedEvent();
+					event.setWidth(e.getComponent().getWidth());
+					event.setHeight(e.getComponent().getHeight());
+					event.setX(e.getComponent().getX());
+					event.setY(e.getComponent().getY());
+					
 					for(ConsoleEventListener wel : wels) {
-						ConsoleMovedEvent event = new ConsoleMovedEvent();
-						event.setWidth(e.getComponent().getWidth());
-						event.setHeight(e.getComponent().getHeight());
-						event.setX(e.getComponent().getX());
-						event.setY(e.getComponent().getY());
-						wel.onMoved(event);
-						
-						try {
-							wel.onMoved(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						if(wel instanceof ConsoleMovedEventListener) {
+							try {
+								wel.onConsoleMoved(event);
+							} catch(Error | Exception e2) {
+								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							}
 						}
 					}
 				}
 				@Override
 				public void componentShown(ComponentEvent e) {
+					ConsoleShownEvent event = new ConsoleShownEvent();
+					event.setWidth(e.getComponent().getWidth());
+					event.setHeight(e.getComponent().getHeight());
+					event.setX(e.getComponent().getX());
+					event.setY(e.getComponent().getY());
+					
 					for(ConsoleEventListener wel : wels) {
-						ConsoleShownEvent event = new ConsoleShownEvent();
-						event.setWidth(e.getComponent().getWidth());
-						event.setHeight(e.getComponent().getHeight());
-						event.setX(e.getComponent().getX());
-						event.setY(e.getComponent().getY());
-						wel.onShown(event);
-						
-						try {
-							wel.onShown(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						if(wel instanceof ConsoleShownEventListener) {
+							try {
+								wel.onConsoleShown(event);
+							} catch(Error | Exception e2) {
+								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							}
 						}
 					}
 				}
@@ -165,22 +178,22 @@ public class Console {
 				@Override
 				public void windowActivated(WindowEvent e) {}
 				@Override
-				public void windowClosed(WindowEvent e) {
-					
-				}
+				public void windowClosed(WindowEvent e) {}
 				@Override
 				public void windowClosing(WindowEvent e) {
+					ConsoleClosedEvent event = new ConsoleClosedEvent();
+					event.setWidth(e.getComponent().getWidth());
+					event.setHeight(e.getComponent().getHeight());
+					event.setX(e.getComponent().getX());
+					event.setY(e.getComponent().getY());
+					
 					for(ConsoleEventListener wel : wels) {
-						ConsoleClosedEvent event = new ConsoleClosedEvent();
-						event.setWidth(e.getComponent().getWidth());
-						event.setHeight(e.getComponent().getHeight());
-						event.setX(e.getComponent().getX());
-						event.setY(e.getComponent().getY());
-						
-						try {
-							wel.onClosed(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						if(wel instanceof ConsoleClosedEventListener) {
+							try {
+								wel.onConsoleClosed(event);
+							} catch(Error | Exception e2) {
+								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							}
 						}
 					}
 					
@@ -194,17 +207,19 @@ public class Console {
 				public void windowIconified(WindowEvent e) {}
 				@Override
 				public void windowOpened(WindowEvent e) {
+					ConsoleOpenedEvent event = new ConsoleOpenedEvent();
+					event.setWidth(e.getComponent().getWidth());
+					event.setHeight(e.getComponent().getHeight());
+					event.setX(e.getComponent().getX());
+					event.setY(e.getComponent().getY());
+					
 					for(ConsoleEventListener wel : wels) {
-						ConsoleOpenedEvent event = new ConsoleOpenedEvent();
-						event.setWidth(e.getComponent().getWidth());
-						event.setHeight(e.getComponent().getHeight());
-						event.setX(e.getComponent().getX());
-						event.setY(e.getComponent().getY());
-						
-						try {
-							wel.onOpened(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+						if(wel instanceof ConsoleOpenedEventListener) {
+							try {
+								wel.onConsoleOpened(event);
+							} catch(Error | Exception e2) {
+								new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							}
 						}
 					}
 				}
@@ -397,6 +412,25 @@ public class Console {
 	
 	public static void println(String user, String s) {
 		update();
+		
+		if(settings == null) {
+			String time = new SystemUtils().getTime();
+			
+			if(user.equals(ConsoleUser.System)) {
+				cps.println("[SYS " + time + "]: " + s);
+			}
+			else if(user.equals(ConsoleUser.User)) {
+				cps.println("[YOU " + time + "]: " + s);
+			}
+			else if(user.equals(ConsoleUser.Error)) {
+				cps.println("[ERR " + time + "]: " + s);
+			}
+			else if(user.equals(ConsoleUser.Empty)) {
+				cps.println("[" + time + "]: " + s);
+			}
+			return;
+		}
+		
 		if(!settings.contains("time")) {
 			String time = new SystemUtils().getTime();
 			

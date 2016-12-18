@@ -1,5 +1,5 @@
 /bin/
 /logs/
-.project
-.classpath
-setting.jcio
+*.project
+*.classpath
+*.jcio
