@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import nl.jortenmilo.command.CommandEvent.CommandEventListener;
+import nl.jortenmilo.command.CommandPostExecuteEvent.CommandPostExecuteEventListener;
+import nl.jortenmilo.command.CommandPreExecuteEvent.CommandPreExecuteEventListener;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 import nl.jortenmilo.error.CommandUsedError;
@@ -88,15 +91,17 @@ public class CommandManager {
 					params[i] = args[i+1];
 				}
 				
+				CommandPreExecuteEvent event = new CommandPreExecuteEvent();
+				event.setArguments(args);
+				event.setCommand(c);
+				
 				for(CommandEventListener listener : listeners) {
-					CommandPreExecuteEvent event = new CommandPreExecuteEvent();
-					event.setArguments(args);
-					event.setCommand(c);
-					
-					try {
-						listener.onPreExecute(event);
-					} catch(Error | Exception e) {
-						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+					if(listener instanceof CommandPreExecuteEventListener || listener.getClass().getInterfaces().length==0) {
+						try {
+							listener.onCommandPreExecute(event);
+						} catch(Error | Exception e) {
+							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+						}
 					}
 				}
 				
@@ -106,15 +111,17 @@ public class CommandManager {
 					new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 				}
 				
+				CommandPostExecuteEvent event2 = new CommandPostExecuteEvent();
+				event2.setArguments(args);
+				event2.setCommand(c);
+				
 				for(CommandEventListener listener : listeners) {
-					CommandPostExecuteEvent event = new CommandPostExecuteEvent();
-					event.setArguments(args);
-					event.setCommand(c);
-					
-					try {
-						listener.onPostExecute(event);
-					} catch(Error | Exception e) {
-						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+					if(listener instanceof CommandPostExecuteEventListener) {
+						try {
+							listener.onCommandPostExecute(event2);
+						} catch(Error | Exception e) {
+							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+						}
 					}
 				}
 				
@@ -128,15 +135,17 @@ public class CommandManager {
 						params[i] = args[i+1];
 					}
 					
+					CommandPreExecuteEvent event = new CommandPreExecuteEvent();
+					event.setArguments(args);
+					event.setCommand(c);
+					
 					for(CommandEventListener listener : listeners) {
-						CommandPreExecuteEvent event = new CommandPreExecuteEvent();
-						event.setArguments(args);
-						event.setCommand(c);
-						
-						try {
-							listener.onPreExecute(event);
-						} catch(Error | Exception e) {
-							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+						if(listener instanceof CommandPreExecuteEventListener) {
+							try {
+								listener.onCommandPreExecute(event);
+							} catch(Error | Exception e) {
+								new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+							}
 						}
 					}
 					
@@ -146,15 +155,17 @@ public class CommandManager {
 						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 					}
 					
+					CommandPostExecuteEvent event2 = new CommandPostExecuteEvent();
+					event2.setArguments(args);
+					event2.setCommand(c);
+					
 					for(CommandEventListener listener : listeners) {
-						CommandPostExecuteEvent event = new CommandPostExecuteEvent();
-						event.setArguments(args);
-						event.setCommand(c);
-						
-						try {
-							listener.onPostExecute(event);
-						} catch(Error | Exception e) {
-							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+						if(listener instanceof CommandPostExecuteEventListener) {
+							try {
+								listener.onCommandPostExecute(event2);
+							} catch(Error | Exception e) {
+								new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+							}
 						}
 					}
 					
@@ -162,6 +173,7 @@ public class CommandManager {
 				}
 			}
 		}
+		
 		Console.println(ConsoleUser.Error, "Unknown command. Try 'help' for a list of all the commands. " + Arrays.toString(args));
 	}
 	

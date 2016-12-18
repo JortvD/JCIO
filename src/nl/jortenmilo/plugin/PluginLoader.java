@@ -14,7 +14,6 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.MissingFileError;
 import nl.jortenmilo.error.SyntaxError;
 import nl.jortenmilo.plugin.PluginManager.LoadedPlugin;
@@ -26,14 +25,15 @@ public class PluginLoader {
 		File[] files = folder.listFiles();
 		
 		for(File f : files) {
-			load(f, pm);
+			if(f.getName().endsWith(".jar")) {
+				load(f, pm);
+			}
 		}
 	}
 	
 	@SuppressWarnings("resource")
 	public void load(File f, PluginManager pm) {
 		try {
-			Console.println("Loading: " + f.getName());
 			InputStream is = getInputStream(f, "plugin.jcio");
 			
 			if(is==null) {
@@ -96,7 +96,6 @@ public class PluginLoader {
 				
 				pm.addPlugin(lp);
 				lp.getPlugin().load();
-				Console.println("Loaded: " + f.getName());
 			}
 		} catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
@@ -112,8 +111,6 @@ public class PluginLoader {
 	}
 	
 	public void unload(LoadedPlugin plugin) {
-		Console.println("Unloading: " + plugin.getName());
-		
 		URLClassLoader cl = plugin.getClassLoader();
 		
 		try {
@@ -121,8 +118,6 @@ public class PluginLoader {
 		} catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 		}
-		
-		Console.println("Unloaded: " + plugin.getName());
 	}
 	
 	private InputStream getInputStream(File zip, String entry) throws IOException {

@@ -21,4 +21,10 @@ public class CommandEvent {
 		this.arguments = arguments;
 	}
 	
+	public interface CommandEventListener {
+		public void onCommandPreExecute(CommandPreExecuteEvent e);
+		public void onCommandPostExecute(CommandPostExecuteEvent e);
+	}
+
+	
 }

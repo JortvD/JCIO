@@ -39,4 +39,10 @@ public class KeyboardEvent{
 		this.modifiersText = modifiersText;
 	}
 	
+	public interface KeyboardEventListener {
+		public void onKeyboardPressed(KeyboardPressedEvent e);
+		public void onKeyboardReleased(KeyboardReleasedEvent e);
+		public void onKeyboardTyped(KeyboardTypedEvent e);
+	}
+	
 }

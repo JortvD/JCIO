@@ -3,6 +3,8 @@ package nl.jortenmilo.keyboard;
 import java.awt.AWTException;
 import java.awt.Robot;
 
+import nl.jortenmilo.keyboard.KeyboardEvent.KeyboardEventListener;
+
 public class KeyboardManager {
 	
 	private KeyboardInput input;

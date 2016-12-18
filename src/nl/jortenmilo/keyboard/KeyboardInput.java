@@ -9,6 +9,7 @@ import java.util.concurrent.CountDownLatch;
 
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.keyboard.KeyboardEvent.KeyboardEventListener;
 
 public class KeyboardInput implements KeyListener {
 	
@@ -28,7 +29,7 @@ public class KeyboardInput implements KeyListener {
 			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
 			
 			try {
-				kel.onPressed(event);
+				kel.onKeyboardPressed(event);
 			} catch(Error | Exception e2) {
 				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
 			}
@@ -47,7 +48,7 @@ public class KeyboardInput implements KeyListener {
 			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
 			
 			try {
-				kel.onReleased(event);
+				kel.onKeyboardReleased(event);
 			} catch(Error | Exception e2) {
 				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
 			}
@@ -66,7 +67,7 @@ public class KeyboardInput implements KeyListener {
 			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
 			
 			try {
-				kel.onTyped(event);
+				kel.onKeyboardTyped(event);
 			} catch(Error | Exception e2) {
 				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
 			}

@@ -39,4 +39,13 @@ public class ConsoleEvent {
 		this.y = y;
 	}
 	
+	public interface ConsoleEventListener {
+		public void onConsoleResized(ConsoleResizedEvent e);
+		public void onConsoleMoved(ConsoleMovedEvent e);
+		public void onConsoleHidden(ConsoleHiddenEvent e);
+		public void onConsoleShown(ConsoleShownEvent e);
+		public void onConsoleOpened(ConsoleOpenedEvent e);
+		public void onConsoleClosed(ConsoleClosedEvent e);
+	}
+	
 }

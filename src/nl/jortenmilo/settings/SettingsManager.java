@@ -55,10 +55,6 @@ public class SettingsManager {
 	}
 	
 	public boolean contains(String key) {
-		if(keys.contains(key)) {
-			new ExistingSettingError(key).print();
-		}
-		
 		return keys.contains(key);
 	}
 	

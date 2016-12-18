@@ -7,7 +7,6 @@ import java.util.List;
 
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.config.ConfigManager;
-import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
@@ -46,7 +45,6 @@ public class PluginManager {
 	}
 	
 	public void enable(LoadedPlugin plugin) {
-		Console.println("Enabling: " + plugin.getName());
 		plugin.getPlugin().setCommandManager(command);
 		plugin.getPlugin().setPluginManager(this);
 		plugin.getPlugin().setConsoleManager(console);
@@ -57,7 +55,6 @@ public class PluginManager {
 		plugin.getPlugin().setUtilsManager(utils);
 		plugin.getPlugin().setLoadedPlugin(plugin);
 		plugin.getPlugin().enable();
-		Console.println("Enabled: " + plugin.getName());
 		
 		PluginEnabledEvent event = new PluginEnabledEvent();
 		event.setPlugin(plugin);
@@ -71,9 +68,7 @@ public class PluginManager {
 	}
 	
 	public void disable(LoadedPlugin plugin) {
-		Console.println("Disabling: " + plugin.getName());
 		plugin.getPlugin().disable();
-		Console.println("Disabled: " + plugin.getName());
 		
 		PluginDisabledEvent event = new PluginDisabledEvent();
 		event.setPlugin(plugin);

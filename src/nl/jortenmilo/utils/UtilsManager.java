@@ -413,4 +413,8 @@ public class UtilsManager {
 		
 		return nu;
 	}
+	
+	public void addListener(UtilsEventListener listener) {
+		listeners.add(listener);
+	}
 }

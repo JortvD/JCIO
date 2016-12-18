@@ -1,0 +1,7 @@
+default_height: 800
+default_width: 1600
+log: true
+background: black
+default_title: JCIO
+time: true
+foreground: light_gray

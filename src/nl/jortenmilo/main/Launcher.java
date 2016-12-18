@@ -38,10 +38,7 @@ public class Launcher {
 		preInit();
 		
 		//Initialize the program
-		Console.println("<- JCIO Loading->");
 		init();
-		Console.clear();
-		
 		
 		//Start the program
 		Console.println("<- JCIO [Jortenmilo (c) 2016]->");
@@ -60,15 +57,13 @@ public class Launcher {
 		Console.init();
 		keyboard = new KeyboardManager(Console.getKeyboardInput());
 		settings = new SettingsManager();
-		settings.load();
 		Console.setSettingsManager(settings);
+		checkForInstall();
+		settings.load();
 	}
 	
 	private void init() {
 		CloseManager.setLauncher(this);
-		
-		Console.println("Checking if all the files are installed.");
-		checkForInstall();
 		
 		plugin = new PluginManager();
 		PluginLoader pl = new PluginLoader();
@@ -82,13 +77,10 @@ public class Launcher {
 		plugin.setKeyboardManager(keyboard);
 		plugin.setCommandManager(command);
 		
-		Console.println("Loading all the default commands.");
 		initCommands();
 		
-		Console.println("Loading all the plugins.");
 		plugin.loadAll();
 		
-		Console.println("Enabling all the plugins.");
 		plugin.enableAll();
 	}
 	
@@ -104,7 +96,7 @@ public class Launcher {
 		}
 		
 		if(install) {
-			Console.println("There are " + missing + " file(s) missing. Installing them now.");
+			System.out.println("There are " + missing + " file(s) missing. Installing them now.");
 			Installer i = new Installer(files, keyboard, settings);
 			
 			try {
@@ -112,8 +104,6 @@ public class Launcher {
 			} catch(Error | Exception e) {
 				new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 			}
-		} else {
-			Console.println("All files are installed.");
 		}
 	}
 
@@ -134,8 +124,8 @@ public class Launcher {
 	}
 
 	public static void main(String[] args) throws Exception {
-		final boolean DEBUG = true;
-		final String VERSION = "0.0.7";
+		final boolean DEBUG = false;
+		final String VERSION = "0.1.0_1";
 		
 		if(DEBUG) {
 			Thread t = new Thread(new Runnable() {

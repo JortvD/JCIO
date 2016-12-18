@@ -7,14 +7,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import nl.jortenmilo.console.Console;
-
 public class SettingsLoader {
 
 	public void load(File f, SettingsManager settings) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		String line = "";
-		int amount = 0;
 		
 		while((line=br.readLine())!=null) {
 			if(line.startsWith("#") || line.equals("")) {
@@ -34,11 +31,9 @@ public class SettingsLoader {
 			
 			settings.create(key);
 			settings.set(key, value);
-			amount++;
 		}
 		
 		br.close();
-		Console.println("There were " + amount + " settings loaded.");
 	}
 	
 	public void save(File f, SettingsManager settings) throws IOException {
