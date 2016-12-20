@@ -5,6 +5,10 @@ import nl.jortenmilo.console.Console.ConsoleUser;
 
 public class UnknownSettingError extends Error{
 	
+	/* This error is thrown when:
+	 * A setting is called that doesn't exist.
+	 */
+	
 	private String value;
 	
 	public UnknownSettingError(String value) {

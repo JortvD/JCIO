@@ -4,7 +4,11 @@ import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 
 public class UnknownError extends Error {
-
+	
+	/* This error is thrown when:
+	 * A error is thrown, but it isn't casted to a specific error.
+	 */
+	
 	private String value1;
 	
 	public UnknownError(String value1) {

@@ -5,6 +5,10 @@ import nl.jortenmilo.console.Console.ConsoleUser;
 
 public class SyntaxError extends Error {
 	
+	/* This error is thrown when:
+	 * There are unknown symbols in a String.
+	 */
+	
 	private String value1;
 	private String value2;
 	

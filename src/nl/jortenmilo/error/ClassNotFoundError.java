@@ -5,6 +5,10 @@ import nl.jortenmilo.console.Console.ConsoleUser;
 
 public class ClassNotFoundError extends Error {
 	
+	/* This error is thrown when:
+	 * A class has not been found that is called in a plugin.
+	 */
+	
 	private String value1;
 	private String value2;
 	

@@ -5,6 +5,10 @@ import nl.jortenmilo.console.Console.ConsoleUser;
 
 public class ExistingSettingError extends Error {
 	
+	/* This error is thrown when:
+	 * A settings is created that already exists.
+	 */
+	
 	private String value;
 	
 	public ExistingSettingError(String value) {

@@ -5,6 +5,10 @@ import nl.jortenmilo.console.Console.ConsoleUser;
 
 public class CommandUsedError extends Error {
 	
+	/* This error is thrown when:
+	 * A command is created with an command that already exists.
+	 */
+	
 	private String value;
 	
 	public CommandUsedError(String value) {

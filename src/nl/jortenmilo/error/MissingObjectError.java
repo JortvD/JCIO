@@ -3,23 +3,23 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 
-public class MissingFileError extends Error {
+public class MissingObjectError extends Error {
 	
 	/* This error is thrown when:
-	 * A file is missing from a plugin that is loaded in.
+	 * A object is missing from a class.
 	 */
 	
 	private String value1;
 	private String value2;
 	
-	public MissingFileError(String value1, String value2) {
+	public MissingObjectError(String value1, String value2) {
 		this.value1 = value1;
 		this.value2 = value2;
 	}
 	
 	@Override
 	public void print() {
-		Console.println(ConsoleUser.Error, "MissingFileError: The plugin '" + value1 + "' is missing the file '" + value2 + "'!");
+		Console.println(ConsoleUser.Error, "MissingObjectError: The class '" + value1 + "' is missing the object '" + value2 + "'!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();
 		StackTraceElement[] es2 = new StackTraceElement[es.length-2];
