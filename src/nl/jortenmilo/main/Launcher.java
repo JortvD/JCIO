@@ -14,6 +14,8 @@ import java.io.OutputStream;
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.command.defaults.DefaultCommands;
+import nl.jortenmilo.config.ConfigFile;
+import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
@@ -33,6 +35,7 @@ public class Launcher {
 	private MouseManager mouse;
 	private ConsoleManager console;
 	private SettingsManager settings;
+	private ConfigManager config;
 	
 	public Launcher() {
 		preInit();
@@ -71,11 +74,13 @@ public class Launcher {
 		command = new CommandManager();
 		mouse = new MouseManager(Console.getMouseInput());
 		console = new ConsoleManager();
+		config = new ConfigManager();
 		
 		plugin.setMouseManager(mouse);
 		plugin.setConsoleManager(console);
 		plugin.setKeyboardManager(keyboard);
 		plugin.setCommandManager(command);
+		plugin.setConfigManager(config);
 		
 		initCommands();
 		
