@@ -2,6 +2,8 @@ package nl.jortenmilo.config;
 
 import java.io.File;
 
+import nl.jortenmilo.error.MissingObjectError;
+
 public class ConfigManager {
 	
 	private ConfigLoader loader = new ConfigLoader();
@@ -19,7 +21,7 @@ public class ConfigManager {
 	
 	public void saveConfig(ConfigFile file) {
 		if(file.getFile() == null) {
-			
+			new MissingObjectError("ConfigFile", "file").print();
 		}
 		loader.save(file);
 	}

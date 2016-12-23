@@ -1,17 +1,23 @@
 package nl.jortenmilo.command;
 
+/**
+ * The CommandDecorder contains some methods to get the parameters from a String.
+ */
 public class CommandDecoder {
 	
+	/**
+	 * This method parses a String into a list of Strings. It sees a space as the beginning of a new String.
+	 * @param s The string you want to parse.
+	 * @return The outcome of the parse
+	 */
 	public static String[] getParameters(String s) {
 		String[] params = null;
 		int amount = 1;
 		
-		//Remove all spaces at the end of the sentence.
 		s = removeLastSpaces(s);
 		
 		byte[] bytes = s.getBytes();
 		
-		//Check how many parameters there are.
 		for(int i = 0; i < bytes.length; i++) {
 			if(bytes[i] == 32) {
 				amount++;
@@ -22,7 +28,6 @@ public class CommandDecoder {
 		String param = "";
 		int n = 0;
 		
-		//Add all parameters in a list of Strings.
 		for(int i = 0; i < bytes.length; i++) {
 			if(bytes[i] == 32) {
 				params[n] = param;
