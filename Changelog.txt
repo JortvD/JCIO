@@ -1,0 +1,75 @@
+Version 0.1.0_7a (-):
+- 
+
+Version 0.1.0_6c (23 dec. 2016 20:49 CET):
+- Worked on the settings plugin
+- The console now updates to the settings
+
+Version 0.1.0_6b (23 dec. 2016 18:45 CET):
+- The config system is now working
+
+Version 0.1.0_6a (23 dec. 2016 12:26 CET):
+- Working on Javadoc
+- Woring on config
+
+Version 0.1.0_3a (20 dec. 2016 16:27 CET):
+- Added information to the errors
+- Working on the config
+
+Version 0.1.0_1d (18 dec. 2016 22:08 CET):
+- Added some comments
+- Working on the config stuff
+
+Version 0.1.0_1c (18 dec. 2016 13:08 CET):
+- Redid all the listeners
+
+Version 0.1.0_1b (18 dec. 2016 12:33 CET):
+- Edited the .gitignore
+
+Version 0.1.0_1 (18 dec. 2016 12:30 CET):
+- Fixed lots of errors
+- Changed the .gitignore
+- Working on the events
+
+Version 0.1.0_0 (17 dec. 2016 21:55 CET):
+- Added lots of events
+- Reorganized the managers
+- Did some readme stuff
+- Fixed some error messages
+- Did filemanagement
+- Changed the .gitignore
+
+Version 0.0.7 (18 nov. 2016 18:57 CET):
+- Removed some warnings.
+- Added aliasses to commands.
+- Added classes for future projects
+
+Version 0.0.6 (18 nov. 2016 17:53 CET):
+- Fixed some bugs
+- Changed the system that writes to the console
+- Added a Calculator util
+- Added a Randomizer util
+- Removed some warnings
+
+Version 0.0.5 (17 nov. 2016 21:02 CET):
+- Fixed some bugs
+- Added event (Key events/Window events/Mouse events)
+- Changed the default commands managment
+- Added a save file for the plugin
+
+Version 0.0.4 (8 nov. 2016 17:27 CET):
+- Fixed a typing bug
+- Added a new plugin (SettingsIO)
+- Added some methods to the KeyboardInput class
+- The CommandDecoder will now remove spaces at the end of the String
+
+Version 0.0.3 (7 nov. 2016 21:09 CET):
+- Some changes to code layout
+- Redid the reading system (Not done yet!)
+- Added a keyboard input class
+
+Version 0.0.2 (7 nov. 2016 17:53 CET):
+- Changed to a custom CMD
+
+Version 0.0.1 (6 nov. 2016 08:49 CET):
+- Added all of the source code
