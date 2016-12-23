@@ -34,6 +34,7 @@ import nl.jortenmilo.keyboard.KeyboardInput;
 import nl.jortenmilo.main.CloseManager;
 import nl.jortenmilo.mouse.MouseInput;
 import nl.jortenmilo.settings.SettingsManager;
+import nl.jortenmilo.utils.ObjectUtils;
 import nl.jortenmilo.utils.SystemUtils;
 
 public class Console {
@@ -393,7 +394,6 @@ public class Console {
 	}
 	
 	public static void println(String user, String s) {
-		update();
 		
 		if(settings == null) {
 			String time = new SystemUtils().getTime();
@@ -464,7 +464,6 @@ public class Console {
 	}
 	
 	public static void println(String s) {
-		update();
 		if(!settings.contains("time")) {
 			cps.println("[SYS " + new SystemUtils().getTime() + "]: " + s);
 			return;
@@ -479,17 +478,14 @@ public class Console {
 	}
 	
 	public static void write(String s) {
-		update();
 		cps.print(s);
 	}
 	
 	public static void writeln(String s) {
-		update();
 		cps.println(s);
 	}
 	
 	public static String readln() {
-		update();
 		if(settings.get("time").equals("true")) {
 			cps.print("[YOU " + new SystemUtils().getTime() + "]: ");
 			return cis.waitUntilDone();
@@ -503,7 +499,6 @@ public class Console {
 	}
 	
 	public static String read() {
-		update();
 		return cis.waitUntilDone();
 	}
 	
@@ -519,7 +514,27 @@ public class Console {
 	}
 	
 	public static void update() {
-		
+		if(settings.contains("foreground")) {
+			Color fg = new ObjectUtils().StringToColor(settings.get("foreground"));
+			if(t.getForeground() != fg) t.setForeground(fg);
+		}
+		if(settings.contains("background")) {
+			Color bg = new ObjectUtils().StringToColor(settings.get("background"));
+			if(t.getBackground() != bg) t.setBackground(bg);
+		}
+		if(settings.contains("default_title")) {
+			String dt = settings.get("default_title");
+			dt = dt.replace("_", " ");
+			if(frame.getTitle() != dt) frame.setTitle(dt);
+		}
+		if(settings.contains("default_width")) {
+			int dw = new ObjectUtils().StringToInteger(settings.get("default_width"));
+			if(frame.getWidth() != dw) frame.setSize(dw, frame.getHeight());
+		}
+		if(settings.contains("default_height")) {
+			int dh = new ObjectUtils().StringToInteger(settings.get("default_height"));
+			if(frame.getHeight() != dh) frame.setSize(frame.getWidth(), dh);
+		}
 	}
 
 	public static void close() throws IOException {

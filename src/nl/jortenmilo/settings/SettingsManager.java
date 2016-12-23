@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.ExistingSettingError;
 import nl.jortenmilo.error.UnknownSettingError;
 import nl.jortenmilo.settings.SettingsEvent.SettingsEventListener;
@@ -38,6 +39,8 @@ public class SettingsManager {
 		for(SettingsEventListener listener : listeners) {
 			listener.onSettingsChanged(event);
 		}
+		
+		Console.update();
 	}
 	
 	public void create(String key) {
@@ -92,10 +95,10 @@ public class SettingsManager {
 		set("log", "true");
 		
 		create("foreground");
-		set("foreground", "light_gray");
+		set("foreground", "192_192_192");
 		
 		create("background");
-		set("background", "black");
+		set("background", "0_0_0");
 		
 		create("default_width");
 		set("default_width", "1600");

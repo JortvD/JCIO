@@ -14,7 +14,6 @@ import java.io.OutputStream;
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.command.defaults.DefaultCommands;
-import nl.jortenmilo.config.ConfigFile;
 import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleManager;
@@ -81,6 +80,7 @@ public class Launcher {
 		plugin.setKeyboardManager(keyboard);
 		plugin.setCommandManager(command);
 		plugin.setConfigManager(config);
+		plugin.setSettingsManager(settings);
 		
 		initCommands();
 		

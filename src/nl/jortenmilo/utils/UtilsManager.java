@@ -189,6 +189,17 @@ public class UtilsManager {
 		return new SoundUtils(f, m);
 	}
 	
+	public ObjectUtils createObjectUtils() {
+		UtilsCreatedEvent event = new UtilsCreatedEvent();
+		event.setName("ObjectUtils");
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCreated(event);
+		}
+		
+		return new ObjectUtils();
+	}
+	
 	public IDUtils cloneIDUtils(IDUtils u) {
 		IDUtils nu = new IDUtils();
 		nu.setUUDIs(u.getUUIDs());
@@ -406,6 +417,20 @@ public class UtilsManager {
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
 		event.setName("SoundUtils");
+		event.setData(u.getData());
+		
+		for(UtilsEventListener listener : listeners) {
+			listener.onUtilsCloned(event);
+		}
+		
+		return nu;
+	}
+	
+	public ObjectUtils cloneObjectUtils(ObjectUtils u) {
+		ObjectUtils nu = new ObjectUtils();
+		
+		UtilsClonedEvent event = new UtilsClonedEvent();
+		event.setName("MixerUtils");
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
