@@ -1,5 +1,17 @@
 package nl.jortenmilo.settings;
 
-public class SettingsSavedEvent {
+import java.io.File;
+
+public class SettingsSavedEvent extends SettingsEvent {
+	
+	private File file;
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
 
 }

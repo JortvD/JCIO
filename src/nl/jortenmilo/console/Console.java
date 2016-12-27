@@ -511,6 +511,20 @@ public class Console {
 
 	public static void clear() {
 		t.setText("");
+		
+		ConsoleClearedEvent event = new ConsoleClearedEvent();
+		event.setHeight(frame.getHeight());
+		event.setWidth(frame.getWidth());
+		event.setX(frame.getX());
+		event.setY(frame.getY());
+		
+		for(ConsoleEventListener wel : wels) {
+			try {
+				wel.onConsoleCleared(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+			}
+		}
 	}
 	
 	public static void update() {

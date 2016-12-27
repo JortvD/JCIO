@@ -1,7 +1,7 @@
 default_height: 800
 default_width: 1600
 log: true
-background: 0_0_0
+background: 0_255_0
 default_title: JCIO_-_Dev
 time: true
-foreground: 192_192_192
+foreground: 0_100_0

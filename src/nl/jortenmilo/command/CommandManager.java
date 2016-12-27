@@ -60,6 +60,32 @@ public class CommandManager {
 		} else {
 			//Add the command to the list.
 			commands.add(c);
+			
+			CommandAddedEvent event = new CommandAddedEvent();
+			event.setCommand(c);
+			
+			for(CommandEventListener listener : listeners) {
+				try {
+					listener.onCommandAdded(event);
+				} catch(Error | Exception e2) {
+					new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				}
+			}
+		}
+	}
+	
+	public void removeCommand(Command c) {
+		commands.remove(c);
+		
+		CommandRemovedEvent event = new CommandRemovedEvent();
+		event.setCommand(c);
+		
+		for(CommandEventListener listener : listeners) {
+			try {
+				listener.onCommandRemoved(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+			}
 		}
 	}
 	
@@ -109,7 +135,6 @@ public class CommandManager {
 					try {
 						listener.onCommandPreExecute(event);
 					} catch(Error | Exception e) {
-						if(e instanceof NoSuchMethodException) return;
 						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 					}
 				}

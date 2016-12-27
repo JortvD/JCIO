@@ -18,8 +18,12 @@ public class ConfigManager {
 		ConfigCreatedEvent event = new ConfigCreatedEvent();
 		event.setConfig(config);
 		
-		for(ConfigEventListener listener : listeners ) {
-			listener.onConfigCreated(event);
+		for(ConfigEventListener listener : listeners) {
+			try {
+				listener.onConfigCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+			}
 		}
 		
 		return config;
@@ -34,8 +38,12 @@ public class ConfigManager {
 		event.setConfig(config);
 		event.setFile(file);
 		
-		for(ConfigEventListener listener : listeners ) {
-			listener.onConfigLoaded(event);
+		for(ConfigEventListener listener : listeners) {
+			try {
+				listener.onConfigLoaded(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+			}
 		}
 		
 		return config;
@@ -50,8 +58,12 @@ public class ConfigManager {
 		event.setConfig(file);
 		event.setFile(file.getFile());
 		
-		for(ConfigEventListener listener : listeners ) {
-			listener.onConfigSaved(event);
+		for(ConfigEventListener listener : listeners) {
+			try {
+				listener.onConfigSaved(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+			}
 		}
 		
 		loader.save(file);
@@ -59,6 +71,10 @@ public class ConfigManager {
 	
 	public void addListener(ConfigEventListener listener) {
 		listeners.add(listener);
+	}
+	
+	public List<ConfigEventListener> getListeners() {
+		return listeners;
 	}
 	
 }

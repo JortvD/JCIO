@@ -37,7 +37,11 @@ public class SettingsManager {
 		event.setValue(value);
 		
 		for(SettingsEventListener listener : listeners) {
-			listener.onSettingsChanged(event);
+			try {
+				listener.onSettingsChanged(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+			}
 		}
 		
 		Console.update();
@@ -56,7 +60,11 @@ public class SettingsManager {
 		event.setValue(settings.get(key));
 		
 		for(SettingsEventListener listener : listeners) {
-			listener.onSettingsCreated(event);
+			try {
+				listener.onSettingsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+			}
 		}
 	}
 	
@@ -76,7 +84,11 @@ public class SettingsManager {
 		event.setValue(settings.get(key));
 		
 		for(SettingsEventListener listener : listeners) {
-			listener.onSettingsRemoved(event);
+			try {
+				listener.onSettingsRemoved(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+			}
 		}
 	}
 	
@@ -110,11 +122,13 @@ public class SettingsManager {
 		set("default_title", "JCIO");
 		
 		SettingsResetEvent event = new SettingsResetEvent();
-		event.setKey(null);
-		event.setValue(null);
 		
 		for(SettingsEventListener listener : listeners) {
-			listener.onSettingsReset(event);
+			try {
+				listener.onSettingsReset(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+			}
 		}
 	}
 	
@@ -125,6 +139,17 @@ public class SettingsManager {
 	public void save() {
 		try {
 			loader.save(new File("settings.jcio"), this);
+			
+			SettingsSavedEvent event = new SettingsSavedEvent();
+			
+			for(SettingsEventListener listener : listeners) {
+				try {
+					listener.onSettingsSaved(event);
+				} catch(Error | Exception e2) {
+					new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				}
+			}
+			
 		} catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 		}
@@ -133,6 +158,17 @@ public class SettingsManager {
 	public void load() {
 		try {
 			loader.load(new File("settings.jcio"), this);
+			
+			SettingsLoadedEvent event = new SettingsLoadedEvent();
+			
+			for(SettingsEventListener listener : listeners) {
+				try {
+					listener.onSettingsLoaded(event);
+				} catch(Error | Exception e2) {
+					new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				}
+			}
+			
 		} catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
 		}

@@ -1,5 +1,5 @@
 package nl.jortenmilo.command;
 
-public class CommandAddedEvent {
+public class CommandAddedEvent extends CommandEvent {
 
 }

@@ -1,5 +1,5 @@
 package nl.jortenmilo.command;
 
-public class CommandRemovedEvent {
+public class CommandRemovedEvent extends CommandEvent {
 
 }

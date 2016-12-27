@@ -8,6 +8,7 @@ import java.util.List;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.ConsoleManager;
+import nl.jortenmilo.error.ErrorManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
 import nl.jortenmilo.plugin.PluginEvent.PluginEventListener;
@@ -26,6 +27,7 @@ public class PluginManager {
 	private ConfigManager config;
 	private SettingsManager settings;
 	private UtilsManager utils;
+	private ErrorManager error;
 	
 	protected void addPlugin(LoadedPlugin plugin) {
 		plugins.add(plugin);
@@ -54,6 +56,7 @@ public class PluginManager {
 		plugin.getPlugin().setMouseManager(mouse);
 		plugin.getPlugin().setSettingsManager(settings);
 		plugin.getPlugin().setUtilsManager(utils);
+		plugin.getPlugin().setErrorManager(error);
 		plugin.getPlugin().setLoadedPlugin(plugin);
 		plugin.getPlugin().enable();
 		
@@ -172,6 +175,14 @@ public class PluginManager {
 
 	public void setPluginLoader(PluginLoader loader) {
 		this.loader = loader;
+	}
+
+	public ErrorManager getErrorManager() {
+		return error;
+	}
+
+	public void setErrorManager(ErrorManager error) {
+		this.error = error;
 	}
 
 	public class LoadedPlugin {

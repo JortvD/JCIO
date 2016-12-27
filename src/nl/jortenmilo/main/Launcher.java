@@ -17,11 +17,13 @@ import nl.jortenmilo.command.defaults.DefaultCommands;
 import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleManager;
+import nl.jortenmilo.error.ErrorManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
 import nl.jortenmilo.plugin.PluginLoader;
 import nl.jortenmilo.plugin.PluginManager;
 import nl.jortenmilo.settings.SettingsManager;
+import nl.jortenmilo.utils.UtilsManager;
 
 public class Launcher {
 	
@@ -35,6 +37,8 @@ public class Launcher {
 	private ConsoleManager console;
 	private SettingsManager settings;
 	private ConfigManager config;
+	private ErrorManager error;
+	private UtilsManager utils;
 	
 	public Launcher() {
 		preInit();
@@ -74,6 +78,8 @@ public class Launcher {
 		mouse = new MouseManager(Console.getMouseInput());
 		console = new ConsoleManager();
 		config = new ConfigManager();
+		error = new ErrorManager();
+		utils = new UtilsManager();
 		
 		plugin.setMouseManager(mouse);
 		plugin.setConsoleManager(console);
@@ -81,6 +87,8 @@ public class Launcher {
 		plugin.setCommandManager(command);
 		plugin.setConfigManager(config);
 		plugin.setSettingsManager(settings);
+		plugin.setErrorManager(error);
+		plugin.setUtilsManager(utils);
 		
 		initCommands();
 		

@@ -1,5 +1,5 @@
 package nl.jortenmilo.console;
 
-public class ConsoleClearedEvent {
+public class ConsoleClearedEvent extends ConsoleEvent {
 
 }
