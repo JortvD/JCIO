@@ -2,15 +2,20 @@ package nl.jortenmilo.config;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import nl.jortenmilo.command.CommandEvent.CommandEventListener;
 import nl.jortenmilo.config.ConfigEvent.ConfigEventListener;
+import nl.jortenmilo.error.InvalidParameterError;
 import nl.jortenmilo.error.MissingObjectError;
+import nl.jortenmilo.plugin.Plugin;
 
 public class ConfigManager {
 	
 	private ConfigLoader loader = new ConfigLoader();
 	private List<ConfigEventListener> listeners = new ArrayList<ConfigEventListener>();
+	private HashMap<Plugin, List<ConfigEventListener>> plisteners = new HashMap<Plugin, List<ConfigEventListener>>();
 	
 	public ConfigFile createConfig() {
 		ConfigFile config = new ConfigFile();
@@ -69,12 +74,33 @@ public class ConfigManager {
 		loader.save(file);
 	}
 	
-	public void addListener(ConfigEventListener listener) {
+	public void addListener(ConfigEventListener listener, Plugin plugin) {
+		if(plugin == null) {
+			//Throw an error when the plugin is null.
+			new InvalidParameterError(plugin + "").print();
+			return;
+		}
+		
 		listeners.add(listener);
+		
+		List<ConfigEventListener> l = plisteners.get(plugin);
+		l.add(listener);
+		plisteners.put(plugin, l);
 	}
 	
 	public List<ConfigEventListener> getListeners() {
 		return listeners;
+	}
+	
+	public void removeListener(ConfigEventListener listener) {
+		listeners.remove(listener);
+	}
+	
+	public void removeListeners(Plugin plugin) {
+		for(ConfigEventListener listener : plisteners.get(plugin)) {
+			listeners.remove(listener);
+		}
+		plisteners.remove(plugin);
 	}
 	
 }

@@ -2,6 +2,7 @@ package nl.jortenmilo.command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import nl.jortenmilo.command.CommandEvent.CommandEventListener;
@@ -9,11 +10,81 @@ import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 import nl.jortenmilo.error.CommandUsedError;
 import nl.jortenmilo.error.InvalidParameterError;
+import nl.jortenmilo.plugin.Plugin;
 
 public class CommandManager {
 	
 	private List<Command> commands = new ArrayList<Command>();
+	private HashMap<Plugin, List<Command>> pcommands = new HashMap<Plugin, List<Command>>();
 	private List<CommandEventListener> listeners = new ArrayList<CommandEventListener>();
+	private HashMap<Plugin, List<CommandEventListener>> plisteners = new HashMap<Plugin, List<CommandEventListener>>();
+	
+	public void addCommand(Command c, Plugin plugin) {
+		if(c.getCommand() == null) {
+			//Throw an error when the command is null.
+			new InvalidParameterError(c.getCommand()).print();
+		}
+		if(plugin == null) {
+			//Throw an error when the plugin is null.
+			new InvalidParameterError(plugin + "").print();
+		}
+		
+		boolean exists = false;
+		
+		//Go through all the commands.
+		for(Command command : commands) {
+			//Check if this command is equal to the command.
+			if(command.getCommand().equals(c.getCommand())) {
+				exists = true;
+			}
+			
+			//Check if these aliasses is equal to the command.
+			for(String s : command.getAliasses()) {
+				if(s.equalsIgnoreCase(c.getCommand())) {
+					exists = true;
+				}
+			}
+			
+			//Check if this command is equal to the aliasses.
+			for(String s : c.getAliasses()) {
+				if(s.equalsIgnoreCase(command.getCommand())) {
+					c.getAliasses().remove(s);
+				}
+			}
+			
+			//Check if these aliasses are equal to the aliasses.
+			for(String s1 : c.getAliasses()) {
+				for(String s2 : command.getAliasses()) {
+					if(s1.equalsIgnoreCase(s2)) {
+						c.getAliasses().remove(s1);
+					}
+				}
+			}
+		}
+		
+		if(exists) {
+			//Throw an error when the command/aliasses already exist.
+			new CommandUsedError(c.getCommand()).print();
+		} else {
+			//Add the command to the list.
+			commands.add(c);
+			
+			List<Command> l = pcommands.get(plugin);
+			l.add(c);
+			pcommands.put(plugin, l);
+			
+			CommandAddedEvent event = new CommandAddedEvent();
+			event.setCommand(c);
+			
+			for(CommandEventListener listener : listeners) {
+				try {
+					listener.onCommandAdded(event);
+				} catch(Error | Exception e2) {
+					new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				}
+			}
+		}
+	}
 	
 	public void addCommand(Command c) {
 		if(c.getCommand() == null) {
@@ -77,6 +148,11 @@ public class CommandManager {
 	public void removeCommand(Command c) {
 		commands.remove(c);
 		
+		Plugin plugin = getPlugin(c);
+		List<Command> l = pcommands.get(plugin);
+		l.remove(c);
+		pcommands.put(plugin, l);
+		
 		CommandRemovedEvent event = new CommandRemovedEvent();
 		event.setCommand(c);
 		
@@ -89,12 +165,78 @@ public class CommandManager {
 		}
 	}
 	
+	public void removeCommands(Plugin plugin) {
+		for(Command command : pcommands.get(plugin)) {
+			commands.remove(command);
+			
+			CommandRemovedEvent event = new CommandRemovedEvent();
+			event.setCommand(command);
+			
+			for(CommandEventListener listener : listeners) {
+				try {
+					listener.onCommandRemoved(event);
+				} catch(Error | Exception e2) {
+					new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				}
+			}
+		}
+		pcommands.remove(plugin);
+	}
+	
 	public List<Command> getCommands() {
 		return commands;
 	}
 	
-	public void addListener(CommandEventListener listener) {
+	public void addListener(CommandEventListener listener, Plugin plugin) {
+		if(plugin == null) {
+			//Throw an error when the plugin is null.
+			new InvalidParameterError(plugin + "").print();
+			return;
+		}
+		
 		listeners.add(listener);
+		
+		List<CommandEventListener> l = plisteners.get(plugin);
+		l.add(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	public List<CommandEventListener> getListeners() {
+		return listeners;
+	}
+	
+	public void removeListener(CommandEventListener listener) {
+		listeners.remove(listener);
+		
+		Plugin plugin = getPlugin(listener);
+		List<CommandEventListener> l = plisteners.get(plugin);
+		l.remove(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	public void removeListeners(Plugin plugin) {
+		for(CommandEventListener listener : plisteners.get(plugin)) {
+			listeners.remove(listener);
+		}
+		plisteners.remove(plugin);
+	}
+	
+	private Plugin getPlugin(Command command) {
+		for(Plugin plugin : pcommands.keySet()) {
+			for(Command c : pcommands.get(plugin)) {
+				if(c==command) return plugin;
+			}
+		}
+		return null;
+	}
+	
+	private Plugin getPlugin(CommandEventListener listener) {
+		for(Plugin plugin : pcommands.keySet()) {
+			for(Command c : pcommands.get(plugin)) {
+				if(c==listener) return plugin;
+			}
+		}
+		return null;
 	}
 	
 	public void executeCommand(Command cmd, String[] args) {
