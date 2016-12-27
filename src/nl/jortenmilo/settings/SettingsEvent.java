@@ -26,6 +26,8 @@ public class SettingsEvent {
 		public void onSettingsChanged(SettingsChangedEvent event) {}
 		public void onSettingsReset(SettingsResetEvent event) {}
 		public void onSettingsRemoved(SettingsRemovedEvent event) {}
+		public void onSettingsSaved(SettingsSavedEvent event) {}
+		public void onSettingsLoaded(SettingsLoadedEvent event) {}
 	}
 	
 }

@@ -57,6 +57,10 @@ public class CommandEvent {
 		 * @see CommandPostExecuteEvent
 		 */
 		public void onCommandPostExecute(CommandPostExecuteEvent e);
+		
+		public void onCommandRemoved(CommandRemovedEvent e);
+		
+		public void onCommandAdded(CommandAddedEvent e);
 	}
 
 }

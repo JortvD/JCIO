@@ -1,5 +1,6 @@
-Version 0.1.0_7a (-):
-- 
+Version 0.1.0_6d (23 dec. 2016 21:36 CET):
+- Added the newest build file
+- Added a changelog
 
 Version 0.1.0_6c (23 dec. 2016 20:49 CET):
 - Worked on the settings plugin

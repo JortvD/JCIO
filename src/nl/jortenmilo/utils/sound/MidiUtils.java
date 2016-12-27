@@ -17,6 +17,7 @@ public class MidiUtils {
 	public MidiUtils() {
 		try {
 			synth = MidiSystem.getSynthesizer();
+			
 			synth.open();
 			channels = synth.getChannels();
 		} catch(Error | Exception e) {

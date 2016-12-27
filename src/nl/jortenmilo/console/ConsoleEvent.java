@@ -46,6 +46,7 @@ public class ConsoleEvent {
 		public void onConsoleShown(ConsoleShownEvent e);
 		public void onConsoleOpened(ConsoleOpenedEvent e);
 		public void onConsoleClosed(ConsoleClosedEvent e);
+		public void onConsoleCleared(ConsoleClearedEvent e);
 	}
 	
 }
