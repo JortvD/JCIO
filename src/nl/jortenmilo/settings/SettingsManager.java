@@ -7,7 +7,9 @@ import java.util.List;
 
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.ExistingSettingError;
+import nl.jortenmilo.error.InvalidParameterError;
 import nl.jortenmilo.error.UnknownSettingError;
+import nl.jortenmilo.plugin.Plugin;
 import nl.jortenmilo.settings.SettingsEvent.SettingsEventListener;
 
 public class SettingsManager {
@@ -15,6 +17,7 @@ public class SettingsManager {
 	private HashMap<String, String> settings = new HashMap<String, String>();
 	private List<String> keys = new ArrayList<String>();
 	private List<SettingsEventListener> listeners = new ArrayList<SettingsEventListener>();
+	private HashMap<Plugin, List<SettingsEventListener>> plisteners = new HashMap<Plugin, List<SettingsEventListener>>();
 	private SettingsLoader loader = new SettingsLoader();
 	
 	public String get(String key) {
@@ -132,8 +135,47 @@ public class SettingsManager {
 		}
 	}
 	
-	public void addListener(SettingsEventListener listener) {
+	public void addListener(SettingsEventListener listener, Plugin plugin) {
+		if(plugin == null) {
+			//Throw an error when the plugin is null.
+			new InvalidParameterError(plugin + "").print();
+			return;
+		}
+		
 		listeners.add(listener);
+		
+		List<SettingsEventListener> l = plisteners.get(plugin);
+		l.add(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	public List<SettingsEventListener> getListeners() {
+		return listeners;
+	}
+	
+	public void removeListener(SettingsEventListener listener) {
+		listeners.remove(listener);
+		
+		Plugin plugin = getPlugin(listener);
+		List<SettingsEventListener> l = plisteners.get(plugin);
+		l.remove(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	public void removeListeners(Plugin plugin) {
+		for(SettingsEventListener listener : plisteners.get(plugin)) {
+			listeners.remove(listener);
+		}
+		plisteners.remove(plugin);
+	}
+	
+	private Plugin getPlugin(SettingsEventListener listener) {
+		for(Plugin plugin : plisteners.keySet()) {
+			for(SettingsEventListener c : plisteners.get(plugin)) {
+				if(c==listener) return plugin;
+			}
+		}
+		return null;
 	}
 	
 	public void save() {

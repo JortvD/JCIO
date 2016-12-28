@@ -3,12 +3,14 @@ package nl.jortenmilo.plugin;
 import java.io.File;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.ConsoleManager;
 import nl.jortenmilo.error.ErrorManager;
+import nl.jortenmilo.error.InvalidParameterError;
 import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
 import nl.jortenmilo.plugin.PluginEvent.PluginEventListener;
@@ -19,6 +21,7 @@ public class PluginManager {
 	
 	private List<LoadedPlugin> plugins = new ArrayList<LoadedPlugin>();
 	private List<PluginEventListener> listeners = new ArrayList<PluginEventListener>();
+	private HashMap<Plugin, List<PluginEventListener>> plisteners = new HashMap<Plugin, List<PluginEventListener>>();
 	private PluginLoader loader;
 	private CommandManager command;
 	private ConsoleManager console;
@@ -74,6 +77,24 @@ public class PluginManager {
 	
 	public void disable(LoadedPlugin plugin) {
 		plugin.getPlugin().disable();
+		plugin.getPlugin().setCommandManager(null);
+		plugin.getPlugin().setPluginManager(null);
+		plugin.getPlugin().setConsoleManager(null);
+		plugin.getPlugin().setKeyboardManager(null);
+		plugin.getPlugin().setConfigManager(null);
+		plugin.getPlugin().setMouseManager(null);
+		plugin.getPlugin().setSettingsManager(null);
+		plugin.getPlugin().setUtilsManager(null);
+		plugin.getPlugin().setErrorManager(null);
+		plugin.getPlugin().setLoadedPlugin(null);
+		command.removeCommands(plugin.getPlugin());
+		command.removeListeners(plugin.getPlugin());
+		this.removeListeners(plugin.getPlugin());
+		console.removeListeners(plugin.getPlugin());
+		keyboard.removeListeners(plugin.getPlugin());
+		config.removeListeners(plugin.getPlugin());
+		mouse.removeListeners(plugin.getPlugin());
+		error.removeListeners(plugin.getPlugin());
 		
 		PluginDisabledEvent event = new PluginDisabledEvent();
 		event.setPlugin(plugin);
@@ -169,8 +190,47 @@ public class PluginManager {
 		this.utils = utils;
 	}
 	
-	public void addListener(PluginEventListener listener) {
+	public void addListener(PluginEventListener listener, Plugin plugin) {
+		if(plugin == null) {
+			//Throw an error when the plugin is null.
+			new InvalidParameterError(plugin + "").print();
+			return;
+		}
+		
 		listeners.add(listener);
+		
+		List<PluginEventListener> l = plisteners.get(plugin);
+		l.add(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	public List<PluginEventListener> getListeners() {
+		return listeners;
+	}
+	
+	public void removeListener(PluginEventListener listener) {
+		listeners.remove(listener);
+		
+		Plugin plugin = getPlugin(listener);
+		List<PluginEventListener> l = plisteners.get(plugin);
+		l.remove(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	public void removeListeners(Plugin plugin) {
+		for(PluginEventListener listener : plisteners.get(plugin)) {
+			listeners.remove(listener);
+		}
+		plisteners.remove(plugin);
+	}
+	
+	private Plugin getPlugin(PluginEventListener listener) {
+		for(Plugin plugin : plisteners.keySet()) {
+			for(PluginEventListener c : plisteners.get(plugin)) {
+				if(c==listener) return plugin;
+			}
+		}
+		return null;
 	}
 
 	public void setPluginLoader(PluginLoader loader) {

@@ -9,11 +9,14 @@ import java.util.concurrent.CountDownLatch;
 
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.error.InvalidParameterError;
 import nl.jortenmilo.keyboard.KeyboardEvent.KeyboardEventListener;
+import nl.jortenmilo.plugin.Plugin;
 
 public class KeyboardInput implements KeyListener {
 	
-	private List<KeyboardEventListener> kels = new ArrayList<KeyboardEventListener>();
+	private List<KeyboardEventListener> listeners = new ArrayList<KeyboardEventListener>();
+	private HashMap<Plugin, List<KeyboardEventListener>> plisteners = new HashMap<Plugin, List<KeyboardEventListener>>();
 	private HashMap<Integer, Boolean> pressed = new HashMap<Integer, Boolean>();
 	private List<Integer> wait = new ArrayList<Integer>();
 	private CountDownLatch latch;
@@ -27,7 +30,7 @@ public class KeyboardInput implements KeyListener {
 		event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
 		event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
 		
-		for(KeyboardEventListener kel : kels) {
+		for(KeyboardEventListener kel : listeners) {
 			try {
 				kel.onKeyboardPressed(event);
 			} catch(Error | Exception e2) {
@@ -46,7 +49,7 @@ public class KeyboardInput implements KeyListener {
 		event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
 		event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
 		
-		for(KeyboardEventListener kel : kels) {
+		for(KeyboardEventListener kel : listeners) {
 			try {
 				kel.onKeyboardReleased(event);
 			} catch(Error | Exception e2) {
@@ -65,7 +68,7 @@ public class KeyboardInput implements KeyListener {
 		event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
 		event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
 		
-		for(KeyboardEventListener kel : kels) {
+		for(KeyboardEventListener kel : listeners) {
 			try {
 				kel.onKeyboardTyped(event);
 			} catch(Error | Exception e2) {
@@ -103,8 +106,47 @@ public class KeyboardInput implements KeyListener {
 		t.start();
 	}
 	
-	protected void addEventListener(KeyboardEventListener e) {
-		kels.add(e);
+	protected void addListener(KeyboardEventListener listener, Plugin plugin) {
+		if(plugin == null) {
+			//Throw an error when the plugin is null.
+			new InvalidParameterError(plugin + "").print();
+			return;
+		}
+		
+		listeners.add(listener);
+		
+		List<KeyboardEventListener> l = plisteners.get(plugin);
+		l.add(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	protected List<KeyboardEventListener> getListeners() {
+		return listeners;
+	}
+	
+	protected void removeListener(KeyboardEventListener listener) {
+		listeners.remove(listener);
+		
+		Plugin plugin = getPlugin(listener);
+		List<KeyboardEventListener> l = plisteners.get(plugin);
+		l.remove(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	protected void removeListeners(Plugin plugin) {
+		for(KeyboardEventListener listener : plisteners.get(plugin)) {
+			listeners.remove(listener);
+		}
+		plisteners.remove(plugin);
+	}
+	
+	private Plugin getPlugin(KeyboardEventListener listener) {
+		for(Plugin plugin : plisteners.keySet()) {
+			for(KeyboardEventListener c : plisteners.get(plugin)) {
+				if(c==listener) return plugin;
+			}
+		}
+		return null;
 	}
 	
 	protected int waitUntilTyped() {
@@ -169,11 +211,5 @@ public class KeyboardInput implements KeyListener {
 		typed = -1;
 		return typed2;
 	}
-
-	public List<KeyboardEventListener> getListeners() {
-		return kels;
-	}
-	
-	
 
 }

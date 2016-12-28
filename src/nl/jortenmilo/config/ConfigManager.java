@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import nl.jortenmilo.command.CommandEvent.CommandEventListener;
 import nl.jortenmilo.config.ConfigEvent.ConfigEventListener;
 import nl.jortenmilo.error.InvalidParameterError;
 import nl.jortenmilo.error.MissingObjectError;
@@ -94,6 +93,11 @@ public class ConfigManager {
 	
 	public void removeListener(ConfigEventListener listener) {
 		listeners.remove(listener);
+		
+		Plugin plugin = getPlugin(listener);
+		List<ConfigEventListener> l = plisteners.get(plugin);
+		l.remove(listener);
+		plisteners.put(plugin, l);
 	}
 	
 	public void removeListeners(Plugin plugin) {
@@ -101,6 +105,15 @@ public class ConfigManager {
 			listeners.remove(listener);
 		}
 		plisteners.remove(plugin);
+	}
+	
+	private Plugin getPlugin(ConfigEventListener listener) {
+		for(Plugin plugin : plisteners.keySet()) {
+			for(ConfigEventListener c : plisteners.get(plugin)) {
+				if(c==listener) return plugin;
+			}
+		}
+		return null;
 	}
 	
 }

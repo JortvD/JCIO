@@ -21,6 +21,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -30,9 +31,11 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
 import nl.jortenmilo.console.ConsoleEvent.ConsoleEventListener;
+import nl.jortenmilo.error.InvalidParameterError;
 import nl.jortenmilo.keyboard.KeyboardInput;
 import nl.jortenmilo.main.CloseManager;
 import nl.jortenmilo.mouse.MouseInput;
+import nl.jortenmilo.plugin.Plugin;
 import nl.jortenmilo.settings.SettingsManager;
 import nl.jortenmilo.utils.ObjectUtils;
 import nl.jortenmilo.utils.SystemUtils;
@@ -47,7 +50,8 @@ public class Console {
 	private static BufferedWriter bw;
 	private static KeyboardInput ki;
 	private static MouseInput mi;
-	private static List<ConsoleEventListener> wels = new ArrayList<ConsoleEventListener>();
+	private static List<ConsoleEventListener> listeners = new ArrayList<ConsoleEventListener>();
+	private static HashMap<Plugin, List<ConsoleEventListener>> plisteners = new HashMap<Plugin, List<ConsoleEventListener>>();
 	private static SettingsManager settings;
 	
 	public static PrintStream dout; //DEBUG
@@ -104,7 +108,7 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : wels) {
+					for(ConsoleEventListener wel : listeners) {
 						try {
 							wel.onConsoleResized(event);
 						} catch(Error | Exception e2) {
@@ -120,7 +124,7 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : wels) {
+					for(ConsoleEventListener wel : listeners) {
 						try {
 							wel.onConsoleHidden(event);
 						} catch(Error | Exception e2) {
@@ -136,7 +140,7 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : wels) {
+					for(ConsoleEventListener wel : listeners) {
 						try {
 							wel.onConsoleMoved(event);
 						} catch(Error | Exception e2) {
@@ -152,7 +156,7 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : wels) {
+					for(ConsoleEventListener wel : listeners) {
 						try {
 							wel.onConsoleShown(event);
 						} catch(Error | Exception e2) {
@@ -174,7 +178,7 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : wels) {
+					for(ConsoleEventListener wel : listeners) {
 						try {
 							wel.onConsoleClosed(event);
 						} catch(Error | Exception e2) {
@@ -198,7 +202,7 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : wels) {
+					for(ConsoleEventListener wel : listeners) {
 						try {
 							wel.onConsoleOpened(event);
 						} catch(Error | Exception e2) {
@@ -518,7 +522,7 @@ public class Console {
 		event.setX(frame.getX());
 		event.setY(frame.getY());
 		
-		for(ConsoleEventListener wel : wels) {
+		for(ConsoleEventListener wel : listeners) {
 			try {
 				wel.onConsoleCleared(event);
 			} catch(Error | Exception e2) {
@@ -562,9 +566,48 @@ public class Console {
 	public static MouseInput getMouseInput() {
 		return mi;
 	}
-
-	protected static void addEventListener(ConsoleEventListener e) {
-		wels.add(e);
+	
+	protected static void addListener(ConsoleEventListener listener, Plugin plugin) {
+		if(plugin == null) {
+			//Throw an error when the plugin is null.
+			new InvalidParameterError(plugin + "").print();
+			return;
+		}
+		
+		listeners.add(listener);
+		
+		List<ConsoleEventListener> l = plisteners.get(plugin);
+		l.add(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	protected static List<ConsoleEventListener> getListeners() {
+		return listeners;
+	}
+	
+	protected static void removeListener(ConsoleEventListener listener) {
+		listeners.remove(listener);
+		
+		Plugin plugin = getPlugin(listener);
+		List<ConsoleEventListener> l = plisteners.get(plugin);
+		l.remove(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	protected static void removeListeners(Plugin plugin) {
+		for(ConsoleEventListener listener : plisteners.get(plugin)) {
+			listeners.remove(listener);
+		}
+		plisteners.remove(plugin);
+	}
+	
+	private static Plugin getPlugin(ConsoleEventListener listener) {
+		for(Plugin plugin : plisteners.keySet()) {
+			for(ConsoleEventListener c : plisteners.get(plugin)) {
+				if(c==listener) return plugin;
+			}
+		}
+		return null;
 	}
 
 	public static void setSettingsManager(SettingsManager settings) {

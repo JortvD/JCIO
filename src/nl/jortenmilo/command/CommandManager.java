@@ -231,8 +231,8 @@ public class CommandManager {
 	}
 	
 	private Plugin getPlugin(CommandEventListener listener) {
-		for(Plugin plugin : pcommands.keySet()) {
-			for(Command c : pcommands.get(plugin)) {
+		for(Plugin plugin : plisteners.keySet()) {
+			for(CommandEventListener c : plisteners.get(plugin)) {
 				if(c==listener) return plugin;
 			}
 		}

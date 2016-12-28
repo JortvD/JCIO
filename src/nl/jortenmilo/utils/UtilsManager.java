@@ -2,10 +2,13 @@ package nl.jortenmilo.utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.sound.sampled.Mixer;
 
+import nl.jortenmilo.error.InvalidParameterError;
+import nl.jortenmilo.plugin.Plugin;
 import nl.jortenmilo.utils.UtilsEvent.UtilsEventListener;
 import nl.jortenmilo.utils.math.CalculatorUtils;
 import nl.jortenmilo.utils.math.MathUtils;
@@ -23,6 +26,7 @@ import nl.jortenmilo.utils.sound.SoundUtils;
 public class UtilsManager {
 	
 	private List<UtilsEventListener> listeners = new ArrayList<UtilsEventListener>();
+	private HashMap<Plugin, List<UtilsEventListener>> plisteners = new HashMap<Plugin, List<UtilsEventListener>>();
 	
 	public IDUtils createIDUtils() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
@@ -440,7 +444,46 @@ public class UtilsManager {
 		return nu;
 	}
 	
-	public void addListener(UtilsEventListener listener) {
+	public void addListener(UtilsEventListener listener, Plugin plugin) {
+		if(plugin == null) {
+			//Throw an error when the plugin is null.
+			new InvalidParameterError(plugin + "").print();
+			return;
+		}
+		
 		listeners.add(listener);
+		
+		List<UtilsEventListener> l = plisteners.get(plugin);
+		l.add(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	public List<UtilsEventListener> getListeners() {
+		return listeners;
+	}
+	
+	public void removeListener(UtilsEventListener listener) {
+		listeners.remove(listener);
+		
+		Plugin plugin = getPlugin(listener);
+		List<UtilsEventListener> l = plisteners.get(plugin);
+		l.remove(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	public void removeListeners(Plugin plugin) {
+		for(UtilsEventListener listener : plisteners.get(plugin)) {
+			listeners.remove(listener);
+		}
+		plisteners.remove(plugin);
+	}
+	
+	private Plugin getPlugin(UtilsEventListener listener) {
+		for(Plugin plugin : plisteners.keySet()) {
+			for(UtilsEventListener c : plisteners.get(plugin)) {
+				if(c==listener) return plugin;
+			}
+		}
+		return null;
 	}
 }

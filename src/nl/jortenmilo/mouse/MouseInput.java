@@ -6,13 +6,17 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import nl.jortenmilo.error.InvalidParameterError;
 import nl.jortenmilo.mouse.MouseEvent.MouseEventListener;
+import nl.jortenmilo.plugin.Plugin;
 
 public class MouseInput implements MouseListener, MouseWheelListener, MouseMotionListener {
 	
-	private List<MouseEventListener> mels = new ArrayList<MouseEventListener>();
+	private List<MouseEventListener> listeners = new ArrayList<MouseEventListener>();
+	private HashMap<Plugin, List<MouseEventListener>> plisteners = new HashMap<Plugin, List<MouseEventListener>>();
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {}
@@ -26,7 +30,7 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 		event.setXOnScreen(e.getXOnScreen());
 		event.setYOnScreen(e.getYOnScreen());
 		
-		for(MouseEventListener mel : mels) {
+		for(MouseEventListener mel : listeners) {
 			try {
 				mel.onMoved(event);
 			} catch(Error | Exception e2) {
@@ -48,7 +52,7 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 		event.setScrollAmount(e.getScrollAmount());
 		event.setScrollType(e.getScrollType());
 		
-		for(MouseEventListener mel : mels) {
+		for(MouseEventListener mel : listeners) {
 			try {
 				mel.onWheelMoved(event);
 			} catch(Error | Exception e2) {
@@ -67,7 +71,7 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 		event.setYOnScreen(e.getYOnScreen());
 		event.setButton(e.getButton());
 		
-		for(MouseEventListener mel : mels) {
+		for(MouseEventListener mel : listeners) {
 			try {
 				mel.onClicked(event);
 			} catch(Error | Exception e2) {
@@ -92,7 +96,7 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 		event.setYOnScreen(e.getYOnScreen());
 		event.setButton(e.getButton());
 		
-		for(MouseEventListener mel : mels) {
+		for(MouseEventListener mel : listeners) {
 			try {
 				mel.onPressed(event);
 			} catch(Error | Exception e2) {
@@ -111,7 +115,7 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 		event.setYOnScreen(e.getYOnScreen());
 		event.setButton(e.getButton());
 		
-		for(MouseEventListener mel : mels) {
+		for(MouseEventListener mel : listeners) {
 			try {
 				mel.onReleased(event);
 			} catch(Error | Exception e2) {
@@ -120,8 +124,47 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 		}
 	}
 	
-	protected void addEventListener(MouseEventListener e) {
-		mels.add(e);
+	protected void addListener(MouseEventListener listener, Plugin plugin) {
+		if(plugin == null) {
+			//Throw an error when the plugin is null.
+			new InvalidParameterError(plugin + "").print();
+			return;
+		}
+		
+		listeners.add(listener);
+		
+		List<MouseEventListener> l = plisteners.get(plugin);
+		l.add(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	protected List<MouseEventListener> getListeners() {
+		return listeners;
+	}
+	
+	protected void removeListener(MouseEventListener listener) {
+		listeners.remove(listener);
+		
+		Plugin plugin = getPlugin(listener);
+		List<MouseEventListener> l = plisteners.get(plugin);
+		l.remove(listener);
+		plisteners.put(plugin, l);
+	}
+	
+	protected void removeListeners(Plugin plugin) {
+		for(MouseEventListener listener : plisteners.get(plugin)) {
+			listeners.remove(listener);
+		}
+		plisteners.remove(plugin);
+	}
+	
+	private Plugin getPlugin(MouseEventListener listener) {
+		for(Plugin plugin : plisteners.keySet()) {
+			for(MouseEventListener c : plisteners.get(plugin)) {
+				if(c==listener) return plugin;
+			}
+		}
+		return null;
 	}
 
 }
