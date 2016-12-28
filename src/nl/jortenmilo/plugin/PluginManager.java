@@ -61,7 +61,12 @@ public class PluginManager {
 		plugin.getPlugin().setUtilsManager(utils);
 		plugin.getPlugin().setErrorManager(error);
 		plugin.getPlugin().setLoadedPlugin(plugin);
-		plugin.getPlugin().enable();
+		
+		try {
+			plugin.getPlugin().enable();
+		} catch(Error | Exception e2) {
+			new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+		}
 		
 		PluginEnabledEvent event = new PluginEnabledEvent();
 		event.setPlugin(plugin);
@@ -70,13 +75,18 @@ public class PluginManager {
 			try {
 				listener.onPluginEnabled(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
 	
 	public void disable(LoadedPlugin plugin) {
-		plugin.getPlugin().disable();
+		try {
+			plugin.getPlugin().disable();
+		} catch(Error | Exception e2) {
+			new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+		}
+		
 		plugin.getPlugin().setCommandManager(null);
 		plugin.getPlugin().setPluginManager(null);
 		plugin.getPlugin().setConsoleManager(null);
@@ -95,6 +105,8 @@ public class PluginManager {
 		config.removeListeners(plugin.getPlugin());
 		mouse.removeListeners(plugin.getPlugin());
 		error.removeListeners(plugin.getPlugin());
+		utils.removeListeners(plugin.getPlugin());
+		settings.removeListeners(plugin.getPlugin());
 		
 		PluginDisabledEvent event = new PluginDisabledEvent();
 		event.setPlugin(plugin);
@@ -103,7 +115,7 @@ public class PluginManager {
 			try {
 				listener.onPluginDisabled(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -124,7 +136,7 @@ public class PluginManager {
 			try {
 				listener.onPluginLoaded(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -143,7 +155,7 @@ public class PluginManager {
 			try {
 				listener.onPluginUnloaded(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -199,6 +211,8 @@ public class PluginManager {
 		
 		listeners.add(listener);
 		
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<PluginEventListener>());
+		
 		List<PluginEventListener> l = plisteners.get(plugin);
 		l.add(listener);
 		plisteners.put(plugin, l);
@@ -212,6 +226,10 @@ public class PluginManager {
 		listeners.remove(listener);
 		
 		Plugin plugin = getPlugin(listener);
+		
+		if(plugin == null) return;
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<PluginEventListener>());
+		
 		List<PluginEventListener> l = plisteners.get(plugin);
 		l.remove(listener);
 		plisteners.put(plugin, l);
@@ -246,6 +264,7 @@ public class PluginManager {
 	}
 
 	public class LoadedPlugin {
+		
 		private Plugin plugin;
 		private String name;
 		private String path;

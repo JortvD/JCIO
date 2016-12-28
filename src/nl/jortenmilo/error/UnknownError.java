@@ -11,14 +11,17 @@ public class UnknownError extends Error {
 	 */
 	
 	private String value1;
+	private String value2;
 	
-	public UnknownError(String value1) {
+	public UnknownError(String value1, String value2) {
 		this.value1 = value1;
+		this.value2 = value2;
 	}
 	
 	@Override
 	public void print() {
 		Console.println(ConsoleUser.Error, value1);
+		Console.println(" (" + value2 + ")");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();
 		StackTraceElement[] es2 = new StackTraceElement[es.length-2];
@@ -40,7 +43,7 @@ public class UnknownError extends Error {
 			try {
 				listener.onErrorThrown(event);
 			} catch(java.lang.Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}

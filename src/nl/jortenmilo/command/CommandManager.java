@@ -69,9 +69,12 @@ public class CommandManager {
 			//Add the command to the list.
 			commands.add(c);
 			
+			if(pcommands.get(plugin)==null) pcommands.put(plugin, new ArrayList<Command>());
 			List<Command> l = pcommands.get(plugin);
 			l.add(c);
 			pcommands.put(plugin, l);
+			
+			
 			
 			CommandAddedEvent event = new CommandAddedEvent();
 			event.setCommand(c);
@@ -80,7 +83,7 @@ public class CommandManager {
 				try {
 					listener.onCommandAdded(event);
 				} catch(Error | Exception e2) {
-					new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+					new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 				}
 			}
 		}
@@ -139,7 +142,7 @@ public class CommandManager {
 				try {
 					listener.onCommandAdded(event);
 				} catch(Error | Exception e2) {
-					new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+					new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 				}
 			}
 		}
@@ -160,7 +163,7 @@ public class CommandManager {
 			try {
 				listener.onCommandRemoved(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -176,7 +179,7 @@ public class CommandManager {
 				try {
 					listener.onCommandRemoved(event);
 				} catch(Error | Exception e2) {
-					new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+					new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 				}
 			}
 		}
@@ -196,6 +199,8 @@ public class CommandManager {
 		
 		listeners.add(listener);
 		
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<CommandEventListener>());
+		
 		List<CommandEventListener> l = plisteners.get(plugin);
 		l.add(listener);
 		plisteners.put(plugin, l);
@@ -209,6 +214,10 @@ public class CommandManager {
 		listeners.remove(listener);
 		
 		Plugin plugin = getPlugin(listener);
+		
+		if(plugin == null) return;
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<CommandEventListener>());
+		
 		List<CommandEventListener> l = plisteners.get(plugin);
 		l.remove(listener);
 		plisteners.put(plugin, l);
@@ -224,7 +233,7 @@ public class CommandManager {
 	private Plugin getPlugin(Command command) {
 		for(Plugin plugin : pcommands.keySet()) {
 			for(Command c : pcommands.get(plugin)) {
-				if(c==command) return plugin;
+				if(c == command) return plugin;
 			}
 		}
 		return null;
@@ -233,7 +242,7 @@ public class CommandManager {
 	private Plugin getPlugin(CommandEventListener listener) {
 		for(Plugin plugin : plisteners.keySet()) {
 			for(CommandEventListener c : plisteners.get(plugin)) {
-				if(c==listener) return plugin;
+				if(c == listener) return plugin;
 			}
 		}
 		return null;
@@ -277,7 +286,7 @@ public class CommandManager {
 					try {
 						listener.onCommandPreExecute(event);
 					} catch(Error | Exception e) {
-						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+						new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 					}
 				}
 				
@@ -285,7 +294,7 @@ public class CommandManager {
 				try {
 					c.getCommandExecutor().execute(command, c, params);
 				} catch(Error | Exception e) {
-					new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 				}
 				
 				CommandPostExecuteEvent event2 = new CommandPostExecuteEvent();
@@ -296,7 +305,7 @@ public class CommandManager {
 					try {
 						listener.onCommandPostExecute(event2);
 					} catch(Error | Exception e) {
-						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+						new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 					}
 				}
 				
@@ -318,14 +327,14 @@ public class CommandManager {
 						try {
 							listener.onCommandPreExecute(event);
 						} catch(Error | Exception e) {
-							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+							new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 						}
 					}
 					
 					try {
 						c.getCommandExecutor().execute(command, c, params);
 					} catch(Error | Exception e) {
-						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+						new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 					}
 					
 					CommandPostExecuteEvent event2 = new CommandPostExecuteEvent();
@@ -336,7 +345,7 @@ public class CommandManager {
 						try {
 							listener.onCommandPostExecute(event2);
 						} catch(Error | Exception e) {
-							new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+							new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 						}
 					}
 					

@@ -45,52 +45,52 @@ public class MixerUtils {
 	
 	public static class AudioMixer {
 		
-		private Mixer  m;
-		private String n;
-		private String v;
-		private String e;
-		private String d;
+		private Mixer  mixer;
+		private String name;
+		private String vendor;
+		private String version;
+		private String desc;
 		
 		private AudioMixer() {}
 		
 		public Mixer getMixer() {
-			return m;
+			return mixer;
 		}
 
-		public void setMixer(Mixer m) {
-			this.m = m;
+		public void setMixer(Mixer mixer) {
+			this.mixer = mixer;
 		}
 
 		public String getName() {
-			return n;
+			return name;
 		}
 
-		public void setName(String n) {
-			this.n = n;
+		public void setName(String name) {
+			this.name = name;
 		}
 
 		public String getVendor() {
-			return v;
+			return vendor;
 		}
 
-		public void setVendor(String v) {
-			this.v = v;
+		public void setVendor(String vendor) {
+			this.vendor = vendor;
 		}
 
 		public String getVersion() {
-			return e;
+			return version;
 		}
 
-		public void setVersion(String e) {
-			this.e = e;
+		public void setVersion(String version) {
+			this.version = version;
 		}
 
 		public String getDesciption() {
-			return d;
+			return desc;
 		}
 
-		public void setDescription(String d) {
-			this.d = d;
+		public void setDescription(String desc) {
+			this.desc = desc;
 		}
 		
 	}

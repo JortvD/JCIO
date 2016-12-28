@@ -33,7 +33,11 @@ public class UtilsManager {
 		event.setName("IDUtils");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new IDUtils();
@@ -44,7 +48,11 @@ public class UtilsManager {
 		event.setName("StringUtils");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new StringUtils();
@@ -55,7 +63,11 @@ public class UtilsManager {
 		event.setName("SystemUtils");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new SystemUtils();
@@ -66,7 +78,11 @@ public class UtilsManager {
 		event.setName("MathUtils");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new MathUtils();
@@ -77,7 +93,11 @@ public class UtilsManager {
 		event.setName("CalculatorUtils");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new CalculatorUtils();
@@ -88,7 +108,11 @@ public class UtilsManager {
 		event.setName("RandomUtils");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new RandomUtils();
@@ -99,7 +123,11 @@ public class UtilsManager {
 		event.setName("NetBot");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new NetBot();
@@ -110,7 +138,11 @@ public class UtilsManager {
 		event.setName("SocketClient");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new SocketClient();
@@ -121,7 +153,11 @@ public class UtilsManager {
 		event.setName("SocketServer");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new SocketServer();
@@ -132,7 +168,11 @@ public class UtilsManager {
 		event.setName("WebClient");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new WebClient();
@@ -143,7 +183,11 @@ public class UtilsManager {
 		event.setName("WebServer");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new WebServer();
@@ -154,7 +198,11 @@ public class UtilsManager {
 		event.setName("MidiUtils");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new MidiUtils();
@@ -165,7 +213,11 @@ public class UtilsManager {
 		event.setName("MixerUtils");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new MixerUtils();
@@ -176,7 +228,11 @@ public class UtilsManager {
 		event.setName("RecorderUtils");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new RecorderUtils();
@@ -187,7 +243,11 @@ public class UtilsManager {
 		event.setName("SoundUtils");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new SoundUtils(f, m);
@@ -198,7 +258,11 @@ public class UtilsManager {
 		event.setName("ObjectUtils");
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCreated(event);
+			try {
+				listener.onUtilsCreated(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return new ObjectUtils();
@@ -213,7 +277,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -227,7 +295,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -241,7 +313,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -255,7 +331,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -269,7 +349,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -283,7 +367,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -297,7 +385,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -311,7 +403,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -325,7 +421,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -339,7 +439,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -353,7 +457,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -370,7 +478,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -384,7 +496,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -405,7 +521,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -424,7 +544,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -438,7 +562,11 @@ public class UtilsManager {
 		event.setData(u.getData());
 		
 		for(UtilsEventListener listener : listeners) {
-			listener.onUtilsCloned(event);
+			try {
+				listener.onUtilsCloned(event);
+			} catch(Error | Exception e2) {
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+			}
 		}
 		
 		return nu;
@@ -453,6 +581,8 @@ public class UtilsManager {
 		
 		listeners.add(listener);
 		
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<UtilsEventListener>());
+		
 		List<UtilsEventListener> l = plisteners.get(plugin);
 		l.add(listener);
 		plisteners.put(plugin, l);
@@ -466,6 +596,10 @@ public class UtilsManager {
 		listeners.remove(listener);
 		
 		Plugin plugin = getPlugin(listener);
+		
+		if(plugin == null) return;
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<UtilsEventListener>());
+		
 		List<UtilsEventListener> l = plisteners.get(plugin);
 		l.remove(listener);
 		plisteners.put(plugin, l);

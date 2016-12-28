@@ -98,7 +98,7 @@ public class PluginLoader {
 				lp.getPlugin().load();
 			}
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 	
@@ -116,7 +116,7 @@ public class PluginLoader {
 		try {
 			cl.close();
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 	

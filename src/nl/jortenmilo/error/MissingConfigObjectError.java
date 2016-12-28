@@ -38,7 +38,7 @@ public class MissingConfigObjectError extends Error {
 			try {
 				listener.onErrorThrown(event);
 			} catch(java.lang.Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}

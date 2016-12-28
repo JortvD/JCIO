@@ -43,7 +43,7 @@ public class SettingsManager {
 			try {
 				listener.onSettingsChanged(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 		
@@ -66,7 +66,7 @@ public class SettingsManager {
 			try {
 				listener.onSettingsCreated(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -90,7 +90,7 @@ public class SettingsManager {
 			try {
 				listener.onSettingsRemoved(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -130,7 +130,7 @@ public class SettingsManager {
 			try {
 				listener.onSettingsReset(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -143,6 +143,8 @@ public class SettingsManager {
 		}
 		
 		listeners.add(listener);
+		
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<SettingsEventListener>());
 		
 		List<SettingsEventListener> l = plisteners.get(plugin);
 		l.add(listener);
@@ -157,6 +159,10 @@ public class SettingsManager {
 		listeners.remove(listener);
 		
 		Plugin plugin = getPlugin(listener);
+		
+		if(plugin == null) return;
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<SettingsEventListener>());
+		
 		List<SettingsEventListener> l = plisteners.get(plugin);
 		l.remove(listener);
 		plisteners.put(plugin, l);
@@ -172,7 +178,7 @@ public class SettingsManager {
 	private Plugin getPlugin(SettingsEventListener listener) {
 		for(Plugin plugin : plisteners.keySet()) {
 			for(SettingsEventListener c : plisteners.get(plugin)) {
-				if(c==listener) return plugin;
+				if(c == listener) return plugin;
 			}
 		}
 		return null;
@@ -188,12 +194,12 @@ public class SettingsManager {
 				try {
 					listener.onSettingsSaved(event);
 				} catch(Error | Exception e2) {
-					new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+					new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 				}
 			}
 			
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 	
@@ -207,12 +213,12 @@ public class SettingsManager {
 				try {
 					listener.onSettingsLoaded(event);
 				} catch(Error | Exception e2) {
-					new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+					new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 				}
 			}
 			
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 	

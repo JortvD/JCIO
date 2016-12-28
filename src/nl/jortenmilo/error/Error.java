@@ -23,6 +23,8 @@ public abstract class Error {
 		
 		listeners.add(listener);
 		
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<ErrorEventListener>());
+		
 		List<ErrorEventListener> l = plisteners.get(plugin);
 		l.add(listener);
 		plisteners.put(plugin, l);
@@ -36,6 +38,10 @@ public abstract class Error {
 		listeners.remove(listener);
 		
 		Plugin plugin = getPlugin(listener);
+		
+		if(plugin == null) return;
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<ErrorEventListener>());
+		
 		List<ErrorEventListener> l = plisteners.get(plugin);
 		l.remove(listener);
 		plisteners.put(plugin, l);
@@ -45,13 +51,14 @@ public abstract class Error {
 		for(ErrorEventListener listener : plisteners.get(plugin)) {
 			listeners.remove(listener);
 		}
+		
 		plisteners.remove(plugin);
 	}
 	
 	private static Plugin getPlugin(ErrorEventListener listener) {
 		for(Plugin plugin : plisteners.keySet()) {
 			for(ErrorEventListener c : plisteners.get(plugin)) {
-				if(c==listener) return plugin;
+				if(c == listener) return plugin;
 			}
 		}
 		return null;

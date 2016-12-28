@@ -34,7 +34,7 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 			try {
 				mel.onMoved(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -56,7 +56,7 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 			try {
 				mel.onWheelMoved(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 			try {
 				mel.onClicked(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -100,7 +100,7 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 			try {
 				mel.onPressed(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -119,7 +119,7 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 			try {
 				mel.onReleased(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -132,6 +132,8 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 		}
 		
 		listeners.add(listener);
+		
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<MouseEventListener>());
 		
 		List<MouseEventListener> l = plisteners.get(plugin);
 		l.add(listener);
@@ -146,6 +148,10 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 		listeners.remove(listener);
 		
 		Plugin plugin = getPlugin(listener);
+		
+		if(plugin == null) return;
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<MouseEventListener>());
+		
 		List<MouseEventListener> l = plisteners.get(plugin);
 		l.remove(listener);
 		plisteners.put(plugin, l);

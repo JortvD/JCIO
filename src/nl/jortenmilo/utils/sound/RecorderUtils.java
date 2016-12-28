@@ -30,7 +30,7 @@ public class RecorderUtils {
                 try {
                     Thread.sleep(RECORD_TIME);
                 } catch(Error | Exception e) {
-        			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+        			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
         		}
                 finish();
             }
@@ -54,7 +54,7 @@ public class RecorderUtils {
             AudioInputStream ais = new AudioInputStream(line);
             return ais;
         } catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
         return null;
     }
@@ -63,7 +63,7 @@ public class RecorderUtils {
     	try {
 			AudioSystem.write(ais, fileType, file);
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
     }
     
@@ -71,7 +71,7 @@ public class RecorderUtils {
     	try {
 			AudioSystem.write(ais, fileType, os);
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
     }
     

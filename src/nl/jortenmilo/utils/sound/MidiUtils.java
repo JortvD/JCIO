@@ -21,7 +21,7 @@ public class MidiUtils {
 			synth.open();
 			channels = synth.getChannels();
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 	
@@ -102,7 +102,7 @@ public class MidiUtils {
 					Thread.sleep(time);
 					channels[channel].noteOff(tone);
 				} catch(Error | Exception e) {
-					new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 				}
 			}
 		});

@@ -115,7 +115,7 @@ public class Launcher {
 			try {
 				i.install();
 			} catch(Error | Exception e) {
-				new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 			}
 		}
 	}
@@ -132,7 +132,7 @@ public class Launcher {
 			Console.close();
 			System.exit(0);
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 
@@ -167,7 +167,7 @@ public class Launcher {
 
 						System.out.println("Done with the backup!");
 					} catch(Error | Exception e) {
-						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+						new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 					}
 				}
 				

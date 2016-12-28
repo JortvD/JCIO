@@ -26,7 +26,7 @@ public class ConfigManager {
 			try {
 				listener.onConfigCreated(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 		
@@ -46,7 +46,7 @@ public class ConfigManager {
 			try {
 				listener.onConfigLoaded(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 		
@@ -66,7 +66,7 @@ public class ConfigManager {
 			try {
 				listener.onConfigSaved(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 		
@@ -82,6 +82,7 @@ public class ConfigManager {
 		
 		listeners.add(listener);
 		
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<ConfigEventListener>());
 		List<ConfigEventListener> l = plisteners.get(plugin);
 		l.add(listener);
 		plisteners.put(plugin, l);
@@ -95,6 +96,10 @@ public class ConfigManager {
 		listeners.remove(listener);
 		
 		Plugin plugin = getPlugin(listener);
+		
+		if(plugin == null) return;
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<ConfigEventListener>());
+		
 		List<ConfigEventListener> l = plisteners.get(plugin);
 		l.remove(listener);
 		plisteners.put(plugin, l);
@@ -110,7 +115,7 @@ public class ConfigManager {
 	private Plugin getPlugin(ConfigEventListener listener) {
 		for(Plugin plugin : plisteners.keySet()) {
 			for(ConfigEventListener c : plisteners.get(plugin)) {
-				if(c==listener) return plugin;
+				if(c == listener) return plugin;
 			}
 		}
 		return null;

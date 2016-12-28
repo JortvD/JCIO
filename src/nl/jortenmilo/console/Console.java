@@ -112,7 +112,7 @@ public class Console {
 						try {
 							wel.onConsoleResized(event);
 						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 						}
 					}
 				}
@@ -128,7 +128,7 @@ public class Console {
 						try {
 							wel.onConsoleHidden(event);
 						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 						}
 					}
 				}
@@ -144,7 +144,7 @@ public class Console {
 						try {
 							wel.onConsoleMoved(event);
 						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 						}
 					}
 				}
@@ -160,7 +160,7 @@ public class Console {
 						try {
 							wel.onConsoleShown(event);
 						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 						}
 					}
 				}
@@ -182,7 +182,7 @@ public class Console {
 						try {
 							wel.onConsoleClosed(event);
 						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 						}
 					}
 					
@@ -206,7 +206,7 @@ public class Console {
 						try {
 							wel.onConsoleOpened(event);
 						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 						}
 					}
 				}
@@ -228,7 +228,7 @@ public class Console {
 					f.createNewFile();
 					bw = new BufferedWriter(new PrintWriter(f));
 				} catch(Error | Exception e) {
-					new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 				}
 			}
 		} else {
@@ -382,7 +382,7 @@ public class Console {
 			        try {
 						lock.wait();
 					} catch(Error | Exception e) {
-						new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+						new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 					}
 			    }
 			}
@@ -526,7 +526,7 @@ public class Console {
 			try {
 				wel.onConsoleCleared(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 	}
@@ -576,6 +576,8 @@ public class Console {
 		
 		listeners.add(listener);
 		
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<ConsoleEventListener>());
+		
 		List<ConsoleEventListener> l = plisteners.get(plugin);
 		l.add(listener);
 		plisteners.put(plugin, l);
@@ -589,6 +591,10 @@ public class Console {
 		listeners.remove(listener);
 		
 		Plugin plugin = getPlugin(listener);
+		
+		if(plugin == null) return;
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<ConsoleEventListener>());
+		
 		List<ConsoleEventListener> l = plisteners.get(plugin);
 		l.remove(listener);
 		plisteners.put(plugin, l);
@@ -604,7 +610,7 @@ public class Console {
 	private static Plugin getPlugin(ConsoleEventListener listener) {
 		for(Plugin plugin : plisteners.keySet()) {
 			for(ConsoleEventListener c : plisteners.get(plugin)) {
-				if(c==listener) return plugin;
+				if(c == listener) return plugin;
 			}
 		}
 		return null;

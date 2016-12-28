@@ -70,7 +70,7 @@ public class ConfigLoader {
 			
 			br.close();
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		
 	}
@@ -87,7 +87,7 @@ public class ConfigLoader {
 			
 			bw.close();
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 	

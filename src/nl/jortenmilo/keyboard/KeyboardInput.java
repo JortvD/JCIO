@@ -34,7 +34,7 @@ public class KeyboardInput implements KeyListener {
 			try {
 				kel.onKeyboardPressed(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 		
@@ -53,7 +53,7 @@ public class KeyboardInput implements KeyListener {
 			try {
 				kel.onKeyboardReleased(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 		
@@ -72,7 +72,7 @@ public class KeyboardInput implements KeyListener {
 			try {
 				kel.onKeyboardTyped(event);
 			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
+				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 			}
 		}
 		
@@ -115,6 +115,8 @@ public class KeyboardInput implements KeyListener {
 		
 		listeners.add(listener);
 		
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<KeyboardEventListener>());
+		
 		List<KeyboardEventListener> l = plisteners.get(plugin);
 		l.add(listener);
 		plisteners.put(plugin, l);
@@ -128,6 +130,10 @@ public class KeyboardInput implements KeyListener {
 		listeners.remove(listener);
 		
 		Plugin plugin = getPlugin(listener);
+		
+		if(plugin == null) return;
+		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<KeyboardEventListener>());
+		
 		List<KeyboardEventListener> l = plisteners.get(plugin);
 		l.remove(listener);
 		plisteners.put(plugin, l);
@@ -162,7 +168,7 @@ public class KeyboardInput implements KeyListener {
 		try {
 			latch.await();
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		int typed2 = typed;
 		typed = -1;
@@ -182,7 +188,7 @@ public class KeyboardInput implements KeyListener {
 		try {
 			latch.await();
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 	
@@ -204,7 +210,7 @@ public class KeyboardInput implements KeyListener {
 		try {
 			latch.await();
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		
 		int typed2 = typed;

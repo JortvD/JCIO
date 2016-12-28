@@ -15,10 +15,10 @@ public class SoundUtils {
 	private File file;
 	private Mixer m;
 	private Clip clip;
-	private FloatControl gainControlV;
-	private FloatControl gainControlS;
-	private FloatControl gainControlP;
-	private BooleanControl gainControlM;
+	private FloatControl volume;
+	private FloatControl balance;
+	private FloatControl pan;
+	private BooleanControl mute;
 	private AudioInputStream audioStream;
 	private boolean paused = false;
 	private long CurrentTime = 0;
@@ -32,20 +32,20 @@ public class SoundUtils {
 		try {
 			clip = (Clip)this.m.getLine(dataInfo);
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		
 		try {
 			audioStream = AudioSystem.getAudioInputStream(file);
 			clip.open(audioStream);
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		
-		gainControlM = (BooleanControl)clip.getControl(BooleanControl.Type.MUTE);
-		gainControlV = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
-		gainControlS = (FloatControl)clip.getControl(FloatControl.Type.BALANCE);
-		gainControlP = (FloatControl)clip.getControl(FloatControl.Type.BALANCE);
+		mute = (BooleanControl)clip.getControl(BooleanControl.Type.MUTE);
+		volume = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
+		balance = (FloatControl)clip.getControl(FloatControl.Type.BALANCE);
+		pan = (FloatControl)clip.getControl(FloatControl.Type.PAN);
 	}
 	
 
@@ -70,27 +70,27 @@ public class SoundUtils {
 	}
 	
 	public void setVolume(float Volume) {
-		gainControlV.setValue(-80+Volume);
+		volume.setValue(-80+Volume);
 	}
 	
 	public float getVolume() {
-		return gainControlV.getValue()+80;
+		return volume.getValue()+80;
 	}
 	
 	public void setBalance(float Balance) {
-		gainControlS.setValue(Balance);
-	}
-	
-	public float getPan() {
-		return gainControlP.getValue();
-	}
-	
-	public void setPan(float Pan) {
-		gainControlP.setValue(Pan);
+		balance.setValue(Balance);
 	}
 	
 	public float getBalance() {
-		return gainControlS.getValue();
+		return balance.getValue();
+	}
+	
+	public float getPan() {
+		return pan.getValue();
+	}
+	
+	public void setPan(float Pan) {
+		pan.setValue(Pan);
 	}
 	
 	public void setPosition(long Position) {
@@ -99,11 +99,11 @@ public class SoundUtils {
 	}
 	
 	public void setMute(boolean Mute) {
-		gainControlM.setValue(Mute);
+		mute.setValue(Mute);
 	}
 	
 	public boolean isMuted() {
-		return gainControlM.getValue();
+		return mute.getValue();
 	}
 	
 	public long getSoundLenght() {
@@ -126,17 +126,17 @@ public class SoundUtils {
 		try {
 			Thread.sleep(getSoundLenght()-getSoundPosition());
 		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 
 	public String getData() {
 		return "[File: " + file.getPath() + ", "
 			  + "Mixer: " + m.getMixerInfo().getName() + "/" + m.getMixerInfo().getDescription() + "/" + m.getMixerInfo().getVersion()  + "/" + m.getMixerInfo().getVendor() + ", "
-			  + "Volume: " + gainControlV.getValue() + ", "
-			  + "Muted: " + gainControlM.getValue() + ", "
-			  + "Balance: " + gainControlS.getValue() + ", "
-			  + "Pan: " + gainControlP.getValue() + ", "
+			  + "Volume: " + volume.getValue() + ", "
+			  + "Muted: " + mute.getValue() + ", "
+			  + "Balance: " + balance.getValue() + ", "
+			  + "Pan: " + pan.getValue() + ", "
 			  + "Paused: " + paused + ", "
 			  + "Length: " + clip.getMicrosecondLength() + ", "
 			  + "Position: " + clip.getMicrosecondPosition() + "]";
