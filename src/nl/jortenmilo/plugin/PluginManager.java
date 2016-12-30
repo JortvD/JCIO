@@ -83,6 +83,7 @@ public class PluginManager {
 	public void disable(LoadedPlugin plugin) {
 		try {
 			plugin.getPlugin().disable();
+			
 		} catch(Error | Exception e2) {
 			new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
 		}
@@ -96,7 +97,7 @@ public class PluginManager {
 		plugin.getPlugin().setSettingsManager(null);
 		plugin.getPlugin().setUtilsManager(null);
 		plugin.getPlugin().setErrorManager(null);
-		plugin.getPlugin().setLoadedPlugin(null);
+		
 		command.removeCommands(plugin.getPlugin());
 		command.removeListeners(plugin.getPlugin());
 		this.removeListeners(plugin.getPlugin());
@@ -236,6 +237,10 @@ public class PluginManager {
 	}
 	
 	public void removeListeners(Plugin plugin) {
+		if(!plisteners.containsKey(plugin)) {
+			return;
+		}
+		
 		for(PluginEventListener listener : plisteners.get(plugin)) {
 			listeners.remove(listener);
 		}
@@ -269,6 +274,7 @@ public class PluginManager {
 		private String name;
 		private String path;
 		private URLClassLoader loader;
+		private List<LoadedPlugin> dependencies;
 		
 		public Plugin getPlugin() {
 			return plugin;
@@ -300,6 +306,14 @@ public class PluginManager {
 
 		protected void setClassLoader(URLClassLoader loader) {
 			this.loader = loader;
+		}
+		
+		protected void addDependency(LoadedPlugin plugin) {
+			dependencies.add(plugin);
+		}
+		
+		public List<LoadedPlugin> getDependencies() {
+			return dependencies;
 		}
 	}
 

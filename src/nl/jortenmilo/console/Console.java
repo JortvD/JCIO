@@ -601,6 +601,10 @@ public class Console {
 	}
 	
 	protected static void removeListeners(Plugin plugin) {
+		if(!plisteners.containsKey(plugin)) {
+			return;
+		}
+		
 		for(ConsoleEventListener listener : plisteners.get(plugin)) {
 			listeners.remove(listener);
 		}

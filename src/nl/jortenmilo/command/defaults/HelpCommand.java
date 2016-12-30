@@ -19,6 +19,7 @@ public class HelpCommand implements CommandExecutor {
 	public void execute(String command, Command cmd, String[] params) {
 		if(params.length == 0) {
 			Console.println("This are all the possible commands:");
+			
 			int l = 0;
 			
 			for(Command c : cm.getCommands()) {
@@ -32,8 +33,8 @@ public class HelpCommand implements CommandExecutor {
 				int a = l - text.length();
 				
 				text = new StringUtils().addChars(text, ' ', a);
-				
 				text += " - " + c.getDescription();
+				
 				Console.println(text);
 			}
 			

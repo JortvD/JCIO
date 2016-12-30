@@ -140,6 +140,10 @@ public class KeyboardInput implements KeyListener {
 	}
 	
 	protected void removeListeners(Plugin plugin) {
+		if(!plisteners.containsKey(plugin)) {
+			return;
+		}
+		
 		for(KeyboardEventListener listener : plisteners.get(plugin)) {
 			listeners.remove(listener);
 		}

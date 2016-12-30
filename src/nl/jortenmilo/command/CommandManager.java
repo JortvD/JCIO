@@ -24,6 +24,7 @@ public class CommandManager {
 			//Throw an error when the command is null.
 			new InvalidParameterError(c.getCommand()).print();
 		}
+		
 		if(plugin == null) {
 			//Throw an error when the plugin is null.
 			new InvalidParameterError(plugin + "").print();
@@ -70,11 +71,11 @@ public class CommandManager {
 			commands.add(c);
 			
 			if(pcommands.get(plugin)==null) pcommands.put(plugin, new ArrayList<Command>());
+			
 			List<Command> l = pcommands.get(plugin);
 			l.add(c);
+			
 			pcommands.put(plugin, l);
-			
-			
 			
 			CommandAddedEvent event = new CommandAddedEvent();
 			event.setCommand(c);
@@ -154,6 +155,7 @@ public class CommandManager {
 		Plugin plugin = getPlugin(c);
 		List<Command> l = pcommands.get(plugin);
 		l.remove(c);
+		
 		pcommands.put(plugin, l);
 		
 		CommandRemovedEvent event = new CommandRemovedEvent();
@@ -194,15 +196,18 @@ public class CommandManager {
 		if(plugin == null) {
 			//Throw an error when the plugin is null.
 			new InvalidParameterError(plugin + "").print();
+			
 			return;
 		}
 		
 		listeners.add(listener);
 		
-		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<CommandEventListener>());
+		if(plisteners.get(plugin)==null) 
+			plisteners.put(plugin, new ArrayList<CommandEventListener>());
 		
 		List<CommandEventListener> l = plisteners.get(plugin);
 		l.add(listener);
+		
 		plisteners.put(plugin, l);
 	}
 	
@@ -211,22 +216,32 @@ public class CommandManager {
 	}
 	
 	public void removeListener(CommandEventListener listener) {
-		listeners.remove(listener);
+		if(listeners.contains(listener)) {
+			listeners.remove(listener);
+			return;
+		}
 		
 		Plugin plugin = getPlugin(listener);
 		
-		if(plugin == null) return;
-		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<CommandEventListener>());
+		if(!plisteners.containsValue(listener) || !plisteners.containsKey(plugin)) {
+			return;
+		}
 		
 		List<CommandEventListener> l = plisteners.get(plugin);
 		l.remove(listener);
+		
 		plisteners.put(plugin, l);
 	}
 	
 	public void removeListeners(Plugin plugin) {
+		if(!plisteners.containsKey(plugin)) {
+			return;
+		}
+		
 		for(CommandEventListener listener : plisteners.get(plugin)) {
 			listeners.remove(listener);
 		}
+		
 		plisteners.remove(plugin);
 	}
 	

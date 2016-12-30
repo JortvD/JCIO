@@ -23,7 +23,6 @@ public abstract class Plugin {
 	private SettingsManager settings;
 	private UtilsManager utils;
 	private ErrorManager error;
-	
 	private LoadedPlugin lp;
 	private File sf;
 	

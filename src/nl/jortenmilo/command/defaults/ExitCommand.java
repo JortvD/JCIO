@@ -19,7 +19,9 @@ public class ExitCommand implements CommandExecutor {
 	public void execute(String command, Command cmd, String[] params) {
 		if(params.length == 0) {
 			Console.println("Exiting the program. Press any key to continue!");
+			
 			keyboard.waitUntilTyped();
+			
 			CloseManager.close();
 		} else {
 			Console.println(ConsoleUser.Error, "Wrong command usage: exit");

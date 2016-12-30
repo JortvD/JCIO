@@ -128,7 +128,9 @@ public class Launcher {
 	public void close() {
 		try {
 			settings.save();
+			
 			plugin.disableAll();
+			
 			Console.close();
 			System.exit(0);
 		} catch(Error | Exception e) {

@@ -169,6 +169,10 @@ public class SettingsManager {
 	}
 	
 	public void removeListeners(Plugin plugin) {
+		if(!plisteners.containsKey(plugin)) {
+			return;
+		}
+		
 		for(SettingsEventListener listener : plisteners.get(plugin)) {
 			listeners.remove(listener);
 		}

@@ -158,6 +158,10 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 	}
 	
 	protected void removeListeners(Plugin plugin) {
+		if(!plisteners.containsKey(plugin)) {
+			return;
+		}
+		
 		for(MouseEventListener listener : plisteners.get(plugin)) {
 			listeners.remove(listener);
 		}

@@ -13,9 +13,7 @@ public class CommandDecoder {
 	public static String[] getParameters(String s) {
 		String[] params = null;
 		int amount = 1;
-		
 		s = removeLastSpaces(s);
-		
 		byte[] bytes = s.getBytes();
 		
 		for(int i = 0; i < bytes.length; i++) {
@@ -39,14 +37,17 @@ public class CommandDecoder {
 		}
 		
 		params[n] = param;
+		
 		return params;
 	}
 
 	private static String removeLastSpaces(String s) {
 		if(s.endsWith(" ") && s.length() > 0) {
 			s = s.substring(0, s.length()-1);
+			
 			removeLastSpaces(s);
 		}
+		
 		return s;
 	}
 	

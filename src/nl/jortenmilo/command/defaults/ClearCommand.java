@@ -18,7 +18,9 @@ public class ClearCommand implements CommandExecutor {
 	public void execute(String command, Command cmd, String[] params) {
 		if(params.length == 0) {
 			Console.println("Clearing the screen. Press any key to continue!");
+			
 			keyboard.waitUntilTyped();
+			
 			Console.clear();
 		} else {
 			Console.println(ConsoleUser.Error, "Wrong command usage: exit");

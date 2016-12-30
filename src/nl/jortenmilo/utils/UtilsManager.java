@@ -606,6 +606,10 @@ public class UtilsManager {
 	}
 	
 	public void removeListeners(Plugin plugin) {
+		if(!plisteners.containsKey(plugin)) {
+			return;
+		}
+		
 		for(UtilsEventListener listener : plisteners.get(plugin)) {
 			listeners.remove(listener);
 		}

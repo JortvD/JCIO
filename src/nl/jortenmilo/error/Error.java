@@ -48,6 +48,10 @@ public abstract class Error {
 	}
 	
 	protected static void removeListeners(Plugin plugin) {
+		if(!plisteners.containsKey(plugin)) {
+			return;
+		}
+		
 		for(ErrorEventListener listener : plisteners.get(plugin)) {
 			listeners.remove(listener);
 		}

@@ -106,6 +106,10 @@ public class ConfigManager {
 	}
 	
 	public void removeListeners(Plugin plugin) {
+		if(!plisteners.containsKey(plugin)) {
+			return;
+		}
+		
 		for(ConfigEventListener listener : plisteners.get(plugin)) {
 			listeners.remove(listener);
 		}
