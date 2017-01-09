@@ -27,8 +27,11 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyledDocument;
 
 import nl.jortenmilo.console.ConsoleEvent.ConsoleEventListener;
 import nl.jortenmilo.error.InvalidParameterError;
@@ -44,7 +47,7 @@ public class Console {
 	
 	private static boolean inited = false;
 	private static JFrame frame;
-	private static JTextArea t;
+	private static JTextPane t;
 	private static ConsoleInputStream cis;
 	private static ConsolePrintStream cps;
 	private static BufferedWriter bw;
@@ -53,6 +56,8 @@ public class Console {
 	private static List<ConsoleEventListener> listeners = new ArrayList<ConsoleEventListener>();
 	private static HashMap<Plugin, List<ConsoleEventListener>> plisteners = new HashMap<Plugin, List<ConsoleEventListener>>();
 	private static SettingsManager settings;
+	private static StyledDocument d;
+	private static ConsoleOutputStream cos;
 	
 	public static PrintStream dout; //DEBUG
 	public static InputStream din; //DEBUG
@@ -77,7 +82,7 @@ public class Console {
 			p.setLocation(0, 0);
 			p.setBackground(Color.BLACK);
 			
-			t = new JTextArea();
+			t = new JTextPane();
 			JScrollPane s = new JScrollPane(t);
 			s.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			s.setBounds(0, 0, p.getWidth()-16, p.getHeight()-46);
@@ -217,7 +222,9 @@ public class Console {
 			dout = System.out;
 			din = System.in;
 			
-			ConsoleOutputStream cos = new ConsoleOutputStream();
+			d = t.getStyledDocument();
+			
+			cos = new ConsoleOutputStream();
 			cps = new ConsolePrintStream(cos);
 			cis = new ConsoleInputStream(cos);
 			frame.addKeyListener(cis);
@@ -247,12 +254,15 @@ public class Console {
 		
 		private String lineText = "";
 		private String fullLine = "";
+		private SimpleAttributeSet at = new SimpleAttributeSet();
+		private List<Integer> brakes = new ArrayList<Integer>();
 		
 		private ConsoleOutputStream() {}
 		
 		@Override
 		public void write(int b) throws IOException {
 			int l = t.getGraphics().getFontMetrics().stringWidth(lineText)+12;
+			
 			String text = new String(new byte[]{(byte)b});
 			
 			if(settings.contains("log")) {
@@ -262,12 +272,16 @@ public class Console {
 			}
 			
 			if((l > t.getWidth()) && !text.equals("\n")) {
-				t.append("\n");
+				brakes.add(d.getLength());
+				try {d.insertString(d.getLength(), "\n", at);}
+				catch (BadLocationException e) {}
 				lineText = "";
 			}
 			
 			if(text.equals("\n")) {
-				t.append("\n");
+				brakes.add(d.getLength());
+				try {d.insertString(d.getLength(), "\n", at);}
+				catch (BadLocationException e) {}
 				lineText = "";
 				fullLine = "";
 				return;
@@ -275,7 +289,8 @@ public class Console {
 			
 			lineText += text;
 			fullLine += text;
-			t.append(text);
+			try {d.insertString(d.getLength(), text, at);}
+			catch (BadLocationException e) {}
 		}
 		
 		public void println(String s) throws IOException {
