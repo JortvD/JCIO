@@ -55,7 +55,7 @@ public class PluginLoader {
 						JarFile jarFile = new JarFile(f.getPath());
 						Enumeration<JarEntry> e = jarFile.entries();
 						URL[] urls = { new URL("jar:file:" + f.getPath() +"!/") };
-						URLClassLoader cl = new URLClassLoader(urls, this.getClass().getClassLoader());;
+						URLClassLoader cl = new URLClassLoader(urls, this.getClass().getClassLoader());
 						
 						while (e.hasMoreElements()) {
 							JarEntry je = e.nextElement();

@@ -47,7 +47,7 @@ public class Launcher {
 		init();
 		
 		//Start the program
-		Console.println("<- JCIO [Jortenmilo (c) 2016]->");
+		Console.println("<- JCIO [Jortenmilo (c) 2017]->");
 		start();
 		
 	}
