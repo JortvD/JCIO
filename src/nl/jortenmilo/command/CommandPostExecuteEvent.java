@@ -1,5 +1,8 @@
 package nl.jortenmilo.command;
 
+/**
+ * This event is executed after a command is executed.
+ */
 public class CommandPostExecuteEvent extends CommandEvent {
 	
 	private String[] arguments;

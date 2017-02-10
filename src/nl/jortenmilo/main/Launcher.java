@@ -1,15 +1,6 @@
 package nl.jortenmilo.main;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.command.CommandManager;

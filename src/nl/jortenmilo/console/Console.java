@@ -58,6 +58,7 @@ public class Console {
 	private static SettingsManager settings;
 	private static StyledDocument d;
 	private static ConsoleOutputStream cos;
+	private static SimpleAttributeSet at;
 	
 	public static PrintStream dout; //DEBUG
 	public static InputStream din; //DEBUG
@@ -216,6 +217,7 @@ public class Console {
 					}
 				}
 			});
+			
 			frame.getContentPane().add(p);
 			frame.repaint();
 			
@@ -254,10 +256,12 @@ public class Console {
 		
 		private String lineText = "";
 		private String fullLine = "";
-		private SimpleAttributeSet at = new SimpleAttributeSet();
+		
 		private List<Integer> brakes = new ArrayList<Integer>();
 		
-		private ConsoleOutputStream() {}
+		private ConsoleOutputStream() {
+			at = new SimpleAttributeSet();
+		}
 		
 		@Override
 		public void write(int b) throws IOException {
@@ -273,15 +277,19 @@ public class Console {
 			
 			if((l > t.getWidth()) && !text.equals("\n")) {
 				brakes.add(d.getLength());
+				
 				try {d.insertString(d.getLength(), "\n", at);}
 				catch (BadLocationException e) {}
+				
 				lineText = "";
 			}
 			
 			if(text.equals("\n")) {
 				brakes.add(d.getLength());
+				
 				try {d.insertString(d.getLength(), "\n", at);}
 				catch (BadLocationException e) {}
+				
 				lineText = "";
 				fullLine = "";
 				return;
@@ -289,6 +297,7 @@ public class Console {
 			
 			lineText += text;
 			fullLine += text;
+			
 			try {d.insertString(d.getLength(), text, at);}
 			catch (BadLocationException e) {}
 		}
@@ -331,7 +340,7 @@ public class Console {
 		public void keyTyped(KeyEvent e) {
 			int c = e.getKeyChar();
 			
-			if((byte)e.getKeyChar()==22) {
+			if((byte)e.getKeyChar() == 22) {
 				try {
 					String text = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
 					Console.write(text);
@@ -343,12 +352,14 @@ public class Console {
 				} catch (IOException e1) {
 					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
 				}
+				
 				return;
 			}
 			
 			if((byte)e.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
 				if(presses > 0) {
-					t.setText(t.getText().substring(0,t.getText().length()-1));
+					try {d.remove(d.getLength()-1, 1);}
+					catch (BadLocationException e2) {}
 					
 					if(waitText.length() > 0) {
 						waitText = waitText.substring(0, waitText.length()-1);
@@ -363,29 +374,29 @@ public class Console {
 					
 					if(cos.fullLine.length() != 0 && cos.lineText.length() == 0) {
 						cos.lineText = cos.fullLine;
-						t.setText(t.getText().substring(0,t.getText().length()-1));
+						try {d.remove(d.getLength()-1, 1);}
+						catch (BadLocationException e2) {}
 						cos.lineText = cos.lineText.substring(0, cos.lineText.length()-1);
 						cos.fullLine = cos.fullLine.substring(0, cos.fullLine.length()-1);
 					} else {
 						cos.fullLine = cos.fullLine.substring(0, cos.fullLine.length()-1);
 					}
 				}
-			} else {
-				presses++;
-				if(Waiting) {
-					Console.write(Character.toString(e.getKeyChar()));
-				}
-			}
-			
-			if((byte)e.getKeyChar() == KeyEvent.VK_ENTER) {
+			} 
+			else if((byte)e.getKeyChar() == KeyEvent.VK_ENTER) {
 				presses = 0;
+				Console.write("\n");
 				synchronized (lock) {
 					WakeupNeeded = true;
 				    lock.notifyAll();
 				}
 			}
-			else if(c!=8) {
-				waitText += new String(new char[]{(char) c});
+			else {
+				presses++;
+				if(Waiting) {
+					Console.write(Character.toString(e.getKeyChar()));
+					waitText += new String(new char[]{(char) c});
+				}
 			}
 		}
 		

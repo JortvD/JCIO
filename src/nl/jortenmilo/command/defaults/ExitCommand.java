@@ -7,14 +7,21 @@ import nl.jortenmilo.console.Console.ConsoleUser;
 import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.main.CloseManager;
 
+/**
+ * With this command you can exit the console.
+ * Usage: "<code>exit</code>"
+ */
 public class ExitCommand implements CommandExecutor {
 	
 	private KeyboardManager keyboard;
 	
-	public ExitCommand(KeyboardManager keyboard) {
+	protected ExitCommand(KeyboardManager keyboard) {
 		this.keyboard = keyboard;
 	}
-
+	
+	/**
+	 * The execute method for this command.
+	 */
 	@Override
 	public void execute(String command, Command cmd, String[] params) {
 		if(params.length == 0) {

@@ -1,5 +1,8 @@
 package nl.jortenmilo.command;
 
+/**
+ * This event is executed before a command is executed.
+ */
 public class CommandPreExecuteEvent extends CommandEvent {
 	
 	private String[] arguments;

@@ -7,14 +7,21 @@ import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 import nl.jortenmilo.utils.StringUtils;
 
+/**
+ * This command will show you all of the possible commands.
+ * Usage: "<code>help</code>"
+ */
 public class HelpCommand implements CommandExecutor {
 	
 	private CommandManager cm;
 	
-	public HelpCommand(CommandManager cm) {
+	protected HelpCommand(CommandManager cm) {
 		this.cm = cm;
 	}
-
+	
+	/**
+	 * The execute method for this command.
+	 */
 	@Override
 	public void execute(String command, Command cmd, String[] params) {
 		if(params.length == 0) {

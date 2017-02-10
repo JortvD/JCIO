@@ -12,6 +12,10 @@ import nl.jortenmilo.error.CommandUsedError;
 import nl.jortenmilo.error.InvalidParameterError;
 import nl.jortenmilo.plugin.Plugin;
 
+/**
+ * This is the manager for all of the command related stuff. You can add commands, add listeners and simulate commands.
+ * @see Command
+ */
 public class CommandManager {
 	
 	private List<Command> commands = new ArrayList<Command>();
@@ -19,10 +23,16 @@ public class CommandManager {
 	private List<CommandEventListener> listeners = new ArrayList<CommandEventListener>();
 	private HashMap<Plugin, List<CommandEventListener>> plisteners = new HashMap<Plugin, List<CommandEventListener>>();
 	
-	public void addCommand(Command c, Plugin plugin) {
-		if(c.getCommand() == null) {
+	/**
+	 * Used to register a new command. It also needs the plugin for debugging purposes.
+	 * This method executes all of the CommandAddedEvents when it successfully registered.
+	 * @param command The command to register
+	 * @param plugin The plugin this command is from
+	 */
+	public void addCommand(Command command, Plugin plugin) {
+		if(command.getCommand() == null) {
 			//Throw an error when the command is null.
-			new InvalidParameterError(c.getCommand()).print();
+			new InvalidParameterError(command.getCommand()).print();
 		}
 		
 		if(plugin == null) {
@@ -33,23 +43,23 @@ public class CommandManager {
 		boolean exists = false;
 		
 		//Go through all the commands.
-		for(Command command : commands) {
+		for(Command c : commands) {
 			//Check if this command is equal to the command.
-			if(command.getCommand().equals(c.getCommand())) {
+			if(c.getCommand().equals(command.getCommand())) {
 				exists = true;
 			}
 			
 			//Check if these aliasses is equal to the command.
-			for(String s : command.getAliasses()) {
-				if(s.equalsIgnoreCase(c.getCommand())) {
+			for(String s : c.getAliasses()) {
+				if(s.equalsIgnoreCase(command.getCommand())) {
 					exists = true;
 				}
 			}
 			
 			//Check if this command is equal to the aliasses.
-			for(String s : c.getAliasses()) {
-				if(s.equalsIgnoreCase(command.getCommand())) {
-					c.getAliasses().remove(s);
+			for(String s : command.getAliasses()) {
+				if(s.equalsIgnoreCase(c.getCommand())) {
+					command.getAliasses().remove(s);
 				}
 			}
 			
@@ -65,20 +75,20 @@ public class CommandManager {
 		
 		if(exists) {
 			//Throw an error when the command/aliasses already exist.
-			new CommandUsedError(c.getCommand()).print();
+			new CommandUsedError(command.getCommand()).print();
 		} else {
 			//Add the command to the list.
-			commands.add(c);
+			commands.add(command);
 			
 			if(pcommands.get(plugin)==null) pcommands.put(plugin, new ArrayList<Command>());
 			
 			List<Command> l = pcommands.get(plugin);
-			l.add(c);
+			l.add(command);
 			
 			pcommands.put(plugin, l);
 			
 			CommandAddedEvent event = new CommandAddedEvent();
-			event.setCommand(c);
+			event.setCommand(command);
 			
 			for(CommandEventListener listener : listeners) {
 				try {
@@ -90,24 +100,29 @@ public class CommandManager {
 		}
 	}
 	
-	public void addCommand(Command c) {
-		if(c.getCommand() == null) {
+	/**
+	 * Used to anonymously register a new command. Please avoid this method at all cost! 
+	 * This method executes all of the CommandAddedEvents when it successfully registered.
+	 * @param command The command to register
+	 */
+	public void addCommand(Command command) {
+		if(command.getCommand() == null) {
 			//Throw an error when the command is null.
-			new InvalidParameterError(c.getCommand()).print();
+			new InvalidParameterError(command.getCommand()).print();
 		}
 		
 		boolean exists = false;
 		
 		//Go through all the commands.
-		for(Command command : commands) {
+		for(Command c : commands) {
 			//Check if this command is equal to the command.
-			if(command.getCommand().equals(c.getCommand())) {
+			if(c.getCommand().equals(command.getCommand())) {
 				exists = true;
 			}
 			
 			//Check if these aliasses is equal to the command.
-			for(String s : command.getAliasses()) {
-				if(s.equalsIgnoreCase(c.getCommand())) {
+			for(String s : c.getAliasses()) {
+				if(s.equalsIgnoreCase(command.getCommand())) {
 					exists = true;
 				}
 			}
@@ -115,7 +130,7 @@ public class CommandManager {
 			//Check if this command is equal to the aliasses.
 			for(String s : c.getAliasses()) {
 				if(s.equalsIgnoreCase(command.getCommand())) {
-					c.getAliasses().remove(s);
+					exists = true;
 				}
 			}
 			
@@ -123,7 +138,7 @@ public class CommandManager {
 			for(String s1 : c.getAliasses()) {
 				for(String s2 : command.getAliasses()) {
 					if(s1.equalsIgnoreCase(s2)) {
-						c.getAliasses().remove(s1);
+						command.getAliasses().remove(s1);
 					}
 				}
 			}
@@ -131,13 +146,13 @@ public class CommandManager {
 		
 		if(exists) {
 			//Throw an error when the command/aliasses already exist.
-			new CommandUsedError(c.getCommand()).print();
+			new CommandUsedError(command.getCommand()).print();
 		} else {
 			//Add the command to the list.
-			commands.add(c);
+			commands.add(command);
 			
 			CommandAddedEvent event = new CommandAddedEvent();
-			event.setCommand(c);
+			event.setCommand(command);
 			
 			for(CommandEventListener listener : listeners) {
 				try {
@@ -149,17 +164,22 @@ public class CommandManager {
 		}
 	}
 	
-	public void removeCommand(Command c) {
-		commands.remove(c);
+	/**
+	 * Unregisters the command and disables the executor. 
+	 * This method also executes all of the CommandRemovedEvents.
+	 * @param command The command to unregister
+	 */
+	public void removeCommand(Command command) {
+		commands.remove(command);
 		
-		Plugin plugin = getPlugin(c);
+		Plugin plugin = getPlugin(command);
 		List<Command> l = pcommands.get(plugin);
-		l.remove(c);
+		l.remove(command);
 		
 		pcommands.put(plugin, l);
 		
 		CommandRemovedEvent event = new CommandRemovedEvent();
-		event.setCommand(c);
+		event.setCommand(command);
 		
 		for(CommandEventListener listener : listeners) {
 			try {
@@ -170,6 +190,11 @@ public class CommandManager {
 		}
 	}
 	
+	/**
+	 * Unregisters all the commands that are registered by that plugin. 
+	 * It will also execute all of the CommandRemovedEvents for every command.
+	 * @param plugin The plugin to unregister
+	 */
 	public void removeCommands(Plugin plugin) {
 		for(Command command : pcommands.get(plugin)) {
 			commands.remove(command);
@@ -185,13 +210,23 @@ public class CommandManager {
 				}
 			}
 		}
+		
 		pcommands.remove(plugin);
 	}
 	
+	/**
+	 * Returns all of the commands that are registered.
+	 * @return A list of the commands
+	 */
 	public List<Command> getCommands() {
 		return commands;
 	}
 	
+	/**
+	 * Adds a listener to this manager. It also needs the plugin for debugging purposes.
+	 * @param listener The listener that has to be added
+	 * @param plugin The plugin this listener is from
+	 */
 	public void addListener(CommandEventListener listener, Plugin plugin) {
 		if(plugin == null) {
 			//Throw an error when the plugin is null.
@@ -211,10 +246,18 @@ public class CommandManager {
 		plisteners.put(plugin, l);
 	}
 	
+	/**
+	 * Returns all of the listeners that are added to this manager.
+	 * @return A list of the listeners
+	 */
 	public List<CommandEventListener> getListeners() {
 		return listeners;
 	}
 	
+	/**
+	 * Removes the listener from this manager.
+	 * @param listener The listener that has to be removed.
+	 */
 	public void removeListener(CommandEventListener listener) {
 		if(listeners.contains(listener)) {
 			listeners.remove(listener);
@@ -233,6 +276,10 @@ public class CommandManager {
 		plisteners.put(plugin, l);
 	}
 	
+	/**
+	 * Removes all the listeners that are added by that plugin.
+	 * @param plugin The plugin which listeners have to be removed.
+	 */
 	public void removeListeners(Plugin plugin) {
 		if(!plisteners.containsKey(plugin)) {
 			return;
@@ -263,11 +310,17 @@ public class CommandManager {
 		return null;
 	}
 	
-	public void executeCommand(Command cmd, String[] args) {
+	/**
+	 * Executes the command with the specified arguments.
+	 * It will also execute all of the CommandPreExecuteEvents and the CommandPostExecuteEvents before and after the command is executed.
+	 * @param command The command to execute
+	 * @param args The specified arguments to use
+	 */
+	public void executeCommand(Command command, String[] args) {
 		//Create the arguments from the last arguments.
 		String[] a = new String[args.length+1];
 		
-		a[0] = cmd.getCommand();
+		a[0] = command.getCommand();
 		
 		for(int i = 0; i < 0; i++){
 			a[i+1] = args[i];
@@ -277,6 +330,11 @@ public class CommandManager {
 		executeCommand(a);
 	}
 	
+	/**
+	 * Executes the command from that arguments. The first argument is the command that has to executed.
+	 * It will also execute all of the CommandPreExecuteEvents and the CommandPostExecuteEvents before and after the command is executed.
+	 * @param args The arguments and command that have to be executed
+	 */
 	public void executeCommand(String[] args) {
 		String command = args[0];
 		
@@ -326,6 +384,7 @@ public class CommandManager {
 				
 				return;
 			}
+			
 			for(String s : c.getAliasses()) {
 				if(s.equalsIgnoreCase(command)) {
 					String[] params = new String[args.length-1];

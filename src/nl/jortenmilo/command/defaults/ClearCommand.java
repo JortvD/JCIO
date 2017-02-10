@@ -6,14 +6,21 @@ import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 import nl.jortenmilo.keyboard.KeyboardManager;
 
+/**
+ * With this command you can clear the console. 
+ * Usage: "<code>clear</code>"
+ */
 public class ClearCommand implements CommandExecutor {
 
 	private KeyboardManager keyboard;
 	
-	public ClearCommand(KeyboardManager keyboard) {
+	protected ClearCommand(KeyboardManager keyboard) {
 		this.keyboard = keyboard;
 	}
-
+	
+	/**
+	 * The execute method for this command.
+	 */
 	@Override
 	public void execute(String command, Command cmd, String[] params) {
 		if(params.length == 0) {
