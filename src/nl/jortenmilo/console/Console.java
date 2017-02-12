@@ -21,7 +21,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -33,12 +32,11 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
 
-import nl.jortenmilo.console.ConsoleEvent.ConsoleEventListener;
-import nl.jortenmilo.error.InvalidParameterError;
+import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.keyboard.KeyboardInput;
 import nl.jortenmilo.main.CloseManager;
 import nl.jortenmilo.mouse.MouseInput;
-import nl.jortenmilo.plugin.Plugin;
 import nl.jortenmilo.settings.SettingsManager;
 import nl.jortenmilo.utils.ObjectUtils;
 import nl.jortenmilo.utils.SystemUtils;
@@ -53,12 +51,11 @@ public class Console {
 	private static BufferedWriter bw;
 	private static KeyboardInput ki;
 	private static MouseInput mi;
-	private static List<ConsoleEventListener> listeners = new ArrayList<ConsoleEventListener>();
-	private static HashMap<Plugin, List<ConsoleEventListener>> plisteners = new HashMap<Plugin, List<ConsoleEventListener>>();
 	private static SettingsManager settings;
 	private static StyledDocument d;
 	private static ConsoleOutputStream cos;
 	private static SimpleAttributeSet at;
+	private static EventManager events;
 	
 	public static PrintStream dout; //DEBUG
 	public static InputStream din; //DEBUG
@@ -114,12 +111,8 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : listeners) {
-						try {
-							wel.onConsoleResized(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-						}
+					for(EventHandler handler : events.getHandlers(event.getClass())) {
+						handler.execute(event);
 					}
 				}
 				@Override
@@ -130,12 +123,8 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : listeners) {
-						try {
-							wel.onConsoleHidden(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-						}
+					for(EventHandler handler : events.getHandlers(event.getClass())) {
+						handler.execute(event);
 					}
 				}
 				@Override
@@ -146,12 +135,8 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : listeners) {
-						try {
-							wel.onConsoleMoved(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-						}
+					for(EventHandler handler : events.getHandlers(event.getClass())) {
+						handler.execute(event);
 					}
 				}
 				@Override
@@ -162,12 +147,8 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : listeners) {
-						try {
-							wel.onConsoleShown(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-						}
+					for(EventHandler handler : events.getHandlers(event.getClass())) {
+						handler.execute(event);
 					}
 				}
 			});
@@ -184,12 +165,8 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : listeners) {
-						try {
-							wel.onConsoleClosed(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-						}
+					for(EventHandler handler : events.getHandlers(event.getClass())) {
+						handler.execute(event);
 					}
 					
 					CloseManager.close();
@@ -208,12 +185,8 @@ public class Console {
 					event.setX(e.getComponent().getX());
 					event.setY(e.getComponent().getY());
 					
-					for(ConsoleEventListener wel : listeners) {
-						try {
-							wel.onConsoleOpened(event);
-						} catch(Error | Exception e2) {
-							new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-						}
+					for(EventHandler handler : events.getHandlers(event.getClass())) {
+						handler.execute(event);
 					}
 				}
 			});
@@ -548,12 +521,8 @@ public class Console {
 		event.setX(frame.getX());
 		event.setY(frame.getY());
 		
-		for(ConsoleEventListener wel : listeners) {
-			try {
-				wel.onConsoleCleared(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 	
@@ -592,62 +561,13 @@ public class Console {
 	public static MouseInput getMouseInput() {
 		return mi;
 	}
-	
-	protected static void addListener(ConsoleEventListener listener, Plugin plugin) {
-		if(plugin == null) {
-			//Throw an error when the plugin is null.
-			new InvalidParameterError(plugin + "").print();
-			return;
-		}
-		
-		listeners.add(listener);
-		
-		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<ConsoleEventListener>());
-		
-		List<ConsoleEventListener> l = plisteners.get(plugin);
-		l.add(listener);
-		plisteners.put(plugin, l);
-	}
-	
-	protected static List<ConsoleEventListener> getListeners() {
-		return listeners;
-	}
-	
-	protected static void removeListener(ConsoleEventListener listener) {
-		listeners.remove(listener);
-		
-		Plugin plugin = getPlugin(listener);
-		
-		if(plugin == null) return;
-		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<ConsoleEventListener>());
-		
-		List<ConsoleEventListener> l = plisteners.get(plugin);
-		l.remove(listener);
-		plisteners.put(plugin, l);
-	}
-	
-	protected static void removeListeners(Plugin plugin) {
-		if(!plisteners.containsKey(plugin)) {
-			return;
-		}
-		
-		for(ConsoleEventListener listener : plisteners.get(plugin)) {
-			listeners.remove(listener);
-		}
-		plisteners.remove(plugin);
-	}
-	
-	private static Plugin getPlugin(ConsoleEventListener listener) {
-		for(Plugin plugin : plisteners.keySet()) {
-			for(ConsoleEventListener c : plisteners.get(plugin)) {
-				if(c == listener) return plugin;
-			}
-		}
-		return null;
-	}
 
 	public static void setSettingsManager(SettingsManager settings) {
 		Console.settings = settings;
+	}
+
+	public static void setEventManager(EventManager events) {
+		Console.events = events;
 	}
 	
 }

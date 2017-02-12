@@ -1,6 +1,8 @@
 package nl.jortenmilo.console;
 
-public class ConsoleEvent {
+import nl.jortenmilo.event.Event;
+
+public abstract class ConsoleEvent extends Event {
 	
 	private int width = 0;
 	private int height = 0;
@@ -37,16 +39,6 @@ public class ConsoleEvent {
 
 	public void setY(int y) {
 		this.y = y;
-	}
-	
-	public interface ConsoleEventListener {
-		public void onConsoleResized(ConsoleResizedEvent e);
-		public void onConsoleMoved(ConsoleMovedEvent e);
-		public void onConsoleHidden(ConsoleHiddenEvent e);
-		public void onConsoleShown(ConsoleShownEvent e);
-		public void onConsoleOpened(ConsoleOpenedEvent e);
-		public void onConsoleClosed(ConsoleClosedEvent e);
-		public void onConsoleCleared(ConsoleClearedEvent e);
 	}
 	
 }

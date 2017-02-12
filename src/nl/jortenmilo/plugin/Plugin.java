@@ -6,6 +6,7 @@ import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.ConsoleManager;
 import nl.jortenmilo.error.ErrorManager;
+import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
 import nl.jortenmilo.plugin.PluginManager.LoadedPlugin;
@@ -23,6 +24,8 @@ public abstract class Plugin {
 	private SettingsManager settings;
 	private UtilsManager utils;
 	private ErrorManager error;
+	private EventManager event;
+	
 	private LoadedPlugin lp;
 	private File sf;
 	
@@ -113,10 +116,20 @@ public abstract class Plugin {
 	protected void setUtilsManager(UtilsManager utils) {
 		this.utils = utils;
 	}
+	
 	public ErrorManager getErrorManager() {
 		return error;
 	}
+	
 	protected void setErrorManager(ErrorManager error) {
 		this.error = error;
+	}
+	
+	public EventManager getEventManager() {
+		return event;
+	}
+	
+	protected void setEventManager(EventManager event) {
+		this.event = event;
 	}
 }

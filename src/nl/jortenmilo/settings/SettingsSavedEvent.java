@@ -14,4 +14,9 @@ public class SettingsSavedEvent extends SettingsEvent {
 		this.file = file;
 	}
 
+	@Override
+	public String getName() {
+		return "SettingsSavedEvent";
+	}
+
 }

@@ -1,15 +1,17 @@
 package nl.jortenmilo.utils;
 
-public class UtilsEvent {
-	
-	private String name = "";
+import nl.jortenmilo.event.Event;
 
-	public String getName() {
-		return name;
+public abstract class UtilsEvent extends Event {
+	
+	private String utilName = "";
+
+	public String getUtilName() {
+		return utilName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUtilName(String utilName) {
+		this.utilName = utilName;
 	}
 	
 	public class UtilsEventListener {

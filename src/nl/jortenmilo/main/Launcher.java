@@ -9,6 +9,7 @@ import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleManager;
 import nl.jortenmilo.error.ErrorManager;
+import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
 import nl.jortenmilo.plugin.PluginLoader;
@@ -30,8 +31,9 @@ public class Launcher {
 	private ConfigManager config;
 	private ErrorManager error;
 	private UtilsManager utils;
+	private EventManager event;
 	
-	public Launcher() {
+	protected Launcher() {
 		preInit();
 		
 		//Initialize the program
@@ -52,9 +54,13 @@ public class Launcher {
 	
 	private void preInit() {
 		Console.init();
-		keyboard = new KeyboardManager(Console.getKeyboardInput());
-		settings = new SettingsManager();
+		
+		event = new EventManager(); // Loads first
+		
+		keyboard = new KeyboardManager(Console.getKeyboardInput(), event);
+		settings = new SettingsManager(event);
 		Console.setSettingsManager(settings);
+		Console.setEventManager(event);
 		checkForInstall();
 		settings.load();
 	}
@@ -63,14 +69,16 @@ public class Launcher {
 		CloseManager.setLauncher(this);
 		
 		plugin = new PluginManager();
+		
 		PluginLoader pl = new PluginLoader();
 		plugin.setPluginLoader(pl);
-		command = new CommandManager();
-		mouse = new MouseManager(Console.getMouseInput());
+		
+		command = new CommandManager(event);
+		mouse = new MouseManager(Console.getMouseInput(), event);
 		console = new ConsoleManager();
-		config = new ConfigManager();
-		error = new ErrorManager();
-		utils = new UtilsManager();
+		config = new ConfigManager(event);
+		error = new ErrorManager(event);
+		utils = new UtilsManager(event);
 		
 		plugin.setMouseManager(mouse);
 		plugin.setConsoleManager(console);
@@ -80,6 +88,7 @@ public class Launcher {
 		plugin.setSettingsManager(settings);
 		plugin.setErrorManager(error);
 		plugin.setUtilsManager(utils);
+		plugin.setEventManager(event);
 		
 		initCommands();
 		
@@ -131,6 +140,12 @@ public class Launcher {
 
 	public static void main(String[] args) throws Exception {
 		new Launcher();
+		
+		/*TestListener listener = new TestListener();
+		event.registerListener(listener, null);
+		for(EventHandler handler : event.getHandlers(TestEvent.class)) {
+			handler.execute(new TestEvent());
+		}*/
 	}
 
 }

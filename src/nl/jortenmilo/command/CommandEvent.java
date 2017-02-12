@@ -1,11 +1,13 @@
 package nl.jortenmilo.command;
 
+import nl.jortenmilo.event.Event;
+
 /**
- * This class is created by the CommandManager. It contains all data that all Command events must have when they are created.
+ * This is the general CommandEvent. All CommandEvents instantiate this class since it contains the general information about a CommandEvent.
  * @see CommandManager
  * @see Command
  */
-public class CommandEvent {
+public abstract class CommandEvent extends Event {
 	
 	private Command command;
 	
@@ -21,33 +23,6 @@ public class CommandEvent {
 	
 	protected void setCommand(Command command) {
 		this.command = command;
-	}
-	
-	/**
-	 * Use this interface as listener for all of your Command events. When you add an instance of this interface to the CommandManager
-	 * it will execute one of the methods when that event has happened.
-	 */
-	public interface CommandEventListener {
-		
-		/**
-		 * This method is executed before a command is executed. It has a CommandPreExecuteEvent object that contains all the data 
-		 * about the event.
-		 * @param e The event
-		 * @see CommandPreExecuteEvent
-		 */
-		public void onCommandPreExecute(CommandPreExecuteEvent e);
-		
-		/**
-		 * This method is executed after a command is executed. It has a CommandPostExecuteEvent object that contains all the data 
-		 * about the event.
-		 * @param e The event
-		 * @see CommandPostExecuteEvent
-		 */
-		public void onCommandPostExecute(CommandPostExecuteEvent e);
-		
-		public void onCommandRemoved(CommandRemovedEvent e);
-		
-		public void onCommandAdded(CommandAddedEvent e);
 	}
 
 }

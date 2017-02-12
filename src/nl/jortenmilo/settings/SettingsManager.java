@@ -7,18 +7,20 @@ import java.util.List;
 
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.ExistingSettingError;
-import nl.jortenmilo.error.InvalidParameterError;
 import nl.jortenmilo.error.UnknownSettingError;
-import nl.jortenmilo.plugin.Plugin;
-import nl.jortenmilo.settings.SettingsEvent.SettingsEventListener;
+import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.event.EventManager;
 
 public class SettingsManager {
 	
 	private HashMap<String, String> settings = new HashMap<String, String>();
 	private List<String> keys = new ArrayList<String>();
-	private List<SettingsEventListener> listeners = new ArrayList<SettingsEventListener>();
-	private HashMap<Plugin, List<SettingsEventListener>> plisteners = new HashMap<Plugin, List<SettingsEventListener>>();
 	private SettingsLoader loader = new SettingsLoader();
+	private EventManager events;
+	
+	public SettingsManager(EventManager events) {
+		this.events = events;
+	}
 	
 	public String get(String key) {
 		if(!settings.containsKey(key)) {
@@ -39,12 +41,8 @@ public class SettingsManager {
 		event.setKey(key);
 		event.setValue(value);
 		
-		for(SettingsEventListener listener : listeners) {
-			try {
-				listener.onSettingsChanged(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		Console.update();
@@ -62,12 +60,8 @@ public class SettingsManager {
 		event.setKey(key);
 		event.setValue(settings.get(key));
 		
-		for(SettingsEventListener listener : listeners) {
-			try {
-				listener.onSettingsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 	
@@ -86,12 +80,8 @@ public class SettingsManager {
 		event.setKey(key);
 		event.setValue(settings.get(key));
 		
-		for(SettingsEventListener listener : listeners) {
-			try {
-				listener.onSettingsRemoved(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 	
@@ -126,66 +116,9 @@ public class SettingsManager {
 		
 		SettingsResetEvent event = new SettingsResetEvent();
 		
-		for(SettingsEventListener listener : listeners) {
-			try {
-				listener.onSettingsReset(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
-	}
-	
-	public void addListener(SettingsEventListener listener, Plugin plugin) {
-		if(plugin == null) {
-			//Throw an error when the plugin is null.
-			new InvalidParameterError(plugin + "").print();
-			return;
-		}
-		
-		listeners.add(listener);
-		
-		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<SettingsEventListener>());
-		
-		List<SettingsEventListener> l = plisteners.get(plugin);
-		l.add(listener);
-		plisteners.put(plugin, l);
-	}
-	
-	public List<SettingsEventListener> getListeners() {
-		return listeners;
-	}
-	
-	public void removeListener(SettingsEventListener listener) {
-		listeners.remove(listener);
-		
-		Plugin plugin = getPlugin(listener);
-		
-		if(plugin == null) return;
-		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<SettingsEventListener>());
-		
-		List<SettingsEventListener> l = plisteners.get(plugin);
-		l.remove(listener);
-		plisteners.put(plugin, l);
-	}
-	
-	public void removeListeners(Plugin plugin) {
-		if(!plisteners.containsKey(plugin)) {
-			return;
-		}
-		
-		for(SettingsEventListener listener : plisteners.get(plugin)) {
-			listeners.remove(listener);
-		}
-		plisteners.remove(plugin);
-	}
-	
-	private Plugin getPlugin(SettingsEventListener listener) {
-		for(Plugin plugin : plisteners.keySet()) {
-			for(SettingsEventListener c : plisteners.get(plugin)) {
-				if(c == listener) return plugin;
-			}
-		}
-		return null;
 	}
 	
 	public void save() {
@@ -194,12 +127,8 @@ public class SettingsManager {
 			
 			SettingsSavedEvent event = new SettingsSavedEvent();
 			
-			for(SettingsEventListener listener : listeners) {
-				try {
-					listener.onSettingsSaved(event);
-				} catch(Error | Exception e2) {
-					new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-				}
+			for(EventHandler handler : events.getHandlers(event.getClass())) {
+				handler.execute(event);
 			}
 			
 		} catch(Error | Exception e) {
@@ -213,12 +142,8 @@ public class SettingsManager {
 			
 			SettingsLoadedEvent event = new SettingsLoadedEvent();
 			
-			for(SettingsEventListener listener : listeners) {
-				try {
-					listener.onSettingsLoaded(event);
-				} catch(Error | Exception e2) {
-					new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-				}
+			for(EventHandler handler : events.getHandlers(event.getClass())) {
+				handler.execute(event);
 			}
 			
 		} catch(Error | Exception e) {

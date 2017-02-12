@@ -1,6 +1,15 @@
 package nl.jortenmilo.config;
 
-public class ConfigEvent {
+import nl.jortenmilo.command.Command;
+import nl.jortenmilo.command.CommandManager;
+import nl.jortenmilo.event.Event;
+
+/**
+ * This is the general ConfigEvent. All ConfigEvents instantiate this class since it contains the general information about a ConfigEvent.
+ * @see CommandManager
+ * @see Command
+ */
+public abstract class ConfigEvent extends Event {
 	
 	private ConfigFile config;
 
@@ -10,11 +19,5 @@ public class ConfigEvent {
 
 	protected void setConfig(ConfigFile config) {
 		this.config = config;
-	}
-	
-	public interface ConfigEventListener {
-		public void onConfigCreated(ConfigCreatedEvent e);
-		public void onConfigLoaded(ConfigLoadedEvent e);
-		public void onConfigSaved(ConfigSavedEvent e);
 	}
 }

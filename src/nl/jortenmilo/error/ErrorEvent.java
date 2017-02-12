@@ -1,6 +1,8 @@
 package nl.jortenmilo.error;
 
-public class ErrorEvent {
+import nl.jortenmilo.event.Event;
+
+public abstract class ErrorEvent extends Event {
 	
 	private Error error;
 
@@ -11,9 +13,4 @@ public class ErrorEvent {
 	public void setError(Error error) {
 		this.error = error;
 	}
-	
-	public interface ErrorEventListener {
-		public void onErrorThrown(ErrorThrownEvent e);
-	}
-
 }

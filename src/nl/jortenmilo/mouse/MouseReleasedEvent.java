@@ -11,5 +11,10 @@ public class MouseReleasedEvent extends MouseEvent {
 	public void setButton(int button) {
 		this.button = button;
 	}
+
+	@Override
+	public String getName() {
+		return "MouseReleasedEvent";
+	}
 	
 }

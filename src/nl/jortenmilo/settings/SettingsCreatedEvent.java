@@ -20,5 +20,10 @@ public class SettingsCreatedEvent extends SettingsEvent {
 	protected void setValue(String value) {
 		this.value = value;
 	}
+
+	@Override
+	public String getName() {
+		return "SettingsCreatedEvent";
+	}
 	
 }

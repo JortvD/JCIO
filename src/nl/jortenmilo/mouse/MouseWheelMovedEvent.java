@@ -38,5 +38,10 @@ public class MouseWheelMovedEvent extends MouseEvent {
 	public void setScrollType(int scrollType) {
 		this.scrollType = scrollType;
 	}
+
+	@Override
+	public String getName() {
+		return "MouseWheelMovedEvent";
+	}
 	
 }

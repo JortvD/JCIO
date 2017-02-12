@@ -2,7 +2,7 @@ package nl.jortenmilo.error;
 
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
-import nl.jortenmilo.error.ErrorEvent.ErrorEventListener;
+import nl.jortenmilo.event.EventHandler;
 
 public class InvalidParameterError extends Error {
 	
@@ -36,12 +36,8 @@ public class InvalidParameterError extends Error {
 		ErrorThrownEvent event = new ErrorThrownEvent();
 		event.setError(this);
 		
-		for(ErrorEventListener listener : getListeners()) {
-			try {
-				listener.onErrorThrown(event);
-			} catch(java.lang.Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : getEventManager().getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 

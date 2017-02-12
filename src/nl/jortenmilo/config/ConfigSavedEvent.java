@@ -13,5 +13,10 @@ public class ConfigSavedEvent extends ConfigEvent {
 	protected void setFile(File file) {
 		this.file = file;
 	}
+
+	@Override
+	public String getName() {
+		return "ConfigSavedEvent";
+	}
 	
 }

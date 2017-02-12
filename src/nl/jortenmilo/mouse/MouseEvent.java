@@ -1,6 +1,8 @@
 package nl.jortenmilo.mouse;
 
-public class MouseEvent {
+import nl.jortenmilo.event.Event;
+
+public abstract class MouseEvent extends Event {
 	
 	private int x;
 	private int y;
@@ -46,15 +48,6 @@ public class MouseEvent {
 
 	public void setModifiers(int modifiers) {
 		this.modifiers = modifiers;
-	}
-	
-	public interface MouseEventListener {
-		public void onMoved(MouseMovedEvent e) ;
-		public void onClicked(MouseClickedEvent e);
-		public void onPressed(MousePressedEvent e);
-		public void onReleased(MouseReleasedEvent e);
-		public void onDragged(MouseDraggedEvent e);
-		public void onWheelMoved(MouseWheelMovedEvent e);
 	}
 	
 }

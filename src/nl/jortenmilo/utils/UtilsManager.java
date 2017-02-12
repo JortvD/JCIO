@@ -1,15 +1,11 @@
 package nl.jortenmilo.utils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import javax.sound.sampled.Mixer;
 
-import nl.jortenmilo.error.InvalidParameterError;
-import nl.jortenmilo.plugin.Plugin;
-import nl.jortenmilo.utils.UtilsEvent.UtilsEventListener;
+import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.utils.math.CalculatorUtils;
 import nl.jortenmilo.utils.math.MathUtils;
 import nl.jortenmilo.utils.math.RandomUtils;
@@ -25,19 +21,18 @@ import nl.jortenmilo.utils.sound.SoundUtils;
 
 public class UtilsManager {
 	
-	private List<UtilsEventListener> listeners = new ArrayList<UtilsEventListener>();
-	private HashMap<Plugin, List<UtilsEventListener>> plisteners = new HashMap<Plugin, List<UtilsEventListener>>();
+	private EventManager events;
+	
+	public UtilsManager(EventManager events) {
+		this.events = events;
+	}
 	
 	public IDUtils createIDUtils() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("IDUtils");
+		event.setUtilName("IDUtils");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new IDUtils();
@@ -45,14 +40,10 @@ public class UtilsManager {
 	
 	public StringUtils createStringUtils() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("StringUtils");
+		event.setUtilName("StringUtils");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new StringUtils();
@@ -60,14 +51,10 @@ public class UtilsManager {
 	
 	public SystemUtils createSystemUtils() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("SystemUtils");
+		event.setUtilName("SystemUtils");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new SystemUtils();
@@ -75,14 +62,10 @@ public class UtilsManager {
 	
 	public MathUtils createMathUtils() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("MathUtils");
+		event.setUtilName("MathUtils");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new MathUtils();
@@ -90,14 +73,10 @@ public class UtilsManager {
 	
 	public CalculatorUtils createCalculatorUtils() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("CalculatorUtils");
+		event.setUtilName("CalculatorUtils");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new CalculatorUtils();
@@ -105,14 +84,10 @@ public class UtilsManager {
 	
 	public RandomUtils createRandomUtils() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("RandomUtils");
+		event.setUtilName("RandomUtils");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new RandomUtils();
@@ -120,14 +95,10 @@ public class UtilsManager {
 	
 	public NetBot createNetBot() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("NetBot");
+		event.setUtilName("NetBot");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new NetBot();
@@ -135,14 +106,10 @@ public class UtilsManager {
 	
 	public SocketClient createSocketClient() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("SocketClient");
+		event.setUtilName("SocketClient");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new SocketClient();
@@ -150,14 +117,10 @@ public class UtilsManager {
 	
 	public SocketServer createSocketServer() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("SocketServer");
+		event.setUtilName("SocketServer");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new SocketServer();
@@ -165,14 +128,10 @@ public class UtilsManager {
 	
 	public WebClient createWebClient() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("WebClient");
+		event.setUtilName("WebClient");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new WebClient();
@@ -180,14 +139,10 @@ public class UtilsManager {
 	
 	public WebServer createWebServer() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("WebServer");
+		event.setUtilName("WebServer");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new WebServer();
@@ -195,14 +150,10 @@ public class UtilsManager {
 	
 	public MidiUtils createMidiUtils() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("MidiUtils");
+		event.setUtilName("MidiUtils");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new MidiUtils();
@@ -210,14 +161,10 @@ public class UtilsManager {
 	
 	public MixerUtils createMixerUtils() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("MixerUtils");
+		event.setUtilName("MixerUtils");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new MixerUtils();
@@ -225,14 +172,10 @@ public class UtilsManager {
 	
 	public RecorderUtils createRecorderUtils() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("RecorderUtils");
+		event.setUtilName("RecorderUtils");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new RecorderUtils();
@@ -240,14 +183,10 @@ public class UtilsManager {
 	
 	public SoundUtils createSoundUtils(File f, Mixer m) {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("SoundUtils");
+		event.setUtilName("SoundUtils");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new SoundUtils(f, m);
@@ -255,14 +194,10 @@ public class UtilsManager {
 	
 	public ObjectUtils createObjectUtils() {
 		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setName("ObjectUtils");
+		event.setUtilName("ObjectUtils");
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCreated(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return new ObjectUtils();
@@ -273,15 +208,11 @@ public class UtilsManager {
 		nu.setUUDIs(u.getUUIDs());
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("IDUtils");
+		event.setUtilName("IDUtils");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -291,15 +222,11 @@ public class UtilsManager {
 		StringUtils nu = new StringUtils();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("StringUtils");
+		event.setUtilName("StringUtils");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -309,15 +236,11 @@ public class UtilsManager {
 		SystemUtils nu = new SystemUtils();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("SystemUtils");
+		event.setUtilName("SystemUtils");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -327,15 +250,11 @@ public class UtilsManager {
 		MathUtils nu = new MathUtils();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("MathUtils");
+		event.setUtilName("MathUtils");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -345,15 +264,11 @@ public class UtilsManager {
 		CalculatorUtils nu = new CalculatorUtils();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("CalculatorUtils");
+		event.setUtilName("CalculatorUtils");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -363,15 +278,11 @@ public class UtilsManager {
 		RandomUtils nu = new RandomUtils();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("RandomUtils");
+		event.setUtilName("RandomUtils");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -381,15 +292,11 @@ public class UtilsManager {
 		NetBot nu = new NetBot();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("RandomUtils");
+		event.setUtilName("RandomUtils");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -399,15 +306,11 @@ public class UtilsManager {
 		SocketClient nu = new SocketClient();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("SocketClient");
+		event.setUtilName("SocketClient");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -417,15 +320,11 @@ public class UtilsManager {
 		SocketServer nu = new SocketServer();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("SocketServer");
+		event.setUtilName("SocketServer");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -435,15 +334,11 @@ public class UtilsManager {
 		WebClient nu = new WebClient();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("WebClient");
+		event.setUtilName("WebClient");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -453,15 +348,11 @@ public class UtilsManager {
 		WebServer nu = new WebServer();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("WebServer");
+		event.setUtilName("WebServer");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -474,15 +365,11 @@ public class UtilsManager {
 		nu.setChannels(u.getChannels());
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("WebServer");
+		event.setUtilName("WebServer");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -492,15 +379,11 @@ public class UtilsManager {
 		MixerUtils nu = new MixerUtils();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("MixerUtils");
+		event.setUtilName("MixerUtils");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -517,15 +400,11 @@ public class UtilsManager {
 		nu.setSampleSizeInBits(u.getSampleSizeInBits());
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("RecorderUtils");
+		event.setUtilName("RecorderUtils");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -540,15 +419,11 @@ public class UtilsManager {
 		nu.setVolume(u.getVolume());
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("SoundUtils");
+		event.setUtilName("SoundUtils");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
@@ -558,70 +433,13 @@ public class UtilsManager {
 		ObjectUtils nu = new ObjectUtils();
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setName("MixerUtils");
+		event.setUtilName("MixerUtils");
 		event.setData(u.getData());
 		
-		for(UtilsEventListener listener : listeners) {
-			try {
-				listener.onUtilsCloned(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		return nu;
-	}
-	
-	public void addListener(UtilsEventListener listener, Plugin plugin) {
-		if(plugin == null) {
-			//Throw an error when the plugin is null.
-			new InvalidParameterError(plugin + "").print();
-			return;
-		}
-		
-		listeners.add(listener);
-		
-		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<UtilsEventListener>());
-		
-		List<UtilsEventListener> l = plisteners.get(plugin);
-		l.add(listener);
-		plisteners.put(plugin, l);
-	}
-	
-	public List<UtilsEventListener> getListeners() {
-		return listeners;
-	}
-	
-	public void removeListener(UtilsEventListener listener) {
-		listeners.remove(listener);
-		
-		Plugin plugin = getPlugin(listener);
-		
-		if(plugin == null) return;
-		if(plisteners.get(plugin)==null) plisteners.put(plugin, new ArrayList<UtilsEventListener>());
-		
-		List<UtilsEventListener> l = plisteners.get(plugin);
-		l.remove(listener);
-		plisteners.put(plugin, l);
-	}
-	
-	public void removeListeners(Plugin plugin) {
-		if(!plisteners.containsKey(plugin)) {
-			return;
-		}
-		
-		for(UtilsEventListener listener : plisteners.get(plugin)) {
-			listeners.remove(listener);
-		}
-		plisteners.remove(plugin);
-	}
-	
-	private Plugin getPlugin(UtilsEventListener listener) {
-		for(Plugin plugin : plisteners.keySet()) {
-			for(UtilsEventListener c : plisteners.get(plugin)) {
-				if(c==listener) return plugin;
-			}
-		}
-		return null;
 	}
 }

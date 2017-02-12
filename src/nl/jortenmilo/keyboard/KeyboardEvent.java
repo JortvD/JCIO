@@ -1,6 +1,8 @@
 package nl.jortenmilo.keyboard;
 
-public class KeyboardEvent{
+import nl.jortenmilo.event.Event;
+
+public abstract class KeyboardEvent extends Event {
 	
 	private int keyCode;
 	private char keyChar;
@@ -37,12 +39,6 @@ public class KeyboardEvent{
 
 	public void setModifiersText(String modifiersText) {
 		this.modifiersText = modifiersText;
-	}
-	
-	public interface KeyboardEventListener {
-		public void onKeyboardPressed(KeyboardPressedEvent e);
-		public void onKeyboardReleased(KeyboardReleasedEvent e);
-		public void onKeyboardTyped(KeyboardTypedEvent e);
 	}
 	
 }

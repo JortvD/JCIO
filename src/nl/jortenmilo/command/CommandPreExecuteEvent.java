@@ -18,5 +18,10 @@ public class CommandPreExecuteEvent extends CommandEvent {
 	protected void setArguments(String[] arguments) {
 		this.arguments = arguments;
 	}
+
+	@Override
+	public String getName() {
+		return "CommandPreExecuteEvent";
+	}
 	
 }

@@ -6,4 +6,9 @@ package nl.jortenmilo.command;
  */
 public class CommandAddedEvent extends CommandEvent {
 
+	@Override
+	public String getName() {
+		return "CommandAddedEvent";
+	}
+
 }

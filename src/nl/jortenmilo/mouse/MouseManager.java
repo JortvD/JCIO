@@ -2,33 +2,13 @@ package nl.jortenmilo.mouse;
 
 import java.awt.AWTException;
 import java.awt.Robot;
-import java.util.List;
 
-import nl.jortenmilo.mouse.MouseEvent.MouseEventListener;
-import nl.jortenmilo.plugin.Plugin;
+import nl.jortenmilo.event.EventManager;
 
 public class MouseManager {
 	
-	private MouseInput input;
-	
-	public MouseManager(MouseInput input) {
-		this.input = input;
-	}
-	
-	public void addListener(MouseEventListener listener, Plugin plugin) {
-		input.addListener(listener, plugin);
-	}
-	
-	public List<MouseEventListener> getListeners() {
-		return input.getListeners();
-	}
-	
-	public void removeListener(MouseEventListener listener) {
-		input.removeListener(listener);
-	}
-	
-	public void removeListeners(Plugin plugin) {
-		input.removeListeners(plugin);
+	public MouseManager(MouseInput input, EventManager events) {
+		input.setEventManager(events);
 	}
 	
 	public void simulateButton(int button) {

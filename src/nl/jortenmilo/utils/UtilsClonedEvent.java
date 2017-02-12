@@ -11,4 +11,9 @@ public class UtilsClonedEvent extends UtilsEvent {
 	public void setData(String data) {
 		this.data = data;
 	}
+
+	@Override
+	public String getName() {
+		return "UtilsClonedEvent";
+	}
 }

@@ -5,11 +5,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import nl.jortenmilo.command.CommandEvent.CommandEventListener;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.Console.ConsoleUser;
 import nl.jortenmilo.error.CommandUsedError;
 import nl.jortenmilo.error.InvalidParameterError;
+import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.plugin.Plugin;
 
 /**
@@ -20,8 +21,11 @@ public class CommandManager {
 	
 	private List<Command> commands = new ArrayList<Command>();
 	private HashMap<Plugin, List<Command>> pcommands = new HashMap<Plugin, List<Command>>();
-	private List<CommandEventListener> listeners = new ArrayList<CommandEventListener>();
-	private HashMap<Plugin, List<CommandEventListener>> plisteners = new HashMap<Plugin, List<CommandEventListener>>();
+	private EventManager events;
+	
+	public CommandManager(EventManager events) {
+		this.events = events;
+	}
 	
 	/**
 	 * Used to register a new command. It also needs the plugin for debugging purposes.
@@ -90,12 +94,8 @@ public class CommandManager {
 			CommandAddedEvent event = new CommandAddedEvent();
 			event.setCommand(command);
 			
-			for(CommandEventListener listener : listeners) {
-				try {
-					listener.onCommandAdded(event);
-				} catch(Error | Exception e2) {
-					new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-				}
+			for(EventHandler handler : events.getHandlers(event.getClass())) {
+				handler.execute(event);
 			}
 		}
 	}
@@ -154,12 +154,8 @@ public class CommandManager {
 			CommandAddedEvent event = new CommandAddedEvent();
 			event.setCommand(command);
 			
-			for(CommandEventListener listener : listeners) {
-				try {
-					listener.onCommandAdded(event);
-				} catch(Error | Exception e2) {
-					new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-				}
+			for(EventHandler handler : events.getHandlers(event.getClass())) {
+				handler.execute(event);
 			}
 		}
 	}
@@ -181,12 +177,8 @@ public class CommandManager {
 		CommandRemovedEvent event = new CommandRemovedEvent();
 		event.setCommand(command);
 		
-		for(CommandEventListener listener : listeners) {
-			try {
-				listener.onCommandRemoved(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-			}
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 	
@@ -202,12 +194,8 @@ public class CommandManager {
 			CommandRemovedEvent event = new CommandRemovedEvent();
 			event.setCommand(command);
 			
-			for(CommandEventListener listener : listeners) {
-				try {
-					listener.onCommandRemoved(event);
-				} catch(Error | Exception e2) {
-					new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
-				}
+			for(EventHandler handler : events.getHandlers(event.getClass())) {
+				handler.execute(event);
 			}
 		}
 		
@@ -222,89 +210,10 @@ public class CommandManager {
 		return commands;
 	}
 	
-	/**
-	 * Adds a listener to this manager. It also needs the plugin for debugging purposes.
-	 * @param listener The listener that has to be added
-	 * @param plugin The plugin this listener is from
-	 */
-	public void addListener(CommandEventListener listener, Plugin plugin) {
-		if(plugin == null) {
-			//Throw an error when the plugin is null.
-			new InvalidParameterError(plugin + "").print();
-			
-			return;
-		}
-		
-		listeners.add(listener);
-		
-		if(plisteners.get(plugin)==null) 
-			plisteners.put(plugin, new ArrayList<CommandEventListener>());
-		
-		List<CommandEventListener> l = plisteners.get(plugin);
-		l.add(listener);
-		
-		plisteners.put(plugin, l);
-	}
-	
-	/**
-	 * Returns all of the listeners that are added to this manager.
-	 * @return A list of the listeners
-	 */
-	public List<CommandEventListener> getListeners() {
-		return listeners;
-	}
-	
-	/**
-	 * Removes the listener from this manager.
-	 * @param listener The listener that has to be removed.
-	 */
-	public void removeListener(CommandEventListener listener) {
-		if(listeners.contains(listener)) {
-			listeners.remove(listener);
-			return;
-		}
-		
-		Plugin plugin = getPlugin(listener);
-		
-		if(!plisteners.containsValue(listener) || !plisteners.containsKey(plugin)) {
-			return;
-		}
-		
-		List<CommandEventListener> l = plisteners.get(plugin);
-		l.remove(listener);
-		
-		plisteners.put(plugin, l);
-	}
-	
-	/**
-	 * Removes all the listeners that are added by that plugin.
-	 * @param plugin The plugin which listeners have to be removed.
-	 */
-	public void removeListeners(Plugin plugin) {
-		if(!plisteners.containsKey(plugin)) {
-			return;
-		}
-		
-		for(CommandEventListener listener : plisteners.get(plugin)) {
-			listeners.remove(listener);
-		}
-		
-		plisteners.remove(plugin);
-	}
-	
 	private Plugin getPlugin(Command command) {
 		for(Plugin plugin : pcommands.keySet()) {
 			for(Command c : pcommands.get(plugin)) {
 				if(c == command) return plugin;
-			}
-		}
-		return null;
-	}
-	
-	private Plugin getPlugin(CommandEventListener listener) {
-		for(Plugin plugin : plisteners.keySet()) {
-			for(CommandEventListener c : plisteners.get(plugin)) {
-				if(c == listener) return plugin;
 			}
 		}
 		return null;
@@ -355,12 +264,8 @@ public class CommandManager {
 				event.setCommand(c);
 				
 				//Run all the listeners.
-				for(CommandEventListener listener : listeners) {
-					try {
-						listener.onCommandPreExecute(event);
-					} catch(Error | Exception e) {
-						new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
-					}
+				for(EventHandler handler : events.getHandlers(event.getClass())) {
+					handler.execute(event);
 				}
 				
 				//Run the command executor.
@@ -374,12 +279,8 @@ public class CommandManager {
 				event2.setArguments(args);
 				event2.setCommand(c);
 				
-				for(CommandEventListener listener : listeners) {
-					try {
-						listener.onCommandPostExecute(event2);
-					} catch(Error | Exception e) {
-						new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
-					}
+				for(EventHandler handler : events.getHandlers(event2.getClass())) {
+					handler.execute(event2);
 				}
 				
 				return;
@@ -397,12 +298,8 @@ public class CommandManager {
 					event.setArguments(args);
 					event.setCommand(c);
 					
-					for(CommandEventListener listener : listeners) {
-						try {
-							listener.onCommandPreExecute(event);
-						} catch(Error | Exception e) {
-							new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
-						}
+					for(EventHandler handler : events.getHandlers(event.getClass())) {
+						handler.execute(event);
 					}
 					
 					try {
@@ -415,12 +312,8 @@ public class CommandManager {
 					event2.setArguments(args);
 					event2.setCommand(c);
 					
-					for(CommandEventListener listener : listeners) {
-						try {
-							listener.onCommandPostExecute(event2);
-						} catch(Error | Exception e) {
-							new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
-						}
+					for(EventHandler handler : events.getHandlers(event2.getClass())) {
+						handler.execute(event2);
 					}
 					
 					return;

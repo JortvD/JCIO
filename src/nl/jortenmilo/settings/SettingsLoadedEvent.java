@@ -13,5 +13,10 @@ public class SettingsLoadedEvent extends SettingsEvent {
 	public void setFile(File file) {
 		this.file = file;
 	}
+
+	@Override
+	public String getName() {
+		return "SettingsLoadedEvent";
+	}
 	
 }
