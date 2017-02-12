@@ -3,6 +3,7 @@ nl.jortenmilo.command.defaults
 nl.jortenmilo.config
 nl.jortenmilo.console
 nl.jortenmilo.error
+nl.jortenmilo.event
 nl.jortenmilo.keyboard
 nl.jortenmilo.main
 nl.jortenmilo.mouse

@@ -93,6 +93,7 @@ public class CommandManager {
 			
 			CommandAddedEvent event = new CommandAddedEvent();
 			event.setCommand(command);
+			event.setPlugin(plugin);
 			
 			for(EventHandler handler : events.getHandlers(event.getClass())) {
 				handler.execute(event);
@@ -210,12 +211,45 @@ public class CommandManager {
 		return commands;
 	}
 	
-	private Plugin getPlugin(Command command) {
+	/**
+	 * Returns all of the commands that are registered by a specific plugin.
+	 * @return A list of the commands
+	 */
+	public List<Command> getCommands(Plugin plugin) {
+		return pcommands.get(plugin);
+	}
+	
+	/**
+	 * Returns the plugin that registered that command.
+	 * @return A plugin
+	 */
+	public Plugin getPlugin(Command command) {
 		for(Plugin plugin : pcommands.keySet()) {
 			for(Command c : pcommands.get(plugin)) {
 				if(c == command) return plugin;
 			}
 		}
+		return null;
+	}
+	
+	/**
+	 * Returns the command that belongs to the specified name.
+	 * @param command The name or alias of the command
+	 * @return The command (can be null)
+	 */
+	public Command getCommand(String command) {
+		for(Command c : commands) {
+			if(c.getCommand().equalsIgnoreCase(command)) {
+				return c;
+			}
+			
+			for(String s : c.getAliasses()) {
+				if(s.equalsIgnoreCase(command)) {
+					return c;
+				}
+			}
+		}
+		
 		return null;
 	}
 	
@@ -260,7 +294,7 @@ public class CommandManager {
 				
 				//Create the PreExecute event.
 				CommandPreExecuteEvent event = new CommandPreExecuteEvent();
-				event.setArguments(args);
+				event.setArguments(params);
 				event.setCommand(c);
 				
 				//Run all the listeners.
@@ -295,7 +329,7 @@ public class CommandManager {
 					}
 					
 					CommandPreExecuteEvent event = new CommandPreExecuteEvent();
-					event.setArguments(args);
+					event.setArguments(params);
 					event.setCommand(c);
 					
 					for(EventHandler handler : events.getHandlers(event.getClass())) {
