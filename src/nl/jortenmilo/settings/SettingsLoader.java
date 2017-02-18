@@ -13,7 +13,7 @@ public class SettingsLoader {
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		String line = "";
 		
-		while((line=br.readLine())!=null) {
+		while((line = br.readLine()) != null) {
 			if(line.startsWith("#") || line.equals("")) {
 				continue;
 			} 

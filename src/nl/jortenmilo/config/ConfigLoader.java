@@ -45,7 +45,8 @@ public class ConfigLoader {
 				else if(spaces > dots) {
 					if(spaces-dots == 1) {
 						path = createLongerPath(path, key);
-					} else {
+					} 
+					else {
 						new ConfigLoadingError(config.getFile().getPath(), l + "", spaces + "", "Too much spaces").print();
 						return;
 					}
@@ -69,7 +70,8 @@ public class ConfigLoader {
 			}
 			
 			br.close();
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		
@@ -86,7 +88,8 @@ public class ConfigLoader {
 			}
 			
 			bw.close();
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
@@ -98,7 +101,8 @@ public class ConfigLoader {
 		for(int i = 0; i < s.length(); i++) {
 			if(bytes[i] == (byte)' ') {
 				spaces++;
-			} else {
+			} 
+			else {
 				return spaces;
 			}
 		}

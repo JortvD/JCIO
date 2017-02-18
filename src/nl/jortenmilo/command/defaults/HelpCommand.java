@@ -46,7 +46,8 @@ public class HelpCommand implements CommandExecutor {
 			}
 			
 			Console.println("So, what do you want to do?");
-		} else {
+		} 
+		else {
 			Console.println(ConsoleUser.Error, "Wrong command usage: exit");
 		}
 	}

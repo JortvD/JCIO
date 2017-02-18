@@ -11,6 +11,7 @@ public class KeyboardManager {
 	
 	public KeyboardManager(KeyboardInput input, EventManager events) {
 		this.input = input;
+		
 		input.setEventManager(events);
 	}
 	
@@ -19,7 +20,8 @@ public class KeyboardManager {
 			Robot r = new Robot();
 			r.keyPress(key);
 			r.keyRelease(key);
-		} catch (AWTException e) {
+		} 
+		catch (AWTException e) {
 			e.printStackTrace();
 		}
 	}

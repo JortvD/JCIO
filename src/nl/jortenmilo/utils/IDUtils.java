@@ -11,9 +11,11 @@ public class IDUtils {
 	
 	public UUID getRandomUUID() {
 		UUID uuid = UUID.randomUUID();
+		
 		if(uuids.contains(uuid)) {
 			return getRandomUUID();
 		}
+		
 		uuids.add(uuid);
 		return uuid;
 	}

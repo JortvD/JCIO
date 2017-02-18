@@ -1,3 +1,5 @@
 package nl.jortenmilo.console;
 
-public class ConsoleManager {}
+public class ConsoleManager {
+	
+}

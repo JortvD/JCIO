@@ -21,6 +21,8 @@ import nl.jortenmilo.utils.sound.SoundUtils;
 
 public class UtilsManager {
 	
+	//TODO: Create a Utils class the is implemented in every util. This will contain a getName and a getData method.
+	
 	private EventManager events;
 	
 	public UtilsManager(EventManager events) {

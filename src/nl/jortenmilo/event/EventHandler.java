@@ -15,8 +15,9 @@ public class EventHandler {
 	public void execute(Event event) {
 		try {
 			method.invoke(listener, this.event.cast(event));
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
+		} 
+		catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace(); //TODO: Change this to UnknownException
 		}
 	}
 

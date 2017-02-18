@@ -36,32 +36,36 @@ public class ConfigObject {
 	public void set(ConfigObject object, String path) {
 		if(!path.contains(".")) {
 			objects.add(object);
-		} else {
+		} 
+		else {
 			String key = path.substring(0, path.indexOf("."));
+			
 			for(ConfigObject o : objects) {
 				if(o.getName().equals(key)) {
 					o.set(object, path.substring(path.indexOf(".")+1, path.length()));
 					return;
 				}
 			}
+			
 			new MissingConfigObjectError(key, path).print();
 		}
 	}
 
 	public ConfigObject get(String path) {
 		String key = path.substring(0, path.indexOf("."));
+		
 		for(ConfigObject o : objects) {
 			if(o.getName().equals(key)) {
 				if(!path.contains(".")) {
 					return o;
-				} else {
+				} 
+				else {
 					return o.get(path.substring(path.indexOf(".") + 1, path.length()));
 				}
 			}
 		}
 		
 		new MissingConfigObjectError(key, path).print();
-		
 		return null;
 	}
 	

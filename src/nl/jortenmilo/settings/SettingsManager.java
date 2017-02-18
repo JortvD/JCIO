@@ -131,7 +131,8 @@ public class SettingsManager {
 				handler.execute(event);
 			}
 			
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
@@ -146,7 +147,8 @@ public class SettingsManager {
 				handler.execute(event);
 			}
 			
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}

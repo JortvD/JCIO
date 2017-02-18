@@ -57,7 +57,7 @@ public class Command {
 			new InvalidParameterError(command).print();
 		}
 		
-		if(command.equals("")) {
+		else if(command.equals("")) {
 			new InvalidParameterError(command).print();
 		}
 		
@@ -110,7 +110,7 @@ public class Command {
 			new InvalidParameterError(command).print();
 		}
 		
-		if(alias.equals("")) {
+		else if(alias.equals("")) {
 			new InvalidParameterError(command).print();
 		}
 		

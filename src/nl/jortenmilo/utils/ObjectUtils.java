@@ -12,7 +12,8 @@ public class ObjectUtils {
 			int g = Integer.parseInt(s.substring(s.indexOf("_")+1, s.lastIndexOf("_")));
 			int b = Integer.parseInt(s.substring(s.lastIndexOf("_")+1, s.length()));
 			return new Color(r, g, b);
-		} catch(NumberFormatException e) {
+		} 
+		catch(NumberFormatException e) {
 			new ParsingError("String", s, "Color").print();
 			return null;
 		}
@@ -22,7 +23,8 @@ public class ObjectUtils {
 	public int StringToInteger(String s) {
 		try {
 			return Integer.parseInt(s);
-		} catch(NumberFormatException e) {
+		} 
+		catch(NumberFormatException e) {
 			new ParsingError("String", s, "Integer").print();
 			return 0;
 		}

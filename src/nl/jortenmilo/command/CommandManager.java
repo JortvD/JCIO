@@ -39,7 +39,7 @@ public class CommandManager {
 			new InvalidParameterError(command.getCommand()).print();
 		}
 		
-		if(plugin == null) {
+		else if(plugin == null) {
 			//Throw an error when the plugin is null.
 			new InvalidParameterError(plugin + "").print();
 		}
@@ -54,24 +54,20 @@ public class CommandManager {
 			}
 			
 			//Check if these aliasses is equal to the command.
-			for(String s : c.getAliasses()) {
-				if(s.equalsIgnoreCase(command.getCommand())) {
-					exists = true;
-				}
+			if(c.getAliasses().contains(command.getCommand())) {
+				exists = true;
 			}
 			
 			//Check if this command is equal to the aliasses.
-			for(String s : command.getAliasses()) {
-				if(s.equalsIgnoreCase(c.getCommand())) {
-					command.getAliasses().remove(s);
-				}
+			if(command.getAliasses().contains(c.getCommand())) {
+				command.getAliasses().remove(c.getCommand());
 			}
 			
 			//Check if these aliasses are equal to the aliasses.
 			for(String s1 : c.getAliasses()) {
 				for(String s2 : command.getAliasses()) {
 					if(s1.equalsIgnoreCase(s2)) {
-						c.getAliasses().remove(s1);
+						command.getAliasses().remove(s1);
 					}
 				}
 			}
@@ -80,11 +76,14 @@ public class CommandManager {
 		if(exists) {
 			//Throw an error when the command/aliasses already exist.
 			new CommandUsedError(command.getCommand()).print();
-		} else {
+		} 
+		else {
 			//Add the command to the list.
 			commands.add(command);
 			
-			if(pcommands.get(plugin)==null) pcommands.put(plugin, new ArrayList<Command>());
+			if(pcommands.get(plugin)==null) {
+				pcommands.put(plugin, new ArrayList<Command>());
+			}
 			
 			List<Command> l = pcommands.get(plugin);
 			l.add(command);
@@ -122,17 +121,13 @@ public class CommandManager {
 			}
 			
 			//Check if these aliasses is equal to the command.
-			for(String s : c.getAliasses()) {
-				if(s.equalsIgnoreCase(command.getCommand())) {
-					exists = true;
-				}
+			if(c.getAliasses().contains(command.getCommand())) {
+				exists = true;
 			}
 			
 			//Check if this command is equal to the aliasses.
-			for(String s : c.getAliasses()) {
-				if(s.equalsIgnoreCase(command.getCommand())) {
-					exists = true;
-				}
+			if(command.getAliasses().contains(c.getCommand())) {
+				command.getAliasses().remove(c.getCommand());
 			}
 			
 			//Check if these aliasses are equal to the aliasses.
@@ -148,7 +143,8 @@ public class CommandManager {
 		if(exists) {
 			//Throw an error when the command/aliasses already exist.
 			new CommandUsedError(command.getCommand()).print();
-		} else {
+		} 
+		else {
 			//Add the command to the list.
 			commands.add(command);
 			
@@ -213,6 +209,7 @@ public class CommandManager {
 	
 	/**
 	 * Returns all of the commands that are registered by a specific plugin.
+	 * @param plugin The plugin
 	 * @return A list of the commands
 	 */
 	public List<Command> getCommands(Plugin plugin) {
@@ -221,14 +218,18 @@ public class CommandManager {
 	
 	/**
 	 * Returns the plugin that registered that command.
+	 * @param command The command
 	 * @return A plugin
 	 */
 	public Plugin getPlugin(Command command) {
 		for(Plugin plugin : pcommands.keySet()) {
 			for(Command c : pcommands.get(plugin)) {
-				if(c == command) return plugin;
+				if(c == command) {
+					return plugin;
+				}
 			}
 		}
+		
 		return null;
 	}
 	
@@ -243,10 +244,8 @@ public class CommandManager {
 				return c;
 			}
 			
-			for(String s : c.getAliasses()) {
-				if(s.equalsIgnoreCase(command)) {
-					return c;
-				}
+			if(c.getAliasses().contains(command)) {
+				return c;
 			}
 		}
 		
@@ -305,7 +304,8 @@ public class CommandManager {
 				//Run the command executor.
 				try {
 					c.getCommandExecutor().execute(command, c, params);
-				} catch(Error | Exception e) {
+				} 
+				catch(Error | Exception e) {
 					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 				}
 				
@@ -338,7 +338,8 @@ public class CommandManager {
 					
 					try {
 						c.getCommandExecutor().execute(command, c, params);
-					} catch(Error | Exception e) {
+					} 
+					catch(Error | Exception e) {
 						new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 					}
 					

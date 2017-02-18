@@ -29,7 +29,8 @@ public class ClearCommand implements CommandExecutor {
 			keyboard.waitUntilTyped();
 			
 			Console.clear();
-		} else {
+		} 
+		else {
 			Console.println(ConsoleUser.Error, "Wrong command usage: exit");
 		}
 	}

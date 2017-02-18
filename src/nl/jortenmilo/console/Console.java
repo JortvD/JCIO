@@ -115,6 +115,7 @@ public class Console {
 						handler.execute(event);
 					}
 				}
+				
 				@Override
 				public void componentHidden(ComponentEvent e) {
 					ConsoleHiddenEvent event = new ConsoleHiddenEvent();
@@ -127,6 +128,7 @@ public class Console {
 						handler.execute(event);
 					}
 				}
+				
 				@Override
 				public void componentMoved(ComponentEvent e) {
 					ConsoleMovedEvent event = new ConsoleMovedEvent();
@@ -139,6 +141,7 @@ public class Console {
 						handler.execute(event);
 					}
 				}
+				
 				@Override
 				public void componentShown(ComponentEvent e) {
 					ConsoleShownEvent event = new ConsoleShownEvent();
@@ -152,11 +155,14 @@ public class Console {
 					}
 				}
 			});
+			
 			frame.addWindowListener(new WindowListener() {
 				@Override
 				public void windowActivated(WindowEvent e) {}
+				
 				@Override
 				public void windowClosed(WindowEvent e) {}
+				
 				@Override
 				public void windowClosing(WindowEvent e) {
 					ConsoleClosedEvent event = new ConsoleClosedEvent();
@@ -171,12 +177,16 @@ public class Console {
 					
 					CloseManager.close();
 				}
+				
 				@Override
 				public void windowDeactivated(WindowEvent e) {}
+				
 				@Override
 				public void windowDeiconified(WindowEvent e) {}
+				
 				@Override
 				public void windowIconified(WindowEvent e) {}
+				
 				@Override
 				public void windowOpened(WindowEvent e) {
 					ConsoleOpenedEvent event = new ConsoleOpenedEvent();
@@ -209,12 +219,28 @@ public class Console {
 				try {
 					f.createNewFile();
 					bw = new BufferedWriter(new PrintWriter(f));
+					
+					debug("Started JCIO [Jortenmilo (c) 2017]");
+					debug("OS: " + System.getProperty("os.name"));
 				} catch(Error | Exception e) {
 					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 				}
 			}
 		} else {
 			Console.println(ConsoleUser.Error, "Console is already created!");
+		}
+	}
+	
+	public static void debug(String s) {
+		if(settings.contains("log")) {
+			if(settings.get("log").equals("true") && bw!=null) {
+				try {
+					bw.write(s);
+					bw.newLine();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
@@ -241,12 +267,6 @@ public class Console {
 			int l = t.getGraphics().getFontMetrics().stringWidth(lineText)+12;
 			
 			String text = new String(new byte[]{(byte)b});
-			
-			if(settings.contains("log")) {
-				if(settings.get("log").equals("true") && bw!=null) {
-					bw.write(b);
-				}
-			}
 			
 			if((l > t.getWidth()) && !text.equals("\n")) {
 				brakes.add(d.getLength());
@@ -281,12 +301,25 @@ public class Console {
 				write(bytes[i]);
 			}
 			write((byte)'\n');
+			
+			if(settings.contains("log")) {
+				if(settings.get("log").equals("true") && bw!=null) {
+					bw.write(s);
+					bw.newLine();
+				}
+			}
 		}
 		
 		public void print(String s) throws IOException {
 			byte[] bytes = s.getBytes();
 			for(int i = 0; i < s.length(); i++) {
 				write(bytes[i]);
+			}
+			
+			if(settings.contains("log")) {
+				if(settings.get("log").equals("true") && bw!=null) {
+					bw.write(s);
+				}
 			}
 		}
 	}

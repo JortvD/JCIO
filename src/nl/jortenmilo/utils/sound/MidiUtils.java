@@ -20,7 +20,8 @@ public class MidiUtils {
 			
 			synth.open();
 			channels = synth.getChannels();
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
@@ -101,11 +102,13 @@ public class MidiUtils {
 		        	channels[channel].noteOn(tone, velocity);
 					Thread.sleep(time);
 					channels[channel].noteOff(tone);
-				} catch(Error | Exception e) {
+				} 
+		        catch(Error | Exception e) {
 					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 				}
 			}
 		});
+		
 		t.start();
 	}
 	

@@ -90,6 +90,7 @@ public class KeyboardInput implements KeyListener {
 				latch.countDown();
 			}
 		});
+		
 		t.start();
 	}
 	
@@ -105,9 +106,11 @@ public class KeyboardInput implements KeyListener {
 		
 		try {
 			latch.await();
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
+		
 		int typed2 = typed;
 		typed = -1;
 		return typed2;
@@ -125,7 +128,8 @@ public class KeyboardInput implements KeyListener {
 		
 		try {
 			latch.await();
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
@@ -147,7 +151,8 @@ public class KeyboardInput implements KeyListener {
 		
 		try {
 			latch.await();
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		

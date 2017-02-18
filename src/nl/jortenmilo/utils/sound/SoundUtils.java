@@ -29,16 +29,20 @@ public class SoundUtils {
 		this.m = m;
 		
 		DataLine.Info dataInfo = new DataLine.Info(Clip.class, null);
+		
 		try {
 			clip = (Clip)this.m.getLine(dataInfo);
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		
 		try {
 			audioStream = AudioSystem.getAudioInputStream(file);
+			
 			clip.open(audioStream);
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		
@@ -58,7 +62,8 @@ public class SoundUtils {
 			paused = true;
 			CurrentTime = clip.getMicrosecondPosition();
 			clip.stop();
-		} else {
+		} 
+		else {
 			paused = false;
 			clip.setMicrosecondPosition(CurrentTime);
 			clip.start();
@@ -125,7 +130,8 @@ public class SoundUtils {
 	public void sleepUntilDone() {
 		try {
 			Thread.sleep(getSoundLenght()-getSoundPosition());
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}

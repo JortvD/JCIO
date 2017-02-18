@@ -18,6 +18,10 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		if(events == null) {
+			return;
+		}
+		
 		MouseMovedEvent event = new MouseMovedEvent();
 		event.setModifiers(e.getModifiers());
 		event.setX(e.getX());
@@ -32,6 +36,10 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
+		if(events == null) {
+			return;
+		}
+		
 		MouseWheelMovedEvent event = new MouseWheelMovedEvent();
 		event.setModifiers(e.getModifiers());
 		event.setX(e.getX());
@@ -50,6 +58,10 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		if(events == null) {
+			return;
+		}
+		
 		MouseClickedEvent event = new MouseClickedEvent();
 		event.setModifiers(e.getModifiers());
 		event.setX(e.getX());
@@ -71,6 +83,10 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		if(events == null) {
+			return;
+		}
+		
 		MousePressedEvent event = new MousePressedEvent();
 		event.setModifiers(e.getModifiers());
 		event.setX(e.getX());
@@ -86,6 +102,10 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		if(events == null) {
+			return;
+		}
+		
 		MouseReleasedEvent event = new MouseReleasedEvent();
 		event.setModifiers(e.getModifiers());
 		event.setX(e.getX());

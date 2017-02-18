@@ -16,7 +16,8 @@ public class MouseManager {
 			Robot r = new Robot();
 			r.mousePress(button);
 			r.mouseRelease(button);
-		} catch (AWTException e) {
+		} 
+		catch (AWTException e) {
 			e.printStackTrace();
 		}
 	}
@@ -25,7 +26,8 @@ public class MouseManager {
 		try {
 			Robot r = new Robot();
 			r.mouseMove(x, y);
-		} catch (AWTException e) {
+		} 
+		catch (AWTException e) {
 			e.printStackTrace();
 		}
 	}
@@ -34,7 +36,8 @@ public class MouseManager {
 		try {
 			Robot r = new Robot();
 			r.mouseWheel(move);
-		} catch (AWTException e) {
+		} 
+		catch (AWTException e) {
 			e.printStackTrace();
 		}
 	}

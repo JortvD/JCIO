@@ -14,74 +14,79 @@ import javax.sound.sampled.TargetDataLine;
 public class RecorderUtils {
 	
 	private long RECORD_TIME = 5000;
-    
-    private AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
-    private TargetDataLine line;
-    
+
+	private AudioFileFormat.Type fileType = AudioFileFormat.Type.WAVE;
+	private TargetDataLine line;
+
 	private float sampleRate = 16000;
 	private int sampleSizeInBits = 8;
 	private int channels = 2;
 	private boolean signed = true;
 	private boolean bigEndian = true;
-    
-    public AudioInputStream record(Mixer m) {
-        Thread stopper = new Thread(new Runnable() {
-            public void run() {
-                try {
-                    Thread.sleep(RECORD_TIME);
-                } catch(Error | Exception e) {
-        			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
-        		}
-                finish();
-            }
-        });
-        stopper.start();
-    	
-        try {
-            AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);;
-            DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-            
-            
-            if (!AudioSystem.isLineSupported(info)) {
-                System.out.println("Line not supported");
-                System.exit(0);
-            }
-            
-            line = (TargetDataLine) m.getLine(info);
-            line.open(format);
-            line.start();
- 
-            AudioInputStream ais = new AudioInputStream(line);
-            return ais;
-        } catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
-		}
-        return null;
-    }
-    
-    public void writeToFile(AudioInputStream ais, File file) {
-    	try {
-			AudioSystem.write(ais, fileType, file);
-		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
-		}
-    }
-    
-    public void writeToStream(AudioInputStream ais, OutputStream os) {
-    	try {
-			AudioSystem.write(ais, fileType, os);
-		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
-		}
-    }
-    
-    private void finish() {
-        line.stop();
-        line.close();
-    }
-    
 
-    public long getRecordTime() {
+	public AudioInputStream record(Mixer m) {
+		Thread stopper = new Thread(new Runnable() {
+			public void run() {
+				try {
+					Thread.sleep(RECORD_TIME);
+				} 
+				catch(Error | Exception e) {
+					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
+				}
+				
+				finish();
+			}
+		});
+		
+		stopper.start();
+		
+		try {
+			AudioFormat format = new AudioFormat(sampleRate, sampleSizeInBits, channels, signed, bigEndian);;
+			DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+			
+			if (!AudioSystem.isLineSupported(info)) {
+				System.out.println("Line not supported");
+				System.exit(0);
+			}
+			
+			line = (TargetDataLine) m.getLine(info);
+			line.open(format);
+			line.start();
+			
+			AudioInputStream ais = new AudioInputStream(line);
+			return ais;
+		} 
+		catch(Error | Exception e) {
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
+		}
+		
+		return null;
+	}
+	
+	public void writeToFile(AudioInputStream ais, File file) {
+		try {
+			AudioSystem.write(ais, fileType, file);
+		} 
+		catch(Error | Exception e) {
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
+		}
+	}
+
+	public void writeToStream(AudioInputStream ais, OutputStream os) {
+		try {
+			AudioSystem.write(ais, fileType, os);
+		} 
+		catch(Error | Exception e) {
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
+		}
+	}
+
+	private void finish() {
+		line.stop();
+		line.close();
+	}
+
+	public long getRecordTime() {
 		return RECORD_TIME;
 	}
 

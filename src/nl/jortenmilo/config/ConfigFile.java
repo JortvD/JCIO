@@ -22,8 +22,8 @@ public class ConfigFile {
 	public void set(ConfigObject object, String path) {
 		if(!path.contains(".")) {
 			objects.add(object);
-		} else {
-			
+		} 
+		else {
 			String key = path.substring(0, path.indexOf("."));
 			
 			for(ConfigObject o : objects) {
@@ -32,6 +32,7 @@ public class ConfigFile {
 					return;
 				}
 			}
+			
 			new MissingConfigObjectError(key, path).print();
 		}
 	}
@@ -46,7 +47,8 @@ public class ConfigFile {
 			if(o.getName().equals(key)) {
 				if(!path.contains(".")) {
 					return o;
-				} else {
+				} 
+				else {
 					return o.get(path.substring(path.indexOf(".") + 1, path.length()));
 				}
 			}

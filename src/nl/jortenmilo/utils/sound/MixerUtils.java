@@ -8,9 +8,10 @@ import javax.sound.sampled.Mixer;
 
 public class MixerUtils {
 	
-	public static List<AudioMixer> getMixers() {
+	public List<AudioMixer> getMixers() {
 		List<AudioMixer> mixers = new ArrayList<AudioMixer>();
 		Mixer.Info[] mixInfo = AudioSystem.getMixerInfo();
+		
 		for(Mixer.Info info : mixInfo) {
 			AudioMixer mixer = new AudioMixer();
 			mixer.setName(info.getName());
@@ -20,11 +21,13 @@ public class MixerUtils {
 			mixer.setMixer(AudioSystem.getMixer(info));
 			mixers.add(mixer);
 		}
+		
 		return mixers;
 	}
 	
-	public static AudioMixer getMixer(String name) {
+	public AudioMixer getMixer(String name) {
 		Mixer.Info[] mixInfo = AudioSystem.getMixerInfo();
+		
 		for(Mixer.Info info : mixInfo) {
 			if(info.getName().equals(name)) {
 				AudioMixer mixer = new AudioMixer();
@@ -36,6 +39,7 @@ public class MixerUtils {
 				return mixer;
 			}
 		}
+		
 		return null;
 	}
 	
@@ -43,9 +47,9 @@ public class MixerUtils {
 		return "";
 	}
 	
-	public static class AudioMixer {
+	public class AudioMixer {
 		
-		private Mixer  mixer;
+		private Mixer mixer;
 		private String name;
 		private String vendor;
 		private String version;

@@ -1,7 +1,6 @@
 package nl.jortenmilo.plugin;
 
 import nl.jortenmilo.event.Event;
-import nl.jortenmilo.plugin.PluginManager.LoadedPlugin;
 
 public abstract class PluginEvent extends Event {
 	

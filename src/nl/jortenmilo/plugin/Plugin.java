@@ -9,7 +9,6 @@ import nl.jortenmilo.error.ErrorManager;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
-import nl.jortenmilo.plugin.PluginManager.LoadedPlugin;
 import nl.jortenmilo.settings.SettingsManager;
 import nl.jortenmilo.utils.UtilsManager;
 
@@ -52,6 +51,7 @@ public abstract class Plugin {
 	
 	protected void setLoadedPlugin(LoadedPlugin lp) {
 		this.lp = lp;
+		
 		sf = new File("plugins/" + lp.getName());
 	}
 	

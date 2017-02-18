@@ -16,7 +16,6 @@ import java.util.zip.ZipInputStream;
 
 import nl.jortenmilo.error.MissingFileError;
 import nl.jortenmilo.error.SyntaxError;
-import nl.jortenmilo.plugin.PluginManager.LoadedPlugin;
 
 public class PluginLoader {
 	
@@ -36,10 +35,11 @@ public class PluginLoader {
 		try {
 			InputStream is = getInputStream(f, "plugin.jcio");
 			
-			if(is==null) {
+			if(is == null) {
 				new MissingFileError(f.getName(), "plugin.jcio").print();
-			} else {
-				LoadedPlugin lp = pm.new LoadedPlugin();
+			} 
+			else {
+				LoadedPlugin lp = new LoadedPlugin();
 				lp.setPath(f.getPath());
 				
 				Scanner scr = new Scanner(is);
@@ -90,14 +90,15 @@ public class PluginLoader {
 					new MissingFileError(f.getName(), "name").print();
 				}
 				
-				if(lp.getPlugin()==null) {
+				else if(lp.getPlugin()==null) {
 					new MissingFileError(f.getName(), "path").print();
 				}
 				
 				pm.addPlugin(lp);
 				lp.getPlugin().load();
 			}
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
@@ -105,6 +106,7 @@ public class PluginLoader {
 	public void unloadAll(PluginManager pm) {
 		for(LoadedPlugin plugin : pm.getPlugins()) {
 			unload(plugin);
+			
 			pm.removePlugin(plugin);
 			plugin.getPlugin().unload();
 		}
@@ -115,7 +117,8 @@ public class PluginLoader {
 		
 		try {
 			cl.close();
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}

@@ -8,21 +8,24 @@ public class SystemUtils {
 		Platform p = Platform.Unknown;
 		String operSys = System.getProperty("os.name").toLowerCase();
 		
-		if (operSys.contains("win"))
+		if (operSys.contains("win")) {
 			p = Platform.Windows;
-		else if (operSys.contains("nix") || operSys.contains("nux") || operSys.contains("aix"))
+		}
+		else if (operSys.contains("nix") || operSys.contains("nux") || operSys.contains("aix")) {
 			p = Platform.Linux;
-		else if (operSys.contains("mac"))
+		}
+		else if (operSys.contains("mac")) {
 			p = Platform.Mac;
-		else if (operSys.contains("sunos"))
+		}
+		else if (operSys.contains("sunos")) {
 			p = Platform.Solaris;
+		}
 		
 		return p;
 	}
 	
 	public String getTime() {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
-		
 		return sdf.format(System.currentTimeMillis());
 	}
 	

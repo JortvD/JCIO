@@ -1,3 +1,5 @@
 package nl.jortenmilo.event;
 
-public interface EventListener {}
+public interface EventListener {
+	
+}

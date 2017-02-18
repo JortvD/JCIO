@@ -93,7 +93,6 @@ public class Launcher {
 		initCommands();
 		
 		plugin.loadAll();
-		
 		plugin.enableAll();
 	}
 	
@@ -114,7 +113,8 @@ public class Launcher {
 			
 			try {
 				i.install();
-			} catch(Error | Exception e) {
+			} 
+			catch(Error | Exception e) {
 				new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 			}
 		}
@@ -133,19 +133,14 @@ public class Launcher {
 			
 			Console.close();
 			System.exit(0);
-		} catch(Error | Exception e) {
+		} 
+		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 
 	public static void main(String[] args) throws Exception {
 		new Launcher();
-		
-		/*TestListener listener = new TestListener();
-		event.registerListener(listener, null);
-		for(EventHandler handler : event.getHandlers(TestEvent.class)) {
-			handler.execute(new TestEvent());
-		}*/
 	}
 
 }

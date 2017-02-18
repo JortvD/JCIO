@@ -30,7 +30,8 @@ public class ExitCommand implements CommandExecutor {
 			keyboard.waitUntilTyped();
 			
 			CloseManager.close();
-		} else {
+		} 
+		else {
 			Console.println(ConsoleUser.Error, "Wrong command usage: exit");
 		}
 	}
