@@ -8,8 +8,15 @@ import java.io.FileWriter;
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.error.ConfigLoadingError;
 
+/**
+ * This is the config loader class. From here classes are loaded and saved. You shouldn't instantiate this class and use the ConfigManager instead.
+ */
 public class ConfigLoader {
-
+	
+	/**
+	 * Loads a config using the file from the ConfigFile. It may throw a ConfigLoadingError when there is a something wrong in the config.
+	 * @param config The ConfigFile you want to load
+	 */
 	@SuppressWarnings("resource")
 	public void load(ConfigFile config) {
 		try {
@@ -76,7 +83,11 @@ public class ConfigLoader {
 		}
 		
 	}
-
+	
+	/**
+	 * This will save the ConfigFile to it's file.
+	 * @param config The config that needs to be saved
+	 */
 	public void save(ConfigFile config) {
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(config.getFile()));

@@ -222,11 +222,13 @@ public class Console {
 					
 					debug("Started JCIO [Jortenmilo (c) 2017]");
 					debug("OS: " + System.getProperty("os.name"));
-				} catch(Error | Exception e) {
+				} 
+				catch(Error | Exception e) {
 					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 				}
 			}
-		} else {
+		} 
+		else {
 			Console.println(ConsoleUser.Error, "Console is already created!");
 		}
 	}
@@ -237,7 +239,8 @@ public class Console {
 				try {
 					bw.write(s);
 					bw.newLine();
-				} catch (IOException e) {
+				} 
+				catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
@@ -271,7 +274,9 @@ public class Console {
 			if((l > t.getWidth()) && !text.equals("\n")) {
 				brakes.add(d.getLength());
 				
-				try {d.insertString(d.getLength(), "\n", at);}
+				try {
+					d.insertString(d.getLength(), "\n", at);
+				}
 				catch (BadLocationException e) {}
 				
 				lineText = "";
@@ -280,7 +285,9 @@ public class Console {
 			if(text.equals("\n")) {
 				brakes.add(d.getLength());
 				
-				try {d.insertString(d.getLength(), "\n", at);}
+				try {
+					d.insertString(d.getLength(), "\n", at);
+				}
 				catch (BadLocationException e) {}
 				
 				lineText = "";
@@ -291,7 +298,9 @@ public class Console {
 			lineText += text;
 			fullLine += text;
 			
-			try {d.insertString(d.getLength(), text, at);}
+			try {
+				d.insertString(d.getLength(), text, at);
+			}
 			catch (BadLocationException e) {}
 		}
 		
@@ -303,7 +312,7 @@ public class Console {
 			write((byte)'\n');
 			
 			if(settings.contains("log")) {
-				if(settings.get("log").equals("true") && bw!=null) {
+				if(settings.get("log").equals("true") && bw != null) {
 					bw.write(s);
 					bw.newLine();
 				}
@@ -317,7 +326,7 @@ public class Console {
 			}
 			
 			if(settings.contains("log")) {
-				if(settings.get("log").equals("true") && bw!=null) {
+				if(settings.get("log").equals("true") && bw != null) {
 					bw.write(s);
 				}
 			}
@@ -347,15 +356,13 @@ public class Console {
 			int c = e.getKeyChar();
 			
 			if((byte)e.getKeyChar() == 22) {
+				String text;
 				try {
-					String text = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+					text = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
 					Console.write(text);
 					presses += text.length();
-				} catch (HeadlessException e1) {
-					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
-				} catch (UnsupportedFlavorException e1) {
-					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
-				} catch (IOException e1) {
+				} 
+				catch (HeadlessException | UnsupportedFlavorException | IOException e1) {
 					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
 				}
 				
@@ -364,7 +371,9 @@ public class Console {
 			
 			if((byte)e.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
 				if(presses > 0) {
-					try {d.remove(d.getLength()-1, 1);}
+					try {
+						d.remove(d.getLength()-1, 1);
+					}
 					catch (BadLocationException e2) {}
 					
 					if(waitText.length() > 0) {
@@ -380,8 +389,12 @@ public class Console {
 					
 					if(cos.fullLine.length() != 0 && cos.lineText.length() == 0) {
 						cos.lineText = cos.fullLine;
-						try {d.remove(d.getLength()-1, 1);}
+						
+						try {
+							d.remove(d.getLength()-1, 1);
+						}
 						catch (BadLocationException e2) {}
+						
 						cos.lineText = cos.lineText.substring(0, cos.lineText.length()-1);
 						cos.fullLine = cos.fullLine.substring(0, cos.fullLine.length()-1);
 					} else {
@@ -392,6 +405,7 @@ public class Console {
 			else if((byte)e.getKeyChar() == KeyEvent.VK_ENTER) {
 				presses = 0;
 				Console.write("\n");
+				
 				synchronized (lock) {
 					WakeupNeeded = true;
 				    lock.notifyAll();
@@ -399,6 +413,7 @@ public class Console {
 			}
 			else {
 				presses++;
+				
 				if(Waiting) {
 					Console.write(Character.toString(e.getKeyChar()));
 					waitText += new String(new char[]{(char) c});
@@ -409,15 +424,18 @@ public class Console {
 		public String waitUntilDone() {
 			waitText = "";
 			Waiting = true;
+			
 			synchronized (lock) {
 			    while (!WakeupNeeded) {
 			        try {
 						lock.wait();
-					} catch(Error | Exception e) {
+					} 
+			        catch(Error | Exception e) {
 						new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 					}
 			    }
 			}
+			
 			WakeupNeeded = false;
 			Waiting = false;
 			String tts = waitText;
@@ -430,7 +448,6 @@ public class Console {
 	}
 	
 	public static void println(String user, String s) {
-		
 		if(settings == null) {
 			String time = new SystemUtils().getTime();
 			
@@ -446,6 +463,7 @@ public class Console {
 			else if(user.equals(ConsoleUser.Empty)) {
 				cps.println("[" + time + "]: " + s);
 			}
+			
 			return;
 		}
 		
@@ -464,6 +482,7 @@ public class Console {
 			else if(user.equals(ConsoleUser.Empty)) {
 				cps.println("[" + time + "]: " + s);
 			}
+			
 			return;
 		}
 		
@@ -562,24 +581,39 @@ public class Console {
 	public static void update() {
 		if(settings.contains("foreground")) {
 			Color fg = new ObjectUtils().StringToColor(settings.get("foreground"));
-			if(t.getForeground() != fg) t.setForeground(fg);
+			
+			if(t.getForeground() != fg) {
+				t.setForeground(fg);
+			}
 		}
 		if(settings.contains("background")) {
 			Color bg = new ObjectUtils().StringToColor(settings.get("background"));
-			if(t.getBackground() != bg) t.setBackground(bg);
+			
+			if(t.getBackground() != bg) {
+				t.setBackground(bg);
+			}
 		}
 		if(settings.contains("default_title")) {
 			String dt = settings.get("default_title");
 			dt = dt.replace("_", " ");
-			if(frame.getTitle() != dt) frame.setTitle(dt);
+			
+			if(frame.getTitle() != dt) {
+				frame.setTitle(dt);
+			}
 		}
 		if(settings.contains("default_width")) {
 			int dw = new ObjectUtils().StringToInteger(settings.get("default_width"));
-			if(frame.getWidth() != dw) frame.setSize(dw, frame.getHeight());
+			
+			if(frame.getWidth() != dw) {
+				frame.setSize(dw, frame.getHeight());
+			}
 		}
 		if(settings.contains("default_height")) {
 			int dh = new ObjectUtils().StringToInteger(settings.get("default_height"));
-			if(frame.getHeight() != dh) frame.setSize(frame.getWidth(), dh);
+			
+			if(frame.getHeight() != dh) {
+				frame.setSize(frame.getWidth(), dh);
+			}
 		}
 	}
 
