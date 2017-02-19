@@ -5,9 +5,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class IDUtils {
+public class IDUtils extends Utils {
 	
-	private List<UUID> uuids = new ArrayList<UUID>();
+	private List<UUID> uuids;
+	
+	@Override
+	public void create() {
+		uuids = new ArrayList<UUID>();
+	}
+
+	@Override
+	public Utils clone() {
+		IDUtils clone = new IDUtils();
+		clone.create();
+		clone.setUUDIs(uuids);
+		
+		return clone;
+	}
 	
 	public UUID getRandomUUID() {
 		UUID uuid = UUID.randomUUID();
@@ -28,16 +42,22 @@ public class IDUtils {
 		return UUID.fromString(uuid);
 	}
 
-	public String getData() {
-		return "[UUIDS: " + Arrays.toString(uuids.toArray()) + "]";
-	}
-
 	public List<UUID> getUUIDs() {
 		return uuids;
 	}
 
-	public void setUUDIs(List<UUID> uuids) {
+	protected void setUUDIs(List<UUID> uuids) {
 		this.uuids = uuids;
+	}
+	
+	@Override
+	public String getData() {
+		return "[UUIDS: " + Arrays.toString(uuids.toArray()) + "]";
+	}
+
+	@Override
+	public String getName() {
+		return "IDUtils";
 	}
 	
 }

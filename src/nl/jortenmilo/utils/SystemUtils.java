@@ -2,7 +2,20 @@ package nl.jortenmilo.utils;
 
 import java.text.SimpleDateFormat;
 
-public class SystemUtils {
+public class SystemUtils extends Utils {
+	
+	@Override
+	public void create() {
+		
+	}
+
+	@Override
+	public Utils clone() {
+		SystemUtils clone = new SystemUtils();
+		clone.create();
+		
+		return clone;
+	}
 	
 	public Platform getPlatform() {
 		Platform p = Platform.Unknown;
@@ -39,6 +52,11 @@ public class SystemUtils {
 
 	public String getData() {
 		return "";
+	}
+
+	@Override
+	public String getName() {
+		return "SystemUtils";
 	}
 	
 }

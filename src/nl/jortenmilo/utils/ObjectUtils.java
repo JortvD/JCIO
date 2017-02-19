@@ -4,7 +4,20 @@ import java.awt.Color;
 
 import nl.jortenmilo.error.ParsingError;
 
-public class ObjectUtils {
+public class ObjectUtils extends Utils {
+	
+	@Override
+	public void create() {
+		
+	}
+
+	@Override
+	public Utils clone() {
+		ObjectUtils clone = new ObjectUtils();
+		clone.create();
+		
+		return clone;
+	}
 	
 	public Color StringToColor(String s) {
 		try {
@@ -31,8 +44,16 @@ public class ObjectUtils {
 		
 	}
 	
+	@Override
 	public String getData() {
 		return "";
 	}
+
+	@Override
+	public String getName() {
+		return "ObjectUtils";
+	}
+
+	
 
 }

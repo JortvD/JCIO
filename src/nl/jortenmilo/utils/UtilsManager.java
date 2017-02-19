@@ -1,447 +1,108 @@
 package nl.jortenmilo.utils;
 
-import java.io.File;
-
-import javax.sound.sampled.Mixer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
-import nl.jortenmilo.utils.math.CalculatorUtils;
-import nl.jortenmilo.utils.math.MathUtils;
-import nl.jortenmilo.utils.math.RandomUtils;
-import nl.jortenmilo.utils.net.NetBot;
-import nl.jortenmilo.utils.net.SocketClient;
-import nl.jortenmilo.utils.net.SocketServer;
-import nl.jortenmilo.utils.net.WebClient;
-import nl.jortenmilo.utils.net.WebServer;
-import nl.jortenmilo.utils.sound.MidiUtils;
-import nl.jortenmilo.utils.sound.MixerUtils;
-import nl.jortenmilo.utils.sound.RecorderUtils;
-import nl.jortenmilo.utils.sound.SoundUtils;
+import nl.jortenmilo.plugin.Plugin;
 
 public class UtilsManager {
 	
 	//TODO: Create a Utils class the is implemented in every util. This will contain a getName and a getData method.
 	
+	private HashMap<Class<? extends Utils>, List<Utils>> utils = new HashMap<Class<? extends Utils>, List<Utils>>();
+	
 	private EventManager events;
 	
 	public UtilsManager(EventManager events) {
 		this.events = events;
+		
+		addUtil(IDUtils.class);
+		addUtil(ObjectUtils.class);
+		addUtil(StringUtils.class);
+		addUtil(SystemUtils.class);
 	}
 	
-	public IDUtils createIDUtils() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("IDUtils");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
+	public Utils createUtils(Class<? extends Utils> name, Plugin plugin) {
+		try {
+			for(Class<? extends Utils> key : utils.keySet()) {
+				if(key == name) {
+					Utils util = name.newInstance();
+					util.setPlugin(plugin);
+					
+					UtilsCreatedEvent event = new UtilsCreatedEvent();
+					event.setUtilName(util.getName());
+					
+					for(EventHandler handler : events.getHandlers(event.getClass())) {
+						handler.execute(event);
+					}
+					
+					List<Utils> list = utils.get(name);
+					list.add(util);
+					utils.put(name, list);
+					
+					return util;
+				}
+			}
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
 		}
 		
-		return new IDUtils();
+		return null;
 	}
 	
-	public StringUtils createStringUtils() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("StringUtils");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new StringUtils();
-	}
-	
-	public SystemUtils createSystemUtils() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("SystemUtils");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new SystemUtils();
-	}
-	
-	public MathUtils createMathUtils() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("MathUtils");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new MathUtils();
-	}
-	
-	public CalculatorUtils createCalculatorUtils() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("CalculatorUtils");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new CalculatorUtils();
-	}
-	
-	public RandomUtils createRandomUtils() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("RandomUtils");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new RandomUtils();
-	}
-	
-	public NetBot createNetBot() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("NetBot");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new NetBot();
-	}
-	
-	public SocketClient createSocketClient() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("SocketClient");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new SocketClient();
-	}
-	
-	public SocketServer createSocketServer() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("SocketServer");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new SocketServer();
-	}
-	
-	public WebClient createWebClient() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("WebClient");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new WebClient();
-	}
-	
-	public WebServer createWebServer() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("WebServer");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new WebServer();
-	}
-	
-	public MidiUtils createMidiUtils() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("MidiUtils");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new MidiUtils();
-	}
-	
-	public MixerUtils createMixerUtils() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("MixerUtils");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new MixerUtils();
-	}
-	
-	public RecorderUtils createRecorderUtils() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("RecorderUtils");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new RecorderUtils();
-	}
-	
-	public SoundUtils createSoundUtils(File f, Mixer m) {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("SoundUtils");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new SoundUtils(f, m);
-	}
-	
-	public ObjectUtils createObjectUtils() {
-		UtilsCreatedEvent event = new UtilsCreatedEvent();
-		event.setUtilName("ObjectUtils");
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return new ObjectUtils();
-	}
-	
-	public IDUtils cloneIDUtils(IDUtils u) {
-		IDUtils nu = new IDUtils();
-		nu.setUUDIs(u.getUUIDs());
+	public Utils cloneUtils(Class<? extends Utils> name, Utils util) {
+		Utils clone = util.clone();
+		clone.setPlugin(util.getPlugin());
 		
 		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("IDUtils");
-		event.setData(u.getData());
+		event.setUtilName(util.getName());
+		event.setData(util.getData());
 		
 		for(EventHandler handler : events.getHandlers(event.getClass())) {
 			handler.execute(event);
 		}
 		
-		return nu;
+		List<Utils> list = utils.get(name);
+		list.add(clone);
+		utils.put(name, list);
+		
+		return clone;
 	}
 	
-	public StringUtils cloneStringUtils(StringUtils u) {
-		StringUtils nu = new StringUtils();
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("StringUtils");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
+	public void addUtil(Class<? extends Utils> name) {
+		utils.put(name, new ArrayList<Utils>());
 	}
 	
-	public SystemUtils cloneSystemUtils(SystemUtils u) {
-		SystemUtils nu = new SystemUtils();
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("SystemUtils");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
+	public void removeUtil(Class<? extends Utils> name) {
+		utils.remove(name);
 	}
 	
-	public MathUtils cloneMathUtils(MathUtils u) {
-		MathUtils nu = new MathUtils();
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("MathUtils");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
+	public List<Utils> getUtils(Class<? extends Utils> name) {
+		return utils.get(name);
 	}
 	
-	public CalculatorUtils cloneCalculatorUtils(CalculatorUtils u) {
-		CalculatorUtils nu = new CalculatorUtils();
+	public List<Utils> getUtils(Plugin plugin) {
+		List<Utils> list = new ArrayList<Utils>();
 		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("CalculatorUtils");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
+		for(Class<? extends Utils> key : utils.keySet()) {
+			for(Utils util : utils.get(key)) {
+				list.add(util);
+			}
 		}
 		
-		return nu;
+		return list;
 	}
 	
-	public RandomUtils cloneRandomUtils(RandomUtils u) {
-		RandomUtils nu = new RandomUtils();
+	public List<Utils> getUtils(Plugin plugin, Class<? extends Utils> name) {
+		List<Utils> list = new ArrayList<Utils>();
 		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("RandomUtils");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
+		for(Utils util : utils.get(name)) {
+			list.add(util);
 		}
 		
-		return nu;
-	}
-	
-	public NetBot cloneNetBot(NetBot u) {
-		NetBot nu = new NetBot();
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("RandomUtils");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
-	}
-	
-	public SocketClient cloneSocketClient(SocketClient u) {
-		SocketClient nu = new SocketClient();
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("SocketClient");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
-	}
-	
-	public SocketServer cloneSocketServer(SocketServer u) {
-		SocketServer nu = new SocketServer();
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("SocketServer");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
-	}
-	
-	public WebClient cloneWebClient(WebClient u) {
-		WebClient nu = new WebClient();
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("WebClient");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
-	}
-	
-	public WebServer cloneWebServer(WebServer u) {
-		WebServer nu = new WebServer();
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("WebServer");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
-	}
-	
-	public MidiUtils cloneMidiUtils(MidiUtils u) {
-		MidiUtils nu = new MidiUtils();
-		nu.setInstruments(u.getInstruments());
-		nu.setSynthesizer(u.getSynthesizer());
-		nu.setChannels(u.getChannels());
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("WebServer");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
-	}
-	
-	public MixerUtils cloneMixerUtils(MixerUtils u) {
-		MixerUtils nu = new MixerUtils();
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("MixerUtils");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
-	}
-	
-	public RecorderUtils cloneRecorderUtils(RecorderUtils u) {
-		RecorderUtils nu = new RecorderUtils();
-		nu.setBigEndian(u.isBigEndian());
-		nu.setSigned(u.isSigned());
-		nu.setChannels(u.getChannels());
-		nu.setFileType(u.getFileType());
-		nu.setRecordTime(u.getRecordTime());
-		nu.setSampleRate(u.getSampleRate());
-		nu.setSampleSizeInBits(u.getSampleSizeInBits());
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("RecorderUtils");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
-	}
-	
-	public SoundUtils cloneSoundUtils(SoundUtils u) {
-		SoundUtils nu = new SoundUtils(u.getFile(), u.getMixer());
-		nu.setBalance(u.getBalance());
-		nu.setMute(u.isMuted());
-		nu.setPan(u.getPan());
-		nu.setPosition(u.getSoundPosition());
-		nu.setVolume(u.getVolume());
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("SoundUtils");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
-	}
-	
-	public ObjectUtils cloneObjectUtils(ObjectUtils u) {
-		ObjectUtils nu = new ObjectUtils();
-		
-		UtilsClonedEvent event = new UtilsClonedEvent();
-		event.setUtilName("MixerUtils");
-		event.setData(u.getData());
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		return nu;
+		return list;
 	}
 }
