@@ -17,7 +17,7 @@ public class EventHandler {
 			method.invoke(listener, this.event.cast(event));
 		} 
 		catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace(); //TODO: Change this to UnknownException
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 

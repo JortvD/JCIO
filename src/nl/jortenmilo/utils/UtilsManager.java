@@ -10,8 +10,6 @@ import nl.jortenmilo.plugin.Plugin;
 
 public class UtilsManager {
 	
-	//TODO: Create a Utils class the is implemented in every util. This will contain a getName and a getData method.
-	
 	private HashMap<Class<? extends Utils>, List<Utils>> utils = new HashMap<Class<? extends Utils>, List<Utils>>();
 	
 	private EventManager events;
@@ -47,7 +45,7 @@ public class UtilsManager {
 				}
 			}
 		} catch (InstantiationException | IllegalAccessException e) {
-			e.printStackTrace();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		
 		return null;

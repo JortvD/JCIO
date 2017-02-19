@@ -19,21 +19,20 @@ public class Installer {
 	public void install() throws IOException {
 		for(File file : files) {
 			if(!file.exists()) {
-				//TODO: Change this to switch
-				if(file.getPath().equals("plugins")) { 
-					System.out.println("Installing: " + file.getPath());
-					file.mkdirs();
-				}
-				else if(file.getPath().equals("logs")) {
-					System.out.println("Installing: " + file.getPath());
-					file.mkdirs();
-				}
-				else if(file.getPath().equals("settings.jcio")) {
-					System.out.println("Installing: " + file.getPath());
-					file.createNewFile();
-					s.reset();
+				switch(file.getPath()) {
+					case "plugins":
+					case "logs":
+						System.out.println("Installing: " + file.getPath());
+						file.mkdirs();
+						break;
 					
-					s.save();
+					case "settings.jcio":
+						System.out.println("Installing: " + file.getPath());
+						file.createNewFile();
+						s.reset();
+						
+						s.save();
+						break;
 				}
 			}
 		}

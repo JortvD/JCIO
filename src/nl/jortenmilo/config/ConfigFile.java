@@ -37,7 +37,6 @@ public class ConfigFile {
 	 * @param object The object you want to add to the specified path
 	 * @param path The path
 	 */
-	//TODO: It looks like a path that doesn't contain a dot won't look through the list of objects.
 	public void set(ConfigObject object, String path) {
 		if(!path.contains(".")) {
 			objects.add(object);
@@ -71,9 +70,17 @@ public class ConfigFile {
 	 * @param path The path were the object is from
 	 * @return The object
 	 */
-	//TODO: It'll immediately look into specified paths, but it may not contain a dot.
 	public ConfigObject get(String path) {
-		String key = path.substring(0, path.indexOf("."));
+		String key = "";
+		
+		if(!path.contains(".")) {
+			key = path;
+		} 
+		else {
+			key = path.substring(0, path.indexOf("."));
+		}
+		
+		
 		for(ConfigObject o : objects) {
 			if(o.getName().equals(key)) {
 				if(!path.contains(".")) {
