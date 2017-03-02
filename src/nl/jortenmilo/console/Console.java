@@ -291,7 +291,6 @@ public class Console {
 				brakes.add(d.getLength());
 				
 				try {
-					Console.dout.println("TEST1");
 					d.insertString(d.getLength(), "\n", at);
 				}
 				catch (BadLocationException e) {}

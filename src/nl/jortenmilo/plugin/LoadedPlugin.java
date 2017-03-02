@@ -10,6 +10,7 @@ public class LoadedPlugin {
 	private String path;
 	private String author;
 	private String website;
+	private String version;
 	private URLClassLoader loader;
 	private List<LoadedPlugin> dependencies;
 	
@@ -67,5 +68,13 @@ public class LoadedPlugin {
 
 	protected void setWebsite(String website) {
 		this.website = website;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	protected void setVersion(String version) {
+		this.version = version;
 	}
 }

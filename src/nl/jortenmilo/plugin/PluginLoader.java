@@ -104,6 +104,10 @@ public class PluginLoader {
 						String website = line.replaceAll("website: ", "");
 						lp.setWebsite(website);
 					}
+					else if(line.startsWith("version: ")) {
+						String version = line.replaceAll("version: ", "");
+						lp.setVersion(version);
+					}
 					else {
 						new SyntaxError(line, "the plugin.jcio file (Plugin: " + file.getName() + ")").print();
 					}
