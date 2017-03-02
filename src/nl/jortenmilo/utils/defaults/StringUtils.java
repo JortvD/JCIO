@@ -1,4 +1,6 @@
-package nl.jortenmilo.utils;
+package nl.jortenmilo.utils.defaults;
+
+import nl.jortenmilo.utils.Utils;
 
 public class StringUtils extends Utils {
 	

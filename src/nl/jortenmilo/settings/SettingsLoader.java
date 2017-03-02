@@ -7,10 +7,21 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import nl.jortenmilo.error.NullableParameterError;
+
 public class SettingsLoader {
 
-	public void load(File f, SettingsManager settings) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(f));
+	public void load(File file, SettingsManager manager) throws IOException {
+		if(file == null) {
+			new NullableParameterError("File", "file").print();
+			return;
+		}
+		if(manager == null) {
+			new NullableParameterError("SettingsManager", "manager").print();
+			return;
+		}
+		
+		BufferedReader br = new BufferedReader(new FileReader(file));
 		String line = "";
 		
 		while((line = br.readLine()) != null) {
@@ -29,18 +40,27 @@ public class SettingsLoader {
 				} 
 			}
 			
-			settings.create(key);
-			settings.set(key, value);
+			manager.create(key);
+			manager.set(key, value);
 		}
 		
 		br.close();
 	}
 	
-	public void save(File f, SettingsManager settings) throws IOException {
-		BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+	public void save(File file, SettingsManager manager) throws IOException {
+		if(file == null) {
+			new NullableParameterError("File", "file").print();
+			return;
+		}
+		if(manager == null) {
+			new NullableParameterError("SettingsManager", "manager").print();
+			return;
+		}
 		
-		for(String key : settings.getSettings().keySet()) {
-			String value = settings.get(key);
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+		
+		for(String key : manager.getSettings().keySet()) {
+			String value = manager.get(key);
 			bw.write(key + ": " + value);
 			bw.newLine();
 		}

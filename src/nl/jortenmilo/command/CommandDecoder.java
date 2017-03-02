@@ -1,5 +1,7 @@
 package nl.jortenmilo.command;
 
+import nl.jortenmilo.error.NullableParameterError;
+
 /**
  * The CommandDecorder contains some methods to get the parameters from a String.
  */
@@ -10,13 +12,18 @@ public class CommandDecoder {
 	 * @param s The string you want to parse.
 	 * @return The outcome of the parse
 	 */
-	public static String[] getParameters(String s) {
+	public static String[] getParameters(String command) {
+		if(command == null) {
+			new NullableParameterError("String", "command").print();
+			return null;
+		}
+		
 		String[] params = null;
 		int amount = 1;
 		
-		s = removeLastSpaces(s);
+		command = removeLastSpaces(command);
 		
-		byte[] bytes = s.getBytes();
+		byte[] bytes = command.getBytes();
 		
 		for(int i = 0; i < bytes.length; i++) {
 			if(bytes[i] == 32) {
@@ -35,7 +42,7 @@ public class CommandDecoder {
 				n++;
 			} 
 			else {
-				param += s.substring(i, i+1);
+				param += command.substring(i, i+1);
 			}
 		}
 		
@@ -44,14 +51,14 @@ public class CommandDecoder {
 		return params;
 	}
 
-	private static String removeLastSpaces(String s) {
-		if(s.endsWith(" ") && s.length() > 0) {
-			s = s.substring(0, s.length()-1);
+	private static String removeLastSpaces(String string) {
+		if(string.endsWith(" ") && string.length() > 0) {
+			string = string.substring(0, string.length()-1);
 			
-			removeLastSpaces(s);
+			removeLastSpaces(string);
 		}
 		
-		return s;
+		return string;
 	}
 	
 }

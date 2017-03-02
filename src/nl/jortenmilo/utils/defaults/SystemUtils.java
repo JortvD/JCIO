@@ -1,6 +1,8 @@
-package nl.jortenmilo.utils;
+package nl.jortenmilo.utils.defaults;
 
 import java.text.SimpleDateFormat;
+
+import nl.jortenmilo.utils.Utils;
 
 public class SystemUtils extends Utils {
 	

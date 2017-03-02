@@ -4,10 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.jortenmilo.close.CloseManager;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.ConsoleManager;
 import nl.jortenmilo.error.ErrorManager;
+import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
@@ -28,12 +30,18 @@ public class PluginManager {
 	private UtilsManager utils;
 	private ErrorManager error;
 	private EventManager event;
+	private CloseManager close;
 	
 	protected void addPlugin(LoadedPlugin plugin) {
 		plugins.add(plugin);
 	}
 	
 	public void removePlugin(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
 		plugins.remove(plugin);
 	}
 	
@@ -41,6 +49,7 @@ public class PluginManager {
 		return plugins;
 	}
 	
+	// TODO: Create the dependency system
 	public void enableAll() {
 		for(LoadedPlugin plugin : plugins) {
 			enable(plugin);
@@ -48,6 +57,11 @@ public class PluginManager {
 	}
 	
 	public void enable(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
 		plugin.getPlugin().setCommandManager(command);
 		plugin.getPlugin().setPluginManager(this);
 		plugin.getPlugin().setConsoleManager(console);
@@ -58,6 +72,7 @@ public class PluginManager {
 		plugin.getPlugin().setUtilsManager(utils);
 		plugin.getPlugin().setErrorManager(error);
 		plugin.getPlugin().setEventManager(event);
+		plugin.getPlugin().setCloseManager(close);
 		
 		plugin.getPlugin().setLoadedPlugin(plugin);
 		
@@ -77,6 +92,11 @@ public class PluginManager {
 	}
 	
 	public void disable(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
 		try {
 			plugin.getPlugin().disable();
 			
@@ -114,6 +134,11 @@ public class PluginManager {
 	}
 	
 	public void load(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
 		loader.load(new File("plugins/" + plugin.getPath()), this);
 		
 		PluginLoadedEvent event = new PluginLoadedEvent();
@@ -129,6 +154,11 @@ public class PluginManager {
 	}
 	
 	public void unload(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
 		loader.unload(plugin);
 		
 		PluginUnloadedEvent event = new PluginUnloadedEvent();
@@ -144,6 +174,11 @@ public class PluginManager {
 	}
 	
 	public void reload(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
 		loader.unload(plugin);
 		loader.load(new File("plugins/" + plugin.getPath()), this);
 	}
@@ -199,5 +234,13 @@ public class PluginManager {
 
 	public void setEventManager(EventManager event) {
 		this.event = event;
+	}
+
+	public CloseManager getCloseManager() {
+		return close;
+	}
+
+	public void setCloseManager(CloseManager close) {
+		this.close = close;
 	}
 }

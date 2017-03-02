@@ -7,4 +7,6 @@ import java.lang.annotation.ElementType;
 
 @Retention(value = RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface EventMethod {}
+public @interface EventMethod {
+	
+}

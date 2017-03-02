@@ -2,6 +2,7 @@ package nl.jortenmilo.plugin;
 
 import java.io.File;
 
+import nl.jortenmilo.close.CloseManager;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.ConsoleManager;
@@ -24,6 +25,7 @@ public abstract class Plugin {
 	private UtilsManager utils;
 	private ErrorManager error;
 	private EventManager event;
+	private CloseManager close;
 	
 	private LoadedPlugin lp;
 	private File sf;
@@ -131,5 +133,13 @@ public abstract class Plugin {
 	
 	protected void setEventManager(EventManager event) {
 		this.event = event;
+	}
+	
+	public CloseManager getCloseManager() {
+		return close;
+	}
+	
+	protected void setCloseManager(CloseManager close) {
+		this.close = close;
 	}
 }

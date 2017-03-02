@@ -7,6 +7,7 @@ import java.io.FileWriter;
 
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.error.ConfigLoadingError;
+import nl.jortenmilo.error.NullableParameterError;
 
 /**
  * This is the config loader class. From here classes are loaded and saved. You shouldn't instantiate this class and use the ConfigManager instead.
@@ -19,6 +20,11 @@ public class ConfigLoader {
 	 */
 	@SuppressWarnings("resource")
 	public void load(ConfigFile config) {
+		if(config == null) {
+			new NullableParameterError("ConfigFile", "config").print();
+			return;
+		}
+		
 		try {
 			String path = "";
 			String line = "";
@@ -89,6 +95,11 @@ public class ConfigLoader {
 	 * @param config The config that needs to be saved
 	 */
 	public void save(ConfigFile config) {
+		if(config == null) {
+			new NullableParameterError("ConfigFile", "config").print();
+			return;
+		}
+		
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(config.getFile()));
 			

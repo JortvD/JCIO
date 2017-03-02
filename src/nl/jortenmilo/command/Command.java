@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.jortenmilo.error.InvalidParameterError;
+import nl.jortenmilo.error.NullableParameterError;
 
 /**
  * Command is the class that you use for creating your own commands. When you add an instance of this class to the CommandManager 
@@ -33,6 +34,15 @@ public class Command {
 	 * @see CommandExecutor
 	 */
 	public Command(String command, CommandExecutor ce) {
+		if(command == null) {
+			new NullableParameterError("Command", "command").print();
+			return;
+		}
+		if(ce == null) {
+			new NullableParameterError("CommandExecutor", "ce").print();
+			return;
+		}
+		
 		this.command = command;
 		this.ce = ce;
 	}
@@ -54,11 +64,12 @@ public class Command {
 	 */
 	public void setCommand(String command) {
 		if(command == null) {
-			new InvalidParameterError(command).print();
+			new NullableParameterError("String", "command").print();
+			return;
 		}
-		
-		else if(command.equals("")) {
-			new InvalidParameterError(command).print();
+		if(command.equals("")) {
+			new NullableParameterError("String", "command").print();
+			return;
 		}
 		
 		this.command = command;
@@ -107,11 +118,12 @@ public class Command {
 	 */
 	public void addAlias(String alias) {
 		if(alias == null) {
-			new InvalidParameterError(command).print();
+			new NullableParameterError("String", "alias").print();
+			return;
 		}
-		
-		else if(alias.equals("")) {
-			new InvalidParameterError(command).print();
+		if(alias.equals("")) {
+			new NullableParameterError("String", "alias").print();
+			return;
 		}
 		
 		aliasses.add(alias);

@@ -1,11 +1,11 @@
 package nl.jortenmilo.command.defaults;
 
+import nl.jortenmilo.close.CloseManager;
 import nl.jortenmilo.command.Command;
 import nl.jortenmilo.command.CommandExecutor;
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.keyboard.KeyboardManager;
-import nl.jortenmilo.main.CloseManager;
 
 /**
  * With this command you can exit the console.
@@ -14,9 +14,11 @@ import nl.jortenmilo.main.CloseManager;
 public class ExitCommand implements CommandExecutor {
 	
 	private KeyboardManager keyboard;
+	private CloseManager close;
 	
-	protected ExitCommand(KeyboardManager keyboard) {
+	protected ExitCommand(KeyboardManager keyboard, CloseManager close) {
 		this.keyboard = keyboard;
+		this.close = close;
 	}
 	
 	/**
@@ -29,7 +31,7 @@ public class ExitCommand implements CommandExecutor {
 			
 			keyboard.waitUntilTyped();
 			
-			CloseManager.close();
+			close.close();
 		} 
 		else {
 			Console.println(ConsoleUser.Error, "Wrong command usage: exit");

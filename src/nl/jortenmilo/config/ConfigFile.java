@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.jortenmilo.error.MissingConfigObjectError;
+import nl.jortenmilo.error.NullableParameterError;
 
 /**
  * This class is the base of a config. See it like the parent of all objects.
@@ -29,6 +30,11 @@ public class ConfigFile {
 	 * @param The file
 	 */
 	public void setFile(File file) {
+		if(file == null) {
+			new NullableParameterError("File", "file").print();
+			return;
+		}
+		
 		this.file = file;
 	}
 	
@@ -38,6 +44,15 @@ public class ConfigFile {
 	 * @param path The path
 	 */
 	public void set(ConfigObject object, String path) {
+		if(object == null) {
+			new NullableParameterError("ConfigObject", "object").print();
+			return;
+		}
+		if(path == null) {
+			new NullableParameterError("String", "path").print();
+			return;
+		}
+		
 		if(!path.contains(".")) {
 			objects.add(object);
 		} 
@@ -71,6 +86,11 @@ public class ConfigFile {
 	 * @return The object
 	 */
 	public ConfigObject get(String path) {
+		if(path == null) {
+			new NullableParameterError("String", "path").print();
+			return null;
+		}
+		
 		String key = "";
 		
 		if(!path.contains(".")) {
@@ -93,6 +113,7 @@ public class ConfigFile {
 		}
 		
 		new MissingConfigObjectError(key, path).print();
+		
 		return null;
 	}
 	

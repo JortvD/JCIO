@@ -16,6 +16,29 @@ public class Installer {
 		this.s = s;
 	}
 	
+	public void check() {
+		boolean install = false;
+		int missing = 0;
+		
+		for(File file : files) {
+			if(!file.exists()) {
+				install = true;
+				missing++;
+			}
+		}
+		
+		if(install) {
+			System.out.println("There are " + missing + " file(s) missing. Installing them now.");
+			
+			try {
+				install();
+			} 
+			catch(Error | Exception e) {
+				new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
+			}
+		}
+	}
+	
 	public void install() throws IOException {
 		for(File file : files) {
 			if(!file.exists()) {

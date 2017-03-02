@@ -2,6 +2,8 @@ package nl.jortenmilo.main;
 
 import java.io.File;
 
+import nl.jortenmilo.close.Closable;
+import nl.jortenmilo.close.CloseManager;
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.command.defaults.DefaultCommands;
@@ -17,9 +19,13 @@ import nl.jortenmilo.plugin.PluginManager;
 import nl.jortenmilo.settings.SettingsManager;
 import nl.jortenmilo.utils.UtilsManager;
 
-public class Launcher {
+public class Launcher extends Closable {
 	
-	private File[] files = {new File("plugins"), new File("settings.jcio"), new File("logs")};
+	private File[] files = {
+			new File("plugins"), 
+			new File("settings.jcio"), 
+			new File("logs")};
+	
 	private boolean running = true;
 	
 	private CommandManager command;
@@ -32,18 +38,7 @@ public class Launcher {
 	private ErrorManager error;
 	private UtilsManager utils;
 	private EventManager event;
-	
-	protected Launcher() {
-		preInit();
-		
-		//Initialize the program
-		init();
-		
-		//Start the program
-		Console.println("<- JCIO [Jortenmilo (c) 2017]->");
-		start();
-		
-	}
+	private CloseManager close;
 	
 	private void start() {
 		while(running) {
@@ -59,15 +54,19 @@ public class Launcher {
 		
 		keyboard = new KeyboardManager(Console.getKeyboardInput(), event);
 		settings = new SettingsManager(event);
+		close = new CloseManager(event);
+		
 		Console.setSettingsManager(settings);
 		Console.setEventManager(event);
-		checkForInstall();
+		Console.setCloseManager(close);
+		
+		Installer installer = new Installer(files, keyboard, settings);
+		installer.check();
+		
 		settings.load();
 	}
 	
 	private void init() {
-		CloseManager.setLauncher(this);
-		
 		plugin = new PluginManager();
 		
 		PluginLoader pl = new PluginLoader();
@@ -80,6 +79,8 @@ public class Launcher {
 		error = new ErrorManager(event);
 		utils = new UtilsManager(event);
 		
+		close.addClosable(this);
+		
 		plugin.setMouseManager(mouse);
 		plugin.setConsoleManager(console);
 		plugin.setKeyboardManager(keyboard);
@@ -89,42 +90,20 @@ public class Launcher {
 		plugin.setErrorManager(error);
 		plugin.setUtilsManager(utils);
 		plugin.setEventManager(event);
+		plugin.setCloseManager(close);
 		
 		initCommands();
 		
 		plugin.loadAll();
 		plugin.enableAll();
 	}
-	
-	private void checkForInstall() {
-		boolean install = false;
-		int missing = 0;
-		
-		for(File file : files) {
-			if(!file.exists()) {
-				install = true;
-				missing++;
-			}
-		}
-		
-		if(install) {
-			System.out.println("There are " + missing + " file(s) missing. Installing them now.");
-			Installer i = new Installer(files, keyboard, settings);
-			
-			try {
-				i.install();
-			} 
-			catch(Error | Exception e) {
-				new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
-			}
-		}
-	}
 
 	private void initCommands() {
 		DefaultCommands dc = new DefaultCommands();
-		dc.create(command, keyboard);
+		dc.create(command, keyboard, close);
 	}
 	
+	@Override
 	public void close() {
 		try {
 			settings.save();
@@ -140,7 +119,16 @@ public class Launcher {
 	}
 
 	public static void main(String[] args) throws Exception {
-		new Launcher();
+		Launcher launcher = new Launcher();
+		
+		launcher.preInit();
+		
+		// Initialize the program
+		launcher.init();
+		
+		// Start the program
+		Console.println("<- JCIO [Jortenmilo (c) 2017]->");
+		launcher.start();
 	}
 
 }

@@ -4,8 +4,8 @@ import nl.jortenmilo.command.Command;
 import nl.jortenmilo.command.CommandExecutor;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.console.Console.ConsoleUser;
-import nl.jortenmilo.utils.StringUtils;
+import nl.jortenmilo.console.ConsoleUser;
+import nl.jortenmilo.utils.defaults.StringUtils;
 
 /**
  * This command will show you all of the possible commands.

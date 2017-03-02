@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 

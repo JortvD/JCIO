@@ -3,7 +3,7 @@ package nl.jortenmilo.command.defaults;
 import nl.jortenmilo.command.Command;
 import nl.jortenmilo.command.CommandExecutor;
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.keyboard.KeyboardManager;
 
 /**

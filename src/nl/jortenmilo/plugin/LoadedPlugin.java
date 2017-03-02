@@ -8,6 +8,8 @@ public class LoadedPlugin {
 	private Plugin plugin;
 	private String name;
 	private String path;
+	private String author;
+	private String website;
 	private URLClassLoader loader;
 	private List<LoadedPlugin> dependencies;
 	
@@ -49,5 +51,21 @@ public class LoadedPlugin {
 	
 	public List<LoadedPlugin> getDependencies() {
 		return dependencies;
+	}
+
+	public String getAuthor() {
+		return author;
+	}
+
+	protected void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public String getWebsite() {
+		return website;
+	}
+
+	protected void setWebsite(String website) {
+		this.website = website;
 	}
 }

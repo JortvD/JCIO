@@ -1,8 +1,9 @@
-package nl.jortenmilo.utils;
+package nl.jortenmilo.utils.defaults;
 
 import java.awt.Color;
 
 import nl.jortenmilo.error.ParsingError;
+import nl.jortenmilo.utils.Utils;
 
 public class ObjectUtils extends Utils {
 	

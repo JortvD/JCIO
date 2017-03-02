@@ -32,14 +32,15 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
 
+import nl.jortenmilo.close.CloseManager;
+import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.keyboard.KeyboardInput;
-import nl.jortenmilo.main.CloseManager;
 import nl.jortenmilo.mouse.MouseInput;
 import nl.jortenmilo.settings.SettingsManager;
-import nl.jortenmilo.utils.ObjectUtils;
-import nl.jortenmilo.utils.SystemUtils;
+import nl.jortenmilo.utils.defaults.ObjectUtils;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class Console {
 	
@@ -51,16 +52,18 @@ public class Console {
 	private static BufferedWriter bw;
 	private static KeyboardInput ki;
 	private static MouseInput mi;
-	private static SettingsManager settings;
 	private static StyledDocument d;
 	private static ConsoleOutputStream cos;
 	private static SimpleAttributeSet at;
+	
 	private static EventManager events;
+	private static CloseManager close;
+	private static SettingsManager settings;
 	
-	public static PrintStream dout; //DEBUG
-	public static InputStream din; //DEBUG
+	public static PrintStream dout; //DEBUG OUT
+	public static InputStream din; //DEBUG IN
 	
-	public static void init() {
+	public static void init() throws NullPointerException {
 		if(!inited) {
 			inited = true;
 			
@@ -84,6 +87,8 @@ public class Console {
 			JScrollPane s = new JScrollPane(t);
 			s.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			s.setBounds(0, 0, p.getWidth()-16, p.getHeight()-46);
+			s.setAutoscrolls(true);
+			s.setWheelScrollingEnabled(true);
 			t.setEditable(false);
 			t.setBounds(0, 0, s.getWidth(), s.getHeight());
 			t.setForeground(Color.LIGHT_GRAY);
@@ -175,7 +180,7 @@ public class Console {
 						handler.execute(event);
 					}
 					
-					CloseManager.close();
+					close.close();
 				}
 				
 				@Override
@@ -217,13 +222,15 @@ public class Console {
 			if(new File("logs").exists()) {
 				File f = new File("logs/" + new SimpleDateFormat("MM-dd-yyyy HH-mm-ss").format(System.currentTimeMillis()) + ".log");
 				try {
+					
 					f.createNewFile();
 					bw = new BufferedWriter(new PrintWriter(f));
 					
 					debug("Started JCIO [Jortenmilo (c) 2017]");
 					debug("OS: " + System.getProperty("os.name"));
 				} 
-				catch(Error | Exception e) {
+				catch(Exception | Error e) {
+					e.printStackTrace();
 					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 				}
 			}
@@ -233,11 +240,20 @@ public class Console {
 		}
 	}
 	
-	public static void debug(String s) {
+	public static void debug(String text) {
+		if(text == null) {
+			new NullableParameterError("String", "text").print();
+			return;
+		}
+		
+		if(settings == null) { //TODO: FIX THIS
+			return;
+		}
+		
 		if(settings.contains("log")) {
-			if(settings.get("log").equals("true") && bw!=null) {
+			if(settings.get("log").equals("true") && bw != null) {
 				try {
-					bw.write(s);
+					bw.write(text);
 					bw.newLine();
 				} 
 				catch (IOException e) {
@@ -267,14 +283,15 @@ public class Console {
 		
 		@Override
 		public void write(int b) throws IOException {
-			int l = t.getGraphics().getFontMetrics().stringWidth(lineText)+12;
-			
 			String text = new String(new byte[]{(byte)b});
+			
+			int l = t.getGraphics().getFontMetrics().stringWidth(lineText + text);
 			
 			if((l > t.getWidth()) && !text.equals("\n")) {
 				brakes.add(d.getLength());
 				
 				try {
+					Console.dout.println("TEST1");
 					d.insertString(d.getLength(), "\n", at);
 				}
 				catch (BadLocationException e) {}
@@ -447,21 +464,33 @@ public class Console {
 		private boolean Waiting = false;
 	}
 	
-	public static void println(String user, String s) {
+	public static void println(String user, String text) {
+		if(text == null) {
+			new NullableParameterError("String", "text").print();
+			return;
+		}
+		if(user == null) {
+			new NullableParameterError("String", "user").print();
+			return;
+		}
+		
 		if(settings == null) {
 			String time = new SystemUtils().getTime();
 			
 			if(user.equals(ConsoleUser.System)) {
-				cps.println("[SYS " + time + "]: " + s);
+				cps.println("[SYS " + time + "]: " + text);
 			}
 			else if(user.equals(ConsoleUser.User)) {
-				cps.println("[YOU " + time + "]: " + s);
+				cps.println("[YOU " + time + "]: " + text);
 			}
 			else if(user.equals(ConsoleUser.Error)) {
-				cps.println("[ERR " + time + "]: " + s);
+				cps.println("[ERR " + time + "]: " + text);
 			}
 			else if(user.equals(ConsoleUser.Empty)) {
-				cps.println("[" + time + "]: " + s);
+				cps.println("[" + time + "]: " + text);
+			}
+			else {
+				cps.println("[" + user + time + "]: " + text);
 			}
 			
 			return;
@@ -471,16 +500,19 @@ public class Console {
 			String time = new SystemUtils().getTime();
 			
 			if(user.equals(ConsoleUser.System)) {
-				cps.println("[SYS " + time + "]: " + s);
+				cps.println("[SYS " + time + "]: " + text);
 			}
 			else if(user.equals(ConsoleUser.User)) {
-				cps.println("[YOU " + time + "]: " + s);
+				cps.println("[YOU " + time + "]: " + text);
 			}
 			else if(user.equals(ConsoleUser.Error)) {
-				cps.println("[ERR " + time + "]: " + s);
+				cps.println("[ERR " + time + "]: " + text);
 			}
 			else if(user.equals(ConsoleUser.Empty)) {
-				cps.println("[" + time + "]: " + s);
+				cps.println("[" + time + "]: " + text);
+			}
+			else {
+				cps.println("[" + user + time + "]: " + text);
 			}
 			
 			return;
@@ -490,54 +522,80 @@ public class Console {
 			String time = new SystemUtils().getTime();
 			
 			if(user.equals(ConsoleUser.System)) {
-				cps.println("[SYS " + time + "]: " + s);
+				cps.println("[SYS " + time + "]: " + text);
 			}
 			else if(user.equals(ConsoleUser.User)) {
-				cps.println("[YOU " + time + "]: " + s);
+				cps.println("[YOU " + time + "]: " + text);
 			}
 			else if(user.equals(ConsoleUser.Error)) {
-				cps.println("[ERR " + time + "]: " + s);
+				cps.println("[ERR " + time + "]: " + text);
 			}
 			else if(user.equals(ConsoleUser.Empty)) {
-				cps.println("[" + time + "]: " + s);
+				cps.println("[" + time + "]: " + text);
+			}
+			else {
+				cps.println("[" + user + time + "]: " + text);
 			}
 		}
 		else if(settings.get("time").equals("false")) {
 			if(user == ConsoleUser.System) {
-				cps.println("[SYS]: " + s);
+				cps.println("[SYS]: " + text);
 			}
 			else if(user == ConsoleUser.User) {
-				cps.println("[YOU]: " + s);
+				cps.println("[YOU]: " + text);
 			}
 			else if(user == ConsoleUser.Error) {
-				cps.println("[ERR]: " + s);
+				cps.println("[ERR]: " + text);
 			}
 			else if(user == ConsoleUser.Empty) {
-				cps.println("[]: " + s);
+				cps.println("[]: " + text);
+			}
+			else {
+				cps.println("[" + user + "]: " + text);
 			}
 		}
 	}
 	
-	public static void println(String s) {
+	public static void println(String text) {
+		if(text == null) {
+			new NullableParameterError("String", "text").print();
+			return;
+		}
+		
+		if(settings == null) {
+			cps.println("[SYS " + new SystemUtils().getTime() + "]: " + text);
+			return;
+		}
+		
 		if(!settings.contains("time")) {
-			cps.println("[SYS " + new SystemUtils().getTime() + "]: " + s);
+			cps.println("[SYS " + new SystemUtils().getTime() + "]: " + text);
 			return;
 		}
 		
 		if(settings.get("time").equals("true")) {
-			cps.println("[SYS " + new SystemUtils().getTime() + "]: " + s);
+			cps.println("[SYS " + new SystemUtils().getTime() + "]: " + text);
 		}
 		else if(settings.get("time").equals("false")) {
-			cps.println("[SYS]: " + s);
+			cps.println("[SYS]: " + text);
 		}
 	}
 	
-	public static void write(String s) {
-		cps.print(s);
+	public static void write(String text) {
+		if(text == null) {
+			new NullableParameterError("String", "text").print();
+			return;
+		}
+		
+		cps.print(text);
 	}
 	
-	public static void writeln(String s) {
-		cps.println(s);
+	public static void writeln(String text) {
+		if(text == null) {
+			new NullableParameterError("String", "text").print();
+			return;
+		}
+		
+		cps.println(text);
 	}
 	
 	public static String readln() {
@@ -555,13 +613,6 @@ public class Console {
 	
 	public static String read() {
 		return cis.waitUntilDone();
-	}
-	
-	public static class ConsoleUser {
-		public static String System = "SYS";
-		public static String User = "YOU";
-		public static String Empty = "0";
-		public static String Error = "ERR";
 	}
 
 	public static void clear() {
@@ -635,6 +686,10 @@ public class Console {
 
 	public static void setEventManager(EventManager events) {
 		Console.events = events;
+	}
+
+	public static void setCloseManager(CloseManager close) {
+		Console.close = close;
 	}
 	
 }

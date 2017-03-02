@@ -3,6 +3,7 @@ package nl.jortenmilo.event;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.plugin.Plugin;
 
 public class EventHandler {
@@ -13,6 +14,11 @@ public class EventHandler {
 	private EventListener listener;
 	
 	public void execute(Event event) {
+		if(event == null) {
+			new NullableParameterError("Event", "event").print();
+			return;
+		}
+		
 		try {
 			method.invoke(listener, this.event.cast(event));
 		} 

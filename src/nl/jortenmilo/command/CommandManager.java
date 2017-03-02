@@ -1,14 +1,13 @@
 package nl.jortenmilo.command;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.error.CommandUsedError;
-import nl.jortenmilo.error.InvalidParameterError;
+import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.plugin.Plugin;
@@ -34,14 +33,17 @@ public class CommandManager {
 	 * @param plugin The plugin this command is from
 	 */
 	public void addCommand(Command command, Plugin plugin) {
-		if(command.getCommand() == null) {
-			//Throw an error when the command is null.
-			new InvalidParameterError(command.getCommand()).print();
+		if(command == null) {
+			new NullableParameterError("Command", "command").print();
+			return;
 		}
-		
-		else if(plugin == null) {
-			//Throw an error when the plugin is null.
-			new InvalidParameterError(plugin + "").print();
+		if(command.getCommand() == null) {
+			new NullableParameterError("String", "command.getCommand()").print();
+			return;
+		}
+		if(plugin == null) {
+			new NullableParameterError("Plugin", "plugin").print();
+			return;
 		}
 		
 		boolean exists = false;
@@ -81,7 +83,7 @@ public class CommandManager {
 			//Add the command to the list.
 			commands.add(command);
 			
-			if(pcommands.get(plugin)==null) {
+			if(pcommands.get(plugin) == null) {
 				pcommands.put(plugin, new ArrayList<Command>());
 			}
 			
@@ -106,9 +108,9 @@ public class CommandManager {
 	 * @param command The command to register
 	 */
 	public void addCommand(Command command) {
-		if(command.getCommand() == null) {
-			//Throw an error when the command is null.
-			new InvalidParameterError(command.getCommand()).print();
+		if(command == null) {
+			new NullableParameterError("Command", "command").print();
+			return;
 		}
 		
 		boolean exists = false;
@@ -163,6 +165,11 @@ public class CommandManager {
 	 * @param command The command to unregister
 	 */
 	public void removeCommand(Command command) {
+		if(command == null) {
+			new NullableParameterError("Command", "command").print();
+			return;
+		}
+		
 		commands.remove(command);
 		
 		Plugin plugin = getPlugin(command);
@@ -185,6 +192,11 @@ public class CommandManager {
 	 * @param plugin The plugin to unregister
 	 */
 	public void removeCommands(Plugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("Plugin", "plugin").print();
+			return;
+		}
+		
 		for(Command command : pcommands.get(plugin)) {
 			commands.remove(command);
 			
@@ -213,6 +225,11 @@ public class CommandManager {
 	 * @return A list of the commands
 	 */
 	public List<Command> getCommands(Plugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("Plugin", "plugin").print();
+			return null;
+		}
+		
 		return pcommands.get(plugin);
 	}
 	
@@ -222,6 +239,11 @@ public class CommandManager {
 	 * @return A plugin
 	 */
 	public Plugin getPlugin(Command command) {
+		if(command == null) {
+			new NullableParameterError("Command", "command").print();
+			return null;
+		}
+		
 		for(Plugin plugin : pcommands.keySet()) {
 			for(Command c : pcommands.get(plugin)) {
 				if(c == command) {
@@ -239,6 +261,11 @@ public class CommandManager {
 	 * @return The command (can be null)
 	 */
 	public Command getCommand(String command) {
+		if(command == null) {
+			new NullableParameterError("String", "command").print();
+			return null;
+		}
+		
 		for(Command c : commands) {
 			if(c.getCommand().equalsIgnoreCase(command)) {
 				return c;
@@ -259,6 +286,15 @@ public class CommandManager {
 	 * @param args The specified arguments to use
 	 */
 	public void executeCommand(Command command, String[] args) {
+		if(command == null) {
+			new NullableParameterError("Command", "command").print();
+			return;
+		}
+		if(args == null) {
+			new NullableParameterError("String[]", "args").print();
+			return;
+		}
+		
 		//Create the arguments from the last arguments.
 		String[] a = new String[args.length+1];
 		
@@ -278,6 +314,11 @@ public class CommandManager {
 	 * @param args The arguments and command that have to be executed
 	 */
 	public void executeCommand(String[] args) {
+		if(args == null) {
+			new NullableParameterError("String[]", "args").print();
+			return;
+		}
+		
 		String command = args[0];
 		
 		//Go through all the commands.
@@ -356,7 +397,7 @@ public class CommandManager {
 			}
 		}
 		
-		Console.println(ConsoleUser.Error, "Unknown command. Try 'help' for a list of all the commands. " + Arrays.toString(args));
+		Console.println(ConsoleUser.Error, "Unknown command. Try 'help' for a list of all the commands.");
 	}
 	
 }

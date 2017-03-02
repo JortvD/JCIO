@@ -3,6 +3,7 @@ package nl.jortenmilo.keyboard;
 import java.awt.AWTException;
 import java.awt.Robot;
 
+import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.event.EventManager;
 
 public class KeyboardManager {
@@ -31,6 +32,11 @@ public class KeyboardManager {
 	}
 	
 	public int waitUntilTyped(int[] keys) {
+		if(keys == null) {
+			new NullableParameterError("int[]", "keys").print();
+			return 0;
+		}
+		
 		return input.waitUntilTyped(keys);
 	}
 	

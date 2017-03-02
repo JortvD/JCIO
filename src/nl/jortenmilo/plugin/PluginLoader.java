@@ -15,32 +15,47 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import nl.jortenmilo.error.MissingFileError;
+import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.error.SyntaxError;
 
 public class PluginLoader {
 	
-	public void loadAll(PluginManager pm) {
+	public void loadAll(PluginManager manager) {
+		if(manager == null) {
+			new NullableParameterError("PluginManager", "manager").print();
+			return;
+		}
+		
 		File folder = new File("plugins");
 		File[] files = folder.listFiles();
 		
 		for(File f : files) {
 			if(f.getName().endsWith(".jar")) {
-				load(f, pm);
+				load(f, manager);
 			}
 		}
 	}
 	
 	@SuppressWarnings("resource")
-	public void load(File f, PluginManager pm) {
+	public void load(File file, PluginManager manager) {
+		if(manager == null) {
+			new NullableParameterError("PluginManager", "manager").print();
+			return;
+		}
+		if(file == null) {
+			new NullableParameterError("File", "File").print();
+			return;
+		}
+		
 		try {
-			InputStream is = getInputStream(f, "plugin.jcio");
+			InputStream is = getInputStream(file, "plugin.jcio");
 			
 			if(is == null) {
-				new MissingFileError(f.getName(), "plugin.jcio").print();
+				new MissingFileError(file.getName(), "plugin.jcio").print();
 			} 
 			else {
 				LoadedPlugin lp = new LoadedPlugin();
-				lp.setPath(f.getPath());
+				lp.setPath(file.getPath());
 				
 				Scanner scr = new Scanner(is);
 				
@@ -52,9 +67,9 @@ public class PluginLoader {
 					}
 					else if(line.startsWith("path: ")) {
 						String path = line.substring(6);
-						JarFile jarFile = new JarFile(f.getPath());
+						JarFile jarFile = new JarFile(file.getPath());
 						Enumeration<JarEntry> e = jarFile.entries();
-						URL[] urls = { new URL("jar:file:" + f.getPath() +"!/") };
+						URL[] urls = { new URL("jar:file:" + file.getPath() +"!/") };
 						URLClassLoader cl = new URLClassLoader(urls, this.getClass().getClassLoader());
 						
 						while (e.hasMoreElements()) {
@@ -78,23 +93,31 @@ public class PluginLoader {
 						}
 					}
 					else if(line.startsWith("name: ")) {
-						String name = line.substring(6);
+						String name = line.replaceAll("name: ", "");
 						lp.setName(name);
 					}
+					else if(line.startsWith("author: ")) {
+						String author = line.replaceAll("author: ", "");
+						lp.setAuthor(author);
+					}
+					else if(line.startsWith("website: ")) {
+						String website = line.replaceAll("website: ", "");
+						lp.setWebsite(website);
+					}
 					else {
-						new SyntaxError(line, "the plugin.jcio file (Plugin: " + f.getName() + ")").print();
+						new SyntaxError(line, "the plugin.jcio file (Plugin: " + file.getName() + ")").print();
 					}
 				}
 				
 				if(lp.getName()==null) {
-					new MissingFileError(f.getName(), "name").print();
+					new MissingFileError(file.getName(), "name").print();
 				}
 				
 				else if(lp.getPlugin()==null) {
-					new MissingFileError(f.getName(), "path").print();
+					new MissingFileError(file.getName(), "path").print();
 				}
 				
-				pm.addPlugin(lp);
+				manager.addPlugin(lp);
 				lp.getPlugin().load();
 			}
 		} 
@@ -103,16 +126,26 @@ public class PluginLoader {
 		}
 	}
 	
-	public void unloadAll(PluginManager pm) {
-		for(LoadedPlugin plugin : pm.getPlugins()) {
+	public void unloadAll(PluginManager manager) {
+		if(manager == null) {
+			new NullableParameterError("PluginManager", "manager").print();
+			return;
+		}
+		
+		for(LoadedPlugin plugin : manager.getPlugins()) {
 			unload(plugin);
 			
-			pm.removePlugin(plugin);
+			manager.removePlugin(plugin);
 			plugin.getPlugin().unload();
 		}
 	}
 	
 	public void unload(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
 		URLClassLoader cl = plugin.getClassLoader();
 		
 		try {

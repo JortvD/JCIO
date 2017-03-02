@@ -4,21 +4,23 @@ import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 
-public class InvalidParameterError extends Error {
+public class NullableParameterError extends Error {
 	
 	/* This error is thrown when:
-	 * A method is called and an invalid parameter is used.
+	 * A method is called with a parameter that is null.
 	 */
 	
-	private String value;
+	private String value1;
+	private String value2;
 	
-	public InvalidParameterError(String value) {
-		this.value = value;
+	public NullableParameterError(String value1, String value2) {
+		this.value1 = value1;
+		this.value2 = value2;
 	}
 	
 	@Override
 	public void print() {
-		Console.println(ConsoleUser.Error, "InvalidParameterError: '" + value + "' is an invalid value for this method!");
+		Console.println(ConsoleUser.Error, "NullableParameterError: The parameter " + value1 + "#" + value2 + " is null!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();
 		StackTraceElement[] es2 = new StackTraceElement[es.length-2];
@@ -40,5 +42,5 @@ public class InvalidParameterError extends Error {
 			handler.execute(event);
 		}
 	}
-
+	
 }

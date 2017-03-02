@@ -7,6 +7,7 @@ import java.util.List;
 
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.ExistingSettingError;
+import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.error.UnknownSettingError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
@@ -23,6 +24,11 @@ public class SettingsManager {
 	}
 	
 	public String get(String key) {
+		if(key == null) {
+			new NullableParameterError("String", "key").print();
+			return null;
+		}
+		
 		if(!settings.containsKey(key)) {
 			new UnknownSettingError(key).print();
 		}
@@ -31,6 +37,15 @@ public class SettingsManager {
 	}
 	
 	public void set(String key, String value) {
+		if(key == null) {
+			new NullableParameterError("String", "key").print();
+			return;
+		}
+		if(value == null) {
+			new NullableParameterError("String", "value").print();
+			return;
+		}
+		
 		if(!keys.contains(key)) {
 			new UnknownSettingError(key).print();
 		}
@@ -49,6 +64,11 @@ public class SettingsManager {
 	}
 	
 	public void create(String key) {
+		if(key == null) {
+			new NullableParameterError("String", "key").print();
+			return;
+		}
+		
 		if(keys.contains(key)) {
 			new ExistingSettingError(key).print();
 		}
@@ -66,10 +86,20 @@ public class SettingsManager {
 	}
 	
 	public boolean contains(String key) {
+		if(key == null) {
+			new NullableParameterError("String", "key").print();
+			return false;
+		}
+		
 		return keys.contains(key);
 	}
 	
 	public void remove(String key) {
+		if(key == null) {
+			new NullableParameterError("String", "key").print();
+			return;
+		}
+		
 		if(!keys.contains(key)) {
 			new UnknownSettingError(key).print();
 		}

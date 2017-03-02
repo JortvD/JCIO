@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.plugin.Plugin;
+import nl.jortenmilo.utils.defaults.IDUtils;
+import nl.jortenmilo.utils.defaults.ObjectUtils;
+import nl.jortenmilo.utils.defaults.StringUtils;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class UtilsManager {
 	
@@ -24,6 +29,15 @@ public class UtilsManager {
 	}
 	
 	public Utils createUtils(Class<? extends Utils> name, Plugin plugin) {
+		if(name == null) {
+			new NullableParameterError("Class<? extends Utils>", "name").print();
+			return null;
+		}
+		if(plugin == null) {
+			new NullableParameterError("Plugin", "plugin").print();
+			return null;
+		}
+		
 		try {
 			for(Class<? extends Utils> key : utils.keySet()) {
 				if(key == name) {
@@ -52,6 +66,15 @@ public class UtilsManager {
 	}
 	
 	public Utils cloneUtils(Class<? extends Utils> name, Utils util) {
+		if(name == null) {
+			new NullableParameterError("Class<? extends Utils>", "name").print();
+			return null;
+		}
+		if(util == null) {
+			new NullableParameterError("Utils", "util").print();
+			return null;
+		}
+		
 		Utils clone = util.clone();
 		clone.setPlugin(util.getPlugin());
 		
@@ -71,18 +94,38 @@ public class UtilsManager {
 	}
 	
 	public void addUtil(Class<? extends Utils> name) {
+		if(name == null) {
+			new NullableParameterError("Class<? extends Utils>", "name").print();
+			return;
+		}
+		
 		utils.put(name, new ArrayList<Utils>());
 	}
 	
 	public void removeUtil(Class<? extends Utils> name) {
+		if(name == null) {
+			new NullableParameterError("Class<? extends Utils>", "name").print();
+			return;
+		}
+		
 		utils.remove(name);
 	}
 	
 	public List<Utils> getUtils(Class<? extends Utils> name) {
+		if(name == null) {
+			new NullableParameterError("Class<? extends Utils>", "name").print();
+			return null;
+		}
+		
 		return utils.get(name);
 	}
 	
 	public List<Utils> getUtils(Plugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("Plugin", "plugin").print();
+			return null;
+		}
+		
 		List<Utils> list = new ArrayList<Utils>();
 		
 		for(Class<? extends Utils> key : utils.keySet()) {
@@ -95,6 +138,15 @@ public class UtilsManager {
 	}
 	
 	public List<Utils> getUtils(Plugin plugin, Class<? extends Utils> name) {
+		if(name == null) {
+			new NullableParameterError("Class<? extends Utils>", "name").print();
+			return null;
+		}
+		if(plugin == null) {
+			new NullableParameterError("Plugin", "plugin").print();
+			return null;
+		}
+		
 		List<Utils> list = new ArrayList<Utils>();
 		
 		for(Utils util : utils.get(name)) {

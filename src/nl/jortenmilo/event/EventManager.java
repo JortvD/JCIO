@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.plugin.Plugin;
 
 public class EventManager {
@@ -14,6 +15,15 @@ public class EventManager {
 	private Map<Class<? extends Event>, List<EventHandler>> events = new HashMap<Class<? extends Event>, List<EventHandler>>();
 	
 	public void registerListener(EventListener listener, Plugin plugin) {
+		if(listener == null) {
+			new NullableParameterError("EventListener", "listener").print();
+			return;
+		}
+		if(plugin == null) {
+			new NullableParameterError("Plugin", "plugin").print();
+			return;
+		}
+		
 		for(Method method : listener.getClass().getMethods()) {
 			if(method.getParameterCount() != 1) {
 				continue;
@@ -44,6 +54,11 @@ public class EventManager {
 	}
 	
 	public void unregisterListener(EventListener listener) {
+		if(listener == null) {
+			new NullableParameterError("EventListener", "listener").print();
+			return;
+		}
+		
 		for(Method method : listener.getClass().getMethods()) {
 			if(method.getParameterCount() != 1) {
 				continue;
@@ -70,6 +85,11 @@ public class EventManager {
 	}
 	
 	public void unregisterPlugin(Plugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("Plugin", "plugin").print();
+			return;
+		}
+		
 		for(Class<? extends Event> key : events.keySet()) {
 			List<EventHandler> handlers = events.get(key);
 			
@@ -84,6 +104,11 @@ public class EventManager {
 	}
 	
 	public List<EventHandler> getHandlers(Class<? extends Event> event) {
+		if(event == null) {
+			new NullableParameterError("Class<? extends Event>", "event").print();
+			return null;
+		}
+		
 		if(!events.containsKey(event)) {
 			return new ArrayList<EventHandler>();
 		}

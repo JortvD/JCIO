@@ -1,7 +1,9 @@
 package nl.jortenmilo.config;
 
 import java.io.File;
+
 import nl.jortenmilo.error.MissingObjectError;
+import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 
@@ -43,6 +45,11 @@ public class ConfigManager {
 	 * @return The loaded ConfigFile
 	 */
 	public ConfigFile loadConfig(File file) {
+		if(file == null) {
+			new NullableParameterError("File", "file").print();
+			return null;
+		}
+		
 		ConfigFile config = new ConfigFile();
 		config.setFile(file);
 		loader.load(config);
@@ -61,22 +68,26 @@ public class ConfigManager {
 	/**
 	 * This will save the specified config to it's file.
 	 * It will execute all of the ConfigSavedEvents when the config is successfully saved.
-	 * @param file The config you want to save
+	 * @param config The config you want to save
 	 */
-	public void saveConfig(ConfigFile file) {
-		if(file.getFile() == null) {
-			new MissingObjectError("ConfigFile", "file").print();
+	public void saveConfig(ConfigFile config) {
+		if(config == null) {
+			new NullableParameterError("ConfigFile", "config").print();
+			return;
+		}
+		if(config.getFile() == null) {
+			new MissingObjectError("File", "config.getFile()").print();
 		}
 		
 		ConfigSavedEvent event = new ConfigSavedEvent();
-		event.setConfig(file);
-		event.setFile(file.getFile());
+		event.setConfig(config);
+		event.setFile(config.getFile());
 		
 		for(EventHandler handler : events.getHandlers(event.getClass())) {
 			handler.execute(event);
 		}
 		
-		loader.save(file);
+		loader.save(config);
 	}
 	
 }

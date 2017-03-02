@@ -1,7 +1,7 @@
 package nl.jortenmilo.error;
 
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 
 public class UnknownSettingError extends Error{

@@ -1,9 +1,11 @@
-package nl.jortenmilo.utils;
+package nl.jortenmilo.utils.defaults;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import nl.jortenmilo.utils.Utils;
 
 public class IDUtils extends Utils {
 	
