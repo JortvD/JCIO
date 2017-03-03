@@ -1,0 +1,22 @@
+This file contains explanations of all the debugging actions.
+
+CLOSABLE_ADDED [time][path][priority][plugin]
+CLOSABLE_REMOVED [time][path]
+CLOSE [time][path]
+COMMAND [time][command][arguments]
+COMMAND_ADDED [time][command][description][executor][aliasses][plugin]
+COMMAND_REMOVED [time][command]
+CONFIG_CREATED [time][hash]
+CONFIG_LOADED [time][hash][file]
+CONFIG_SAVED [time][hash][file]
+DATA [key][value]
+FRAME [key][value]
+TEXTPANE [key][value]
+PLUGIN_DISABLED [time][name]
+PLUGIN_ENABLED [time][name]
+PLUGIN_LOADED [time][name][path][version][author][website]
+PLUGIN_UNLOADED [time][name]
+PRINTLN [time][user][text]
+WRITE [time][text]
+WRITELN [time][text]
+

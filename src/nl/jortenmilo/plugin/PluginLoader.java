@@ -14,9 +14,11 @@ import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.MissingFileError;
 import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.error.SyntaxError;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class PluginLoader {
 	
@@ -121,10 +123,12 @@ public class PluginLoader {
 					new MissingFileError(file.getName(), "path").print();
 				}
 				
+				Console.debug("PLUGIN_LOADED [" + new SystemUtils().getTime() + "][" + lp.getName() + "][" + lp.getPlugin().getClass().getName() + "][" + lp.getVersion() + "][" + lp.getAuthor() + "][" + lp.getWebsite() + "]");
+				
 				manager.addPlugin(lp);
 				lp.getPlugin().load();
 			}
-		} 
+		}
 		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
@@ -149,6 +153,8 @@ public class PluginLoader {
 			new NullableParameterError("LoadedPlugin", "plugin").print();
 			return;
 		}
+		
+		Console.debug("PLUGIN_UNLOADED [" + new SystemUtils().getTime() + "][" + plugin.getName() + "]");
 		
 		URLClassLoader cl = plugin.getClassLoader();
 		

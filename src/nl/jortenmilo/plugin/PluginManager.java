@@ -7,6 +7,7 @@ import java.util.List;
 import nl.jortenmilo.close.CloseManager;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.config.ConfigManager;
+import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleManager;
 import nl.jortenmilo.error.ErrorManager;
 import nl.jortenmilo.error.NullableParameterError;
@@ -16,6 +17,7 @@ import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
 import nl.jortenmilo.settings.SettingsManager;
 import nl.jortenmilo.utils.UtilsManager;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class PluginManager {
 	
@@ -62,6 +64,8 @@ public class PluginManager {
 			return;
 		}
 		
+		Console.debug("PLUGIN_ENABLED [" + new SystemUtils().getTime() + "][" + plugin.getName() + "]");
+		
 		plugin.getPlugin().setCommandManager(command);
 		plugin.getPlugin().setPluginManager(this);
 		plugin.getPlugin().setConsoleManager(console);
@@ -97,9 +101,10 @@ public class PluginManager {
 			return;
 		}
 		
+		Console.debug("PLUGIN_DISABLED [" + new SystemUtils().getTime() + "][" + plugin.getName() + "]");
+		
 		try {
 			plugin.getPlugin().disable();
-			
 		} 
 		catch(Error | Exception e2) {
 			new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
@@ -178,6 +183,8 @@ public class PluginManager {
 			new NullableParameterError("LoadedPlugin", "plugin").print();
 			return;
 		}
+		
+		Console.debug("PLUGIN_RELOADED [" + new SystemUtils().getTime() + "][" + plugin.getName() + "]");
 		
 		loader.unload(plugin);
 		loader.load(new File("plugins/" + plugin.getPath()), this);

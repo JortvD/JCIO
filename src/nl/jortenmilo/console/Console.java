@@ -67,12 +67,58 @@ public class Console {
 		if(!inited) {
 			inited = true;
 			
+			if(new File("logs").exists()) {
+				File f = new File("logs/" + new SimpleDateFormat("MM-dd-yyyy HH-mm-ss").format(System.currentTimeMillis()) + ".log");
+				try {
+					
+					f.createNewFile();
+					bw = new BufferedWriter(new PrintWriter(f));
+					
+					debug("----- JCIO -----");
+					debug("");
+					debug("DATA [OS_NAME][" + System.getProperty("os.name") + "]");
+					debug("DATA [OS_ARCH][" + System.getProperty("os.arch") + "]");
+					debug("DATA [OS_TIME][" + new SimpleDateFormat("MM-dd-yyyy HH:mm:ss").format(System.currentTimeMillis()) + "]");
+					debug("DATA [OS_VERSION][" + System.getProperty("os.version") + "]");
+					debug("DATA [JAVA_NAME][" + System.getProperty("java.name") + "]");
+					debug("DATA [JAVA_VERSION][" + System.getProperty("java.version") + "]");
+					debug("DATA [JAVA_VENDOR][" + System.getProperty("java.vendor") + "]");
+					debug("DATA [JAVA_HOME][" + System.getProperty("java.home") + "]");
+					debug("DATA [VM_NAME][" + System.getProperty("java.vm.name") + "]");
+					debug("DATA [VM_VERSION][" + System.getProperty("java.vm.version") + "]");
+					debug("DATA [VM_VENDOR][" + System.getProperty("java.vm.vendor") + "]");
+					debug("DATA [VM_INFO][" + System.getProperty("java.vm.info") + "]");
+					debug("DATA [RUNTIME_NAME][" + System.getProperty("java.runtime.name") + "]");
+					debug("DATA [RUNTIME_VERSION][" + System.getProperty("java.runtime.version") + "]");
+					debug("DATA [RUNTIME_VENDOR][" + System.getProperty("java.runtime.vendor") + "]");
+					debug("DATA [SUN_ENCODING][" + System.getProperty("sun.encoding") + "]");
+					debug("DATA [SUN_DESKTOP][" + System.getProperty("sun.desktop") + "]");
+					debug("DATA [SUN_COMMAND][" + System.getProperty("sun.java.command") + "]");
+					debug("DATA [SUN_BOOT][" + System.getProperty("sun.boot.library.path") + "]");
+					debug("DATA [SUN_LAUNCHER][" + System.getProperty("sun.java.launcher") + "]");
+					debug("DATA [USER_NAME][" + System.getProperty("user.name") + "]");
+					debug("DATA [USER_LANGUAGE][" + System.getProperty("user.language") + "]");
+					debug("DATA [USER_COUNTRY][" + System.getProperty("user.country") + "]");
+					debug("");
+				} 
+				catch(Exception | Error e) {
+					e.printStackTrace();
+					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
+				}
+			}
+			
 			frame = new JFrame();
 			frame.setTitle("JCIO");
 			frame.setSize(1600, 800);
 			frame.setResizable(true);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			frame.setVisible(true);
+			
+			debug("FRAME [TITLE][" + frame.getTitle() + "]");
+			debug("FRAME [SIZE][" + frame.getWidth() + ", " + frame.getHeight() + "]");
+			debug("FRAME [RESIZABLE][" + frame.isResizable() + "]");
+			debug("FRAME [CLOSE_OPERATION][" + frame.getDefaultCloseOperation() + "]");
+			debug("FRAME [VISIBLE][" + frame.isVisible() + "]");
 			
 			ki = new KeyboardInput();
 			mi = new MouseInput();
@@ -97,6 +143,15 @@ public class Console {
 			t.setFocusable(false);
 			p.add(s);
 			
+			debug("TEXTPANE [EDITABLE][" + t.isEditable() + "]");
+			debug("TEXTPANE [SIZE][" + t.getWidth() + ", " + t.getHeight() + "]");
+			debug("TEXTPANE [FOREGROUND][" + t.getForeground().toString() + "]");
+			debug("TEXTPANE [BACKGROUND][" + t.getBackground().toString() + "]");
+			debug("TEXTPANE [FONT_FAMILY][" + t.getFont().getFontName() + "]");
+			debug("TEXTPANE [FONT_STYLE][" + t.getFont().getStyle() + "]");
+			debug("TEXTPANE [FONT_SIZE][" + t.getFont().getSize() + "]");
+			debug("TEXTPANE [FOCUSABLE][" + t.isFocusable() + "]");
+			
 			frame.addKeyListener(ki);
 			t.addMouseListener(mi);
 			t.addMouseMotionListener(mi);
@@ -105,6 +160,8 @@ public class Console {
 			frame.addComponentListener(new ComponentListener() {
 				@Override
 				public void componentResized(ComponentEvent e) {
+					debug("CONSOLE_RESIZED [" + new SystemUtils().getTime() + "][" + frame.getWidth() + ", " + frame.getHeight() + "][" + p.getWidth() + ", " + p.getHeight() + "]");
+					
 					p.setBounds(0, 0, frame.getWidth(), frame.getHeight());
 					s.setBounds(0, 0, p.getWidth()-16, p.getHeight()-46);
 					t.setBounds(0, 0, s.getWidth(), s.getHeight());
@@ -123,6 +180,8 @@ public class Console {
 				
 				@Override
 				public void componentHidden(ComponentEvent e) {
+					debug("CONSOLE_HIDDEN [" + new SystemUtils().getTime() + "]");
+					
 					ConsoleHiddenEvent event = new ConsoleHiddenEvent();
 					event.setWidth(e.getComponent().getWidth());
 					event.setHeight(e.getComponent().getHeight());
@@ -136,6 +195,8 @@ public class Console {
 				
 				@Override
 				public void componentMoved(ComponentEvent e) {
+					debug("CONSOLE_MOVED [" + new SystemUtils().getTime() + "][" + frame.getX() + ", " + frame.getY() + "]");
+					
 					ConsoleMovedEvent event = new ConsoleMovedEvent();
 					event.setWidth(e.getComponent().getWidth());
 					event.setHeight(e.getComponent().getHeight());
@@ -149,6 +210,8 @@ public class Console {
 				
 				@Override
 				public void componentShown(ComponentEvent e) {
+					debug("CONSOLE_SHOWN [" + new SystemUtils().getTime() + "]");
+					
 					ConsoleShownEvent event = new ConsoleShownEvent();
 					event.setWidth(e.getComponent().getWidth());
 					event.setHeight(e.getComponent().getHeight());
@@ -170,6 +233,8 @@ public class Console {
 				
 				@Override
 				public void windowClosing(WindowEvent e) {
+					debug("CONSOLE_CLOSED [" + new SystemUtils().getTime() + "]");
+					
 					ConsoleClosedEvent event = new ConsoleClosedEvent();
 					event.setWidth(e.getComponent().getWidth());
 					event.setHeight(e.getComponent().getHeight());
@@ -194,6 +259,8 @@ public class Console {
 				
 				@Override
 				public void windowOpened(WindowEvent e) {
+					debug("CONSOLE_OPENED [" + new SystemUtils().getTime() + "]");
+					
 					ConsoleOpenedEvent event = new ConsoleOpenedEvent();
 					event.setWidth(e.getComponent().getWidth());
 					event.setHeight(e.getComponent().getHeight());
@@ -219,21 +286,7 @@ public class Console {
 			cis = new ConsoleInputStream(cos);
 			frame.addKeyListener(cis);
 			
-			if(new File("logs").exists()) {
-				File f = new File("logs/" + new SimpleDateFormat("MM-dd-yyyy HH-mm-ss").format(System.currentTimeMillis()) + ".log");
-				try {
-					
-					f.createNewFile();
-					bw = new BufferedWriter(new PrintWriter(f));
-					
-					debug("Started JCIO [Jortenmilo (c) 2017]");
-					debug("OS: " + System.getProperty("os.name"));
-				} 
-				catch(Exception | Error e) {
-					e.printStackTrace();
-					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
-				}
-			}
+			update();
 		} 
 		else {
 			Console.println(ConsoleUser.Error, "Console is already created!");
@@ -375,8 +428,11 @@ public class Console {
 				String text;
 				try {
 					text = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+					text = text.replace("\n", "");
+					
 					Console.write(text);
 					presses += text.length();
+					cos.fullLine += text;
 				} 
 				catch (HeadlessException | UnsupportedFlavorException | IOException e1) {
 					Console.println(ConsoleUser.Error, "Unknown Error: " + e1.getMessage());
@@ -473,110 +529,26 @@ public class Console {
 			return;
 		}
 		
+		String time = new SystemUtils().getTime();
+		
 		if(settings == null) {
-			String time = new SystemUtils().getTime();
-			
-			if(user.equals(ConsoleUser.System)) {
-				cps.println("[SYS " + time + "]: " + text);
-			}
-			else if(user.equals(ConsoleUser.User)) {
-				cps.println("[YOU " + time + "]: " + text);
-			}
-			else if(user.equals(ConsoleUser.Error)) {
-				cps.println("[ERR " + time + "]: " + text);
-			}
-			else if(user.equals(ConsoleUser.Empty)) {
-				cps.println("[" + time + "]: " + text);
-			}
-			else {
-				cps.println("[" + user + time + "]: " + text);
-			}
-			
-			return;
+			cps.println("[" + user + " " + time + "]: " + text);
 		}
-		
-		if(!settings.contains("time")) {
-			String time = new SystemUtils().getTime();
-			
-			if(user.equals(ConsoleUser.System)) {
-				cps.println("[SYS " + time + "]: " + text);
-			}
-			else if(user.equals(ConsoleUser.User)) {
-				cps.println("[YOU " + time + "]: " + text);
-			}
-			else if(user.equals(ConsoleUser.Error)) {
-				cps.println("[ERR " + time + "]: " + text);
-			}
-			else if(user.equals(ConsoleUser.Empty)) {
-				cps.println("[" + time + "]: " + text);
-			}
-			else {
-				cps.println("[" + user + time + "]: " + text);
-			}
-			
-			return;
+		else if(!settings.contains("time")) {
+			cps.println("[" + user + " " + time + "]: " + text);
 		}
-		
-		if(settings.get("time").equals("true")) {
-			String time = new SystemUtils().getTime();
-			
-			if(user.equals(ConsoleUser.System)) {
-				cps.println("[SYS " + time + "]: " + text);
-			}
-			else if(user.equals(ConsoleUser.User)) {
-				cps.println("[YOU " + time + "]: " + text);
-			}
-			else if(user.equals(ConsoleUser.Error)) {
-				cps.println("[ERR " + time + "]: " + text);
-			}
-			else if(user.equals(ConsoleUser.Empty)) {
-				cps.println("[" + time + "]: " + text);
-			}
-			else {
-				cps.println("[" + user + time + "]: " + text);
-			}
+		else if(settings.get("time").equals("true")) {
+			cps.println("[" + user + " " + time + "]: " + text);
 		}
 		else if(settings.get("time").equals("false")) {
-			if(user == ConsoleUser.System) {
-				cps.println("[SYS]: " + text);
-			}
-			else if(user == ConsoleUser.User) {
-				cps.println("[YOU]: " + text);
-			}
-			else if(user == ConsoleUser.Error) {
-				cps.println("[ERR]: " + text);
-			}
-			else if(user == ConsoleUser.Empty) {
-				cps.println("[]: " + text);
-			}
-			else {
-				cps.println("[" + user + "]: " + text);
-			}
+			cps.println("[" + user + "]: " + text);
 		}
+		
+		debug("PRINTLN [" + time + "][" + user + "][" + text + "]");
 	}
 	
 	public static void println(String text) {
-		if(text == null) {
-			new NullableParameterError("String", "text").print();
-			return;
-		}
-		
-		if(settings == null) {
-			cps.println("[SYS " + new SystemUtils().getTime() + "]: " + text);
-			return;
-		}
-		
-		if(!settings.contains("time")) {
-			cps.println("[SYS " + new SystemUtils().getTime() + "]: " + text);
-			return;
-		}
-		
-		if(settings.get("time").equals("true")) {
-			cps.println("[SYS " + new SystemUtils().getTime() + "]: " + text);
-		}
-		else if(settings.get("time").equals("false")) {
-			cps.println("[SYS]: " + text);
-		}
+		println(ConsoleUser.System, text);
 	}
 	
 	public static void write(String text) {
@@ -586,6 +558,10 @@ public class Console {
 		}
 		
 		cps.print(text);
+		
+		if(!text.equals("\n")) {
+			debug("WRITE [" + new SystemUtils().getTime() + "][" + text + "]");
+		}
 	}
 	
 	public static void writeln(String text) {
@@ -595,10 +571,20 @@ public class Console {
 		}
 		
 		cps.println(text);
+		
+		debug("WRITELN [" + new SystemUtils().getTime() + "][" + text + "]");
 	}
 	
 	public static String readln() {
-		if(settings.get("time").equals("true")) {
+		if(settings == null) {
+			cps.print("[YOU " + new SystemUtils().getTime() + "]: ");
+			return cis.waitUntilDone();
+		}
+		else if(!settings.contains("time")) {
+			cps.print("[YOU " + new SystemUtils().getTime() + "]: ");
+			return cis.waitUntilDone();
+		}
+		else if(settings.get("time").equals("true")) {
 			cps.print("[YOU " + new SystemUtils().getTime() + "]: ");
 			return cis.waitUntilDone();
 		}
@@ -629,6 +615,10 @@ public class Console {
 	}
 	
 	public static void update() {
+		if(settings == null) {
+			return;
+		}
+		
 		if(settings.contains("foreground")) {
 			Color fg = new ObjectUtils().StringToColor(settings.get("foreground"));
 			
@@ -668,6 +658,8 @@ public class Console {
 	}
 
 	public static void close() throws IOException {
+		debug("");
+		debug("-----!JCIO!-----");
 		bw.close();
 	}
 

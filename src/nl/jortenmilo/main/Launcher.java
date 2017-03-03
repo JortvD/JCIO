@@ -3,6 +3,7 @@ package nl.jortenmilo.main;
 import java.io.File;
 
 import nl.jortenmilo.close.Closable;
+import nl.jortenmilo.close.ClosablePriority;
 import nl.jortenmilo.close.CloseManager;
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.command.CommandManager;
@@ -48,22 +49,22 @@ public class Launcher extends Closable {
 	}
 	
 	private void preInit() {
-		Console.init();
-		
 		event = new EventManager(); // Loads first
-		
-		keyboard = new KeyboardManager(Console.getKeyboardInput(), event);
 		settings = new SettingsManager(event);
-		close = new CloseManager(event);
 		
-		Console.setSettingsManager(settings);
-		Console.setEventManager(event);
-		Console.setCloseManager(close);
-		
-		Installer installer = new Installer(files, keyboard, settings);
+		Installer installer = new Installer(files, settings);
 		installer.check();
 		
 		settings.load();
+		
+		Console.setSettingsManager(settings);
+		Console.init();
+		
+		keyboard = new KeyboardManager(Console.getKeyboardInput(), event);
+		close = new CloseManager(event);
+		
+		Console.setEventManager(event);
+		Console.setCloseManager(close);
 	}
 	
 	private void init() {
@@ -79,6 +80,7 @@ public class Launcher extends Closable {
 		error = new ErrorManager(event);
 		utils = new UtilsManager(event);
 		
+		this.setPriority(ClosablePriority.LAUNCHER);
 		close.addClosable(this);
 		
 		plugin.setMouseManager(mouse);
@@ -127,7 +129,7 @@ public class Launcher extends Closable {
 		launcher.init();
 		
 		// Start the program
-		Console.println("<- JCIO [Jortenmilo (c) 2017]->");
+		Console.println("<-< JCIO [Jortenmilo (c) 2017] >->");
 		launcher.start();
 	}
 

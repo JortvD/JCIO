@@ -1,6 +1,7 @@
 package nl.jortenmilo.command;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.plugin.Plugin;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 /**
  * This is the manager for all of the command related stuff. You can add commands, add listeners and simulate commands.
@@ -45,6 +47,8 @@ public class CommandManager {
 			new NullableParameterError("Plugin", "plugin").print();
 			return;
 		}
+		
+		Console.debug("COMMAND_ADDED [" + new SystemUtils().getTime() + "][" + command.getCommand() + "][" + command.getDescription() + "][" + command.getCommandExecutor().getClass().getName() + "][" + Arrays.toString(command.getAliasses().toArray()) + "][" + plugin.getLoadedPlugin().getName() + "]");
 		
 		boolean exists = false;
 		
@@ -113,6 +117,8 @@ public class CommandManager {
 			return;
 		}
 		
+		Console.debug("COMMAND_ADDED [" + new SystemUtils().getTime() + "][" + command.getCommand() + "][" + command.getDescription() + "][" + command.getCommandExecutor().getClass().getName() + "][" + Arrays.toString(command.getAliasses().toArray()) + "][null]");
+		
 		boolean exists = false;
 		
 		//Go through all the commands.
@@ -170,6 +176,8 @@ public class CommandManager {
 			return;
 		}
 		
+		Console.debug("COMMAND_REMOVED [" + new SystemUtils().getTime() + "][" + command.getCommand() + "]");
+		
 		commands.remove(command);
 		
 		Plugin plugin = getPlugin(command);
@@ -199,6 +207,8 @@ public class CommandManager {
 		
 		for(Command command : pcommands.get(plugin)) {
 			commands.remove(command);
+			
+			Console.debug("COMMAND_REMOVED [" + new SystemUtils().getTime() + "][" + command.getCommand() + "]");
 			
 			CommandRemovedEvent event = new CommandRemovedEvent();
 			event.setCommand(command);
@@ -332,6 +342,8 @@ public class CommandManager {
 					params[i] = args[i+1];
 				}
 				
+				Console.debug("COMMAND [" + new SystemUtils().getTime() + "][" + c.getCommand() + "][" + Arrays.toString(params) + "]");
+				
 				//Create the PreExecute event.
 				CommandPreExecuteEvent event = new CommandPreExecuteEvent();
 				event.setArguments(params);
@@ -368,6 +380,8 @@ public class CommandManager {
 					for(int i = 0; i < args.length-1; i++) {
 						params[i] = args[i+1];
 					}
+					
+					Console.debug("COMMAND [" + new SystemUtils().getTime() + "][" + c.getCommand() + "][" + Arrays.toString(params) + "]");
 					
 					CommandPreExecuteEvent event = new CommandPreExecuteEvent();
 					event.setArguments(params);

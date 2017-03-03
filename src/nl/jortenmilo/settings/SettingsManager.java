@@ -179,6 +179,7 @@ public class SettingsManager {
 			
 		} 
 		catch(Error | Exception e) {
+			e.printStackTrace();
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}

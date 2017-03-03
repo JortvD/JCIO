@@ -56,9 +56,7 @@ public class Command {
 	}
 	
 	/**
-	 * Sets the command that will call the CommandExecutor when it is used. <p>
-	 * Throws: <p>
-	 * InvalidParameterError - When the command is null or "".
+	 * Sets the command that will call the CommandExecutor when it is used.
 	 * @param command The command that will call this class' CommandExecutor.
 	 * @see InvalidParameterError
 	 */

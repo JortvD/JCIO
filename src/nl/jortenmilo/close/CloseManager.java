@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.plugin.Plugin;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This is the manager for all of the closable related stuff. You can add Closables, remove them and call them.
+ */
 public class CloseManager {
 	
 	private List<Closable> closables = new ArrayList<Closable>();
@@ -20,16 +25,23 @@ public class CloseManager {
 		this.events = events;
 	}
 	
+	/**
+	 * Used to register a new closable. It also needs the plugin for debugging purposes.
+	 * This method executes all of the ClosableAddedEvents when it successfully registered.
+	 * @param closable The closable to register
+	 * @param plugin The plugin this closable is from
+	 */
 	public void addClosable(Closable closable, Plugin plugin) {
 		if(closable == null) {
 			new NullableParameterError("Closable", "closable").print();
 			return;
 		}
-		
 		if(plugin == null) {
 			new NullableParameterError("Plugin", "plugin").print();
 			return;
 		}
+		
+		Console.debug("CLOSABLE_ADDED [" + new SystemUtils().getTime() + "][" + closable.getClass().getName() + "][" + closable.getPriority() + "][" + plugin.getLoadedPlugin().getName() + "]");
 		
 		closables.add(closable);
 		
@@ -41,6 +53,14 @@ public class CloseManager {
 		l.add(closable);
 		
 		pclosables.put(plugin, l);
+		
+		ClosableAddedEvent event = new ClosableAddedEvent();
+		event.setClosable(closable);
+		event.setPlugin(plugin);
+		
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
+		}
 	}
 	
 	public void addClosable(Closable closable) {
@@ -49,7 +69,93 @@ public class CloseManager {
 			return;
 		}
 		
+		Console.debug("CLOSABLE_ADDED [" + new SystemUtils().getTime() + "][" + closable.getClass().getName() + "][" + closable.getPriority() + "][null]");
+		
+		ClosableAddedEvent event = new ClosableAddedEvent();
+		event.setClosable(closable);
+		
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
+		}
+		
 		closables.add(closable);
+	}
+	
+	public void removeClosable(Closable closable) {
+		if(closable == null) {
+			new NullableParameterError("Closable", "closable").print();
+			return;
+		}
+		
+		closables.remove(closable);
+		
+		Console.debug("CLOSABLE_REMOVED [" + new SystemUtils().getTime() + "][" + closable.getClass().getName() + "]");
+		
+		Plugin plugin = getPlugin(closable);
+		List<Closable> l = pclosables.get(plugin);
+		l.remove(closable);
+		
+		pclosables.put(plugin, l);
+		
+		ClosableRemovedEvent event = new ClosableRemovedEvent();
+		event.setClosable(closable);
+		
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
+		}
+		
+	}
+	
+	public void removeClosables(Plugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("Plugin", "plugin").print();
+			return;
+		}
+		
+		for(Closable closable : pclosables.get(plugin)) {
+			closables.remove(closable);
+			
+			Console.debug("CLOSABLE_REMOVED [" + new SystemUtils().getTime() + "][" + closable.getClass().getName() + "]");
+			
+			ClosableRemovedEvent event = new ClosableRemovedEvent();
+			event.setClosable(closable);
+			
+			for(EventHandler handler : events.getHandlers(event.getClass())) {
+				handler.execute(event);
+			}
+		}
+		
+		pclosables.remove(plugin);
+	}
+	
+	public List<Closable> getCommands() {
+		return closables;
+	}
+	
+	public List<Closable> getClosables(Plugin plugin) {
+		if(plugin == null) {
+			new NullableParameterError("Plugin", "plugin").print();
+			return null;
+		}
+		
+		return pclosables.get(plugin);
+	}
+	
+	public Plugin getPlugin(Closable closable) {
+		if(closable == null) {
+			new NullableParameterError("Closable", "closable").print();
+			return null;
+		}
+		
+		for(Plugin plugin : pclosables.keySet()) {
+			for(Closable c : pclosables.get(plugin)) {
+				if(c == closable) {
+					return plugin;
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	public void close(ClosablePriority priority) {
@@ -71,6 +177,8 @@ public class CloseManager {
 			return;
 		}
 		
+		Console.debug("CLOSE [" + new SystemUtils().getTime() + "][" + closable.getClass().getName() + "]");
+		
 		try {
 			closable.close();
 		} 
@@ -80,16 +188,10 @@ public class CloseManager {
 	}
 	
 	public void close() {
-		CloseAllEvent event = new CloseAllEvent();
-		
-		for(EventHandler handler : events.getHandlers(event.getClass())) {
-			handler.execute(event);
-		}
-		
-		close(ClosablePriority.LAUNCHER);
-		close(ClosablePriority.HIGH);
-		close(ClosablePriority.MEDIUM);
 		close(ClosablePriority.LOW);
+		close(ClosablePriority.MEDIUM);
+		close(ClosablePriority.HIGH);
+		close(ClosablePriority.LAUNCHER);
 	}
 	
 }
