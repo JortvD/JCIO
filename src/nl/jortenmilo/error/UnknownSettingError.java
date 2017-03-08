@@ -3,6 +3,7 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class UnknownSettingError extends Error{
 	
@@ -18,6 +19,8 @@ public class UnknownSettingError extends Error{
 	
 	@Override
 	public void print() {
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][UnknownSetting][" + value + "]");
+		
 		Console.println(ConsoleUser.Error, "UnknownSettingError: Unknown setting '" + value + "'!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();

@@ -3,6 +3,7 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class UnspecifiedError extends Error {
 	
@@ -20,6 +21,8 @@ public class UnspecifiedError extends Error {
 	
 	@Override
 	public void print() {
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][UnspecifiedError][" + value1 + ", " + value2 + "]");
+		
 		Console.println(ConsoleUser.Error, "UnspecifiedError: The plugin '" + value1 + "' has no '" + value2+ "' specified!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();

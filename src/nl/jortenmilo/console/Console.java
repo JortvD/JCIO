@@ -12,16 +12,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -49,7 +49,7 @@ public class Console {
 	private static JTextPane t;
 	private static ConsoleInputStream cis;
 	private static ConsolePrintStream cps;
-	private static BufferedWriter bw;
+	private static GZIPOutputStream bw;
 	private static KeyboardInput ki;
 	private static MouseInput mi;
 	private static StyledDocument d;
@@ -68,11 +68,12 @@ public class Console {
 			inited = true;
 			
 			if(new File("logs").exists()) {
-				File f = new File("logs/" + new SimpleDateFormat("MM-dd-yyyy HH-mm-ss").format(System.currentTimeMillis()) + ".log");
+				File f = new File("logs/" + new SimpleDateFormat("MM-dd-yyyy HH-mm-ss").format(System.currentTimeMillis()) + ".gzip");
 				try {
 					
 					f.createNewFile();
-					bw = new BufferedWriter(new PrintWriter(f));
+					//bw = new BufferedWriter(new PrintWriter(f));
+					bw = new GZIPOutputStream(new FileOutputStream(f));
 					
 					debug("----- JCIO -----");
 					debug("");
@@ -306,8 +307,13 @@ public class Console {
 		if(settings.contains("log")) {
 			if(settings.get("log").equals("true") && bw != null) {
 				try {
-					bw.write(text);
-					bw.newLine();
+					byte[] bytes = text.getBytes();
+					
+					for(int i = 0; i < bytes.length; i++) {
+						bw.write(bytes[i]);
+					}
+					
+					bw.write('\n');
 				} 
 				catch (IOException e) {
 					e.printStackTrace();
@@ -375,29 +381,19 @@ public class Console {
 		
 		public void println(String s) throws IOException {
 			byte[] bytes = s.getBytes();
+			
 			for(int i = 0; i < s.length(); i++) {
 				write(bytes[i]);
 			}
-			write((byte)'\n');
 			
-			if(settings.contains("log")) {
-				if(settings.get("log").equals("true") && bw != null) {
-					bw.write(s);
-					bw.newLine();
-				}
-			}
+			write((byte)'\n');
 		}
 		
 		public void print(String s) throws IOException {
 			byte[] bytes = s.getBytes();
+			
 			for(int i = 0; i < s.length(); i++) {
 				write(bytes[i]);
-			}
-			
-			if(settings.contains("log")) {
-				if(settings.get("log").equals("true") && bw != null) {
-					bw.write(s);
-				}
 			}
 		}
 	}
@@ -601,6 +597,8 @@ public class Console {
 	}
 
 	public static void clear() {
+		debug("CLEAR [" + new SystemUtils().getTime() + "]");
+		
 		t.setText("");
 		
 		ConsoleClearedEvent event = new ConsoleClearedEvent();
@@ -623,6 +621,8 @@ public class Console {
 			Color fg = new ObjectUtils().StringToColor(settings.get("foreground"));
 			
 			if(t.getForeground() != fg) {
+				debug("UPDATE [" + new SystemUtils().getTime() + "][FOREGROUND][" + settings.get("foreground") + "]");
+				
 				t.setForeground(fg);
 			}
 		}
@@ -630,6 +630,8 @@ public class Console {
 			Color bg = new ObjectUtils().StringToColor(settings.get("background"));
 			
 			if(t.getBackground() != bg) {
+				debug("UPDATE [" + new SystemUtils().getTime() + "][BACKGROUND][" + settings.get("background") + "]");
+				
 				t.setBackground(bg);
 			}
 		}
@@ -638,6 +640,8 @@ public class Console {
 			dt = dt.replace("_", " ");
 			
 			if(frame.getTitle() != dt) {
+				debug("UPDATE [" + new SystemUtils().getTime() + "][DEFAULT_TITLE][" + settings.get("default_title") + "]");
+				
 				frame.setTitle(dt);
 			}
 		}
@@ -645,6 +649,8 @@ public class Console {
 			int dw = new ObjectUtils().StringToInteger(settings.get("default_width"));
 			
 			if(frame.getWidth() != dw) {
+				debug("UPDATE [" + new SystemUtils().getTime() + "][DEFAULT_WIDTH][" + settings.get("default_width") + "]");
+				
 				frame.setSize(dw, frame.getHeight());
 			}
 		}
@@ -652,6 +658,8 @@ public class Console {
 			int dh = new ObjectUtils().StringToInteger(settings.get("default_height"));
 			
 			if(frame.getHeight() != dh) {
+				debug("UPDATE [" + new SystemUtils().getTime() + "][DEFAULT_HEIGHT][" + settings.get("default_height") + "]");
+				
 				frame.setSize(frame.getWidth(), dh);
 			}
 		}
@@ -660,6 +668,7 @@ public class Console {
 	public static void close() throws IOException {
 		debug("");
 		debug("-----!JCIO!-----");
+		
 		bw.close();
 	}
 

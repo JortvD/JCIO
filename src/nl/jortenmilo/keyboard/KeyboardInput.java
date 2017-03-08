@@ -11,6 +11,7 @@ import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class KeyboardInput implements KeyListener {
 	
@@ -23,6 +24,14 @@ public class KeyboardInput implements KeyListener {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
+		char c = e.getKeyChar();
+		
+		if(c=='\n') {
+			Console.debug("KEY_PRESSED [" + new SystemUtils().getTime() + "][][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		} else {
+			Console.debug("KEY_PRESSED [" + new SystemUtils().getTime() + "][" + e.getKeyChar() + "][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		}
+		
 		KeyboardPressedEvent event = new KeyboardPressedEvent();
 		event.setKeyChar(e.getKeyChar());
 		event.setKeyCode(e.getKeyCode());
@@ -38,6 +47,14 @@ public class KeyboardInput implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		char c = e.getKeyChar();
+		
+		if(c=='\n') {
+			Console.debug("KEY_RELEASED [" + new SystemUtils().getTime() + "][][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		} else {
+			Console.debug("KEY_RELEASED [" + new SystemUtils().getTime() + "][" + e.getKeyChar() + "][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		}
+			
 		KeyboardReleasedEvent event = new KeyboardReleasedEvent();
 		event.setKeyChar(e.getKeyChar());
 		event.setKeyCode(e.getKeyCode());
@@ -53,6 +70,14 @@ public class KeyboardInput implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+		char c = e.getKeyChar();
+		
+		if(c=='\n') {
+			Console.debug("KEY_TYPED [" + new SystemUtils().getTime() + "][][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		} else {
+			Console.debug("KEY_TYPED [" + new SystemUtils().getTime() + "][" + e.getKeyChar() + "][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		}
+			
 		KeyboardTypedEvent event = new KeyboardTypedEvent();
 		event.setKeyChar(e.getKeyChar());
 		event.setKeyCode(e.getKeyCode());

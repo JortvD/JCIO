@@ -3,6 +3,7 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class MissingObjectError extends Error {
 	
@@ -20,6 +21,8 @@ public class MissingObjectError extends Error {
 	
 	@Override
 	public void print() {
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][MissingObject][" + value1 + ", " + value2 + "]");
+		
 		Console.println(ConsoleUser.Error, "MissingObjectError: The class '" + value1 + "' is missing the object '" + value2 + "'!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();

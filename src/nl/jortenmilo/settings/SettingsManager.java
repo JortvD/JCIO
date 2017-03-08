@@ -11,6 +11,7 @@ import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.error.UnknownSettingError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class SettingsManager {
 	
@@ -50,6 +51,8 @@ public class SettingsManager {
 			new UnknownSettingError(key).print();
 		}
 		
+		Console.debug("SETTING_SET [" + new SystemUtils().getTime() + "][" + key + "][" + value + "]");
+		
 		settings.put(key, value);
 		
 		SettingsChangedEvent event = new SettingsChangedEvent();
@@ -72,6 +75,8 @@ public class SettingsManager {
 		if(keys.contains(key)) {
 			new ExistingSettingError(key).print();
 		}
+		
+		Console.debug("SETTING_CREATE [" + new SystemUtils().getTime() + "][" + key + "]");
 		
 		keys.add(key);
 		settings.put(key, "");
@@ -104,6 +109,8 @@ public class SettingsManager {
 			new UnknownSettingError(key).print();
 		}
 		
+		Console.debug("SETTING_REMOVE [" + new SystemUtils().getTime() + "][" + key + "]");
+		
 		keys.remove(key);
 		
 		SettingsRemovedEvent event = new SettingsRemovedEvent();
@@ -120,6 +127,8 @@ public class SettingsManager {
 	}
 	
 	public void reset() {
+		Console.debug("SETTING_RESET [" + new SystemUtils().getTime() + "]");
+		
 		keys.clear();
 		settings.clear();
 		
@@ -152,6 +161,8 @@ public class SettingsManager {
 	}
 	
 	public void save() {
+		Console.debug("SETTING_SAVE [" + new SystemUtils().getTime() + "]");
+		
 		try {
 			loader.save(new File("settings.jcio"), this);
 			
@@ -168,6 +179,8 @@ public class SettingsManager {
 	}
 	
 	public void load() {
+		Console.debug("SETTING_LOAD [" + new SystemUtils().getTime() + "]");
+		
 		try {
 			loader.load(new File("settings.jcio"), this);
 			

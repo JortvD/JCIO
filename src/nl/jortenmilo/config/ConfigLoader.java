@@ -6,8 +6,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 import nl.jortenmilo.command.CommandDecoder;
+import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.ConfigLoadingError;
 import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 /**
  * This is the config loader class. From here classes are loaded and saved. You shouldn't instantiate this class and use the ConfigManager instead.
@@ -88,6 +90,7 @@ public class ConfigLoader {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		
+		Console.debug("CONFIG_LOADED [" + new SystemUtils().getTime() + "][" + config.hashCode() + "][" + config.getFile().getPath() + "]");
 	}
 	
 	/**
@@ -114,6 +117,8 @@ public class ConfigLoader {
 		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
+		
+		Console.debug("CONFIG_SAVED [" + new SystemUtils().getTime() + "][" + config.hashCode() + "][" + config.getFile().getPath() + "]");
 	}
 	
 	private int getSpaces(String s) {

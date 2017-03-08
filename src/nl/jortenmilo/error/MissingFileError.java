@@ -3,6 +3,7 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class MissingFileError extends Error {
 	
@@ -20,6 +21,8 @@ public class MissingFileError extends Error {
 	
 	@Override
 	public void print() {
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][MissingFile][" + value1 + ", " + value2 + "]");
+		
 		Console.println(ConsoleUser.Error, "MissingFileError: The plugin '" + value1 + "' is missing the file '" + value2 + "'!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();

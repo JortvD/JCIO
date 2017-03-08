@@ -3,6 +3,7 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class UnknownError extends Error {
 	
@@ -20,6 +21,8 @@ public class UnknownError extends Error {
 	
 	@Override
 	public void print() {
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][UnknownError][" + value1 + ", " + value2 + "]");
+		
 		Console.println(ConsoleUser.Error, value1);
 		Console.println(" (" + value2 + ")");
 		

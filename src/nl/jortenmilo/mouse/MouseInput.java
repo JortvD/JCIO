@@ -1,13 +1,16 @@
 package nl.jortenmilo.mouse;
 
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
+import nl.jortenmilo.console.Console;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class MouseInput implements MouseListener, MouseWheelListener, MouseMotionListener {
 	
@@ -40,6 +43,8 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 			return;
 		}
 		
+		Console.debug("MOUSE_WHEELMOVED [" + new SystemUtils().getTime() + "][" + e.getScrollAmount() + "][" + e.getScrollType() + "][" + e.getPreciseWheelRotation() + "][" + e.getX() + "][" + e.getY() + "][" + e.getWhen() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "]");
+		
 		MouseWheelMovedEvent event = new MouseWheelMovedEvent();
 		event.setModifiers(e.getModifiers());
 		event.setX(e.getX());
@@ -61,6 +66,8 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 		if(events == null) {
 			return;
 		}
+		
+		Console.debug("MOUSE_CLICKED [" + new SystemUtils().getTime() + "][" + e.getButton() + "][" + e.getClickCount() + "][" + e.getX() + "][" + e.getY() + "][" + e.getWhen() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "]]");
 		
 		MouseClickedEvent event = new MouseClickedEvent();
 		event.setModifiers(e.getModifiers());
@@ -87,6 +94,8 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 			return;
 		}
 		
+		Console.debug("MOUSE_PRESSED [" + new SystemUtils().getTime() + "][" + e.getButton() + "][" + e.getClickCount() + "][" + e.getX() + "][" + e.getY() + "][" + e.getWhen() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "]]");
+		
 		MousePressedEvent event = new MousePressedEvent();
 		event.setModifiers(e.getModifiers());
 		event.setX(e.getX());
@@ -105,6 +114,8 @@ public class MouseInput implements MouseListener, MouseWheelListener, MouseMotio
 		if(events == null) {
 			return;
 		}
+		
+		Console.debug("MOUSE_RELEASED [" + new SystemUtils().getTime() + "][" + e.getButton() + "][" + e.getClickCount() + "][" + e.getX() + "][" + e.getY() + "][" + e.getWhen() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "]]");
 		
 		MouseReleasedEvent event = new MouseReleasedEvent();
 		event.setModifiers(e.getModifiers());

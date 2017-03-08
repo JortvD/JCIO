@@ -3,6 +3,7 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class MissingConfigObjectError extends Error {
 	
@@ -16,6 +17,8 @@ public class MissingConfigObjectError extends Error {
 	
 	@Override
 	public void print() {
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][MissingConfigObject][" + value1 + ", " + value2 + "]");
+		
 		Console.println(ConsoleUser.Error, "MissingConfigObjectError: The object '" + value1 + "' from the path '" + value2 + "' non-existant!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();

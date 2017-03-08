@@ -2,10 +2,12 @@ package nl.jortenmilo.config;
 
 import java.io.File;
 
+import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.MissingObjectError;
 import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 /**
  * This is the manager for controlling all of the configs. You can create, save and/or load configs. 
@@ -27,6 +29,8 @@ public class ConfigManager {
 	 */
 	public ConfigFile createConfig() {
 		ConfigFile config = new ConfigFile();
+		
+		Console.debug("CONFIG_CREATED [" + new SystemUtils().getTime() + "][" + config.hashCode() + "]");
 		
 		ConfigCreatedEvent event = new ConfigCreatedEvent();
 		event.setConfig(config);
@@ -79,6 +83,8 @@ public class ConfigManager {
 			new MissingObjectError("File", "config.getFile()").print();
 		}
 		
+		loader.save(config);
+		
 		ConfigSavedEvent event = new ConfigSavedEvent();
 		event.setConfig(config);
 		event.setFile(config.getFile());
@@ -86,8 +92,6 @@ public class ConfigManager {
 		for(EventHandler handler : events.getHandlers(event.getClass())) {
 			handler.execute(event);
 		}
-		
-		loader.save(config);
 	}
 	
 }

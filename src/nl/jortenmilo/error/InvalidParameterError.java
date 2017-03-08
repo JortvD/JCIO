@@ -3,6 +3,7 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class InvalidParameterError extends Error {
 	
@@ -18,6 +19,8 @@ public class InvalidParameterError extends Error {
 	
 	@Override
 	public void print() {
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][InvalidParameter][" + value + "]");
+		
 		Console.println(ConsoleUser.Error, "InvalidParameterError: '" + value + "' is an invalid value for this method!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();

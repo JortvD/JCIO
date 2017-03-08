@@ -3,6 +3,7 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class NullableParameterError extends Error {
 	
@@ -20,6 +21,8 @@ public class NullableParameterError extends Error {
 	
 	@Override
 	public void print() {
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][NullableParameter][" + value1 + ", " + value2 + "]");
+		
 		Console.println(ConsoleUser.Error, "NullableParameterError: The parameter " + value1 + "#" + value2 + " is null!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();

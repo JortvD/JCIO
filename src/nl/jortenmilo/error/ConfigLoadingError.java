@@ -3,6 +3,7 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class ConfigLoadingError extends Error {
 	
@@ -20,6 +21,8 @@ public class ConfigLoadingError extends Error {
 	
 	@Override
 	public void print() {
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][ConfigLoading][" + value1 + ", " + value2 + ", " + value3 + ", " + value4 + "]");
+		
 		Console.println(ConsoleUser.Error, "ConfigLoadingError: " + value4 + "!");
 		Console.println(ConsoleUser.Error, " in the file: " + value1);
 		Console.println(ConsoleUser.Error, " at the line: " + value2);

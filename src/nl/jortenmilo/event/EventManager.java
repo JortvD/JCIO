@@ -7,8 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.plugin.Plugin;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class EventManager {
 	
@@ -23,6 +25,8 @@ public class EventManager {
 			new NullableParameterError("Plugin", "plugin").print();
 			return;
 		}
+		
+		Console.debug("LISTENER_REGISTERED [" + new SystemUtils().getTime() + "][" + listener.getClass().getName() + "][" + plugin.getLoadedPlugin().getName() + "]");
 		
 		for(Method method : listener.getClass().getMethods()) {
 			if(method.getParameterCount() != 1) {
@@ -41,6 +45,8 @@ public class EventManager {
 					handler.setListener(listener);
 					handler.setPlugin(plugin);
 					handler.setMethod(method);
+					
+					Console.debug("EVENT_REGISTERED [" + new SystemUtils().getTime() + "][" + listener.getClass().getName() + "][" + event.getName() + "][" + method.getName() + "]");
 					
 					if(events.get(event) == null) {
 						events.put(event, new ArrayList<EventHandler>());
@@ -76,6 +82,8 @@ public class EventManager {
 				for(int i = 0; i < handlers.size(); i++) {
 					EventHandler handler = handlers.get(i);
 					
+					Console.debug("EVENT_UNREGISTERED [" + new SystemUtils().getTime() + "][" + listener.getClass().getName() + "][" + method.getName() + "]");
+					
 					if(handler.getMethod() == method) {
 						handlers.remove(i);
 					}
@@ -97,6 +105,8 @@ public class EventManager {
 				EventHandler handler = handlers.get(i);
 				
 				if(handler.getPlugin() == plugin) {
+					Console.debug("EVENT_UNREGISTERED [" + new SystemUtils().getTime() + "][" + handler.getListener().getClass().getName() + "][" + handler.getMethod().getName() + "]");
+					
 					handlers.remove(i);
 				}
 			}

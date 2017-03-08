@@ -3,6 +3,7 @@ package nl.jortenmilo.error;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class CommandUsedError extends Error {
 	
@@ -18,6 +19,8 @@ public class CommandUsedError extends Error {
 	
 	@Override
 	public void print() {
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][CommandUsed][" + value + "]");
+		
 		Console.println(ConsoleUser.Error, "CommandUsedError: The command '" + value + "' is already used!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();

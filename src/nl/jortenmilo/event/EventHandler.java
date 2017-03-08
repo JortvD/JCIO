@@ -3,8 +3,10 @@ package nl.jortenmilo.event;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.plugin.Plugin;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class EventHandler {
 	
@@ -18,6 +20,8 @@ public class EventHandler {
 			new NullableParameterError("Event", "event").print();
 			return;
 		}
+		
+		Console.debug("EVENT_EXECUTED [" + new SystemUtils().getTime() + "][" + listener.getClass().getName() + "][" + method.getName() + "]");
 		
 		try {
 			method.invoke(listener, this.event.cast(event));

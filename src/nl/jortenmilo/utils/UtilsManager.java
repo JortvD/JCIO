@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.NullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
@@ -55,6 +56,8 @@ public class UtilsManager {
 					list.add(util);
 					utils.put(name, list);
 					
+					Console.debug("UTIL_CREATED [" + new SystemUtils().getTime() + "][" + name.getName() + "][" + util.hashCode() + "][" + plugin.getLoadedPlugin().getName() + "]");
+					
 					return util;
 				}
 			}
@@ -90,6 +93,8 @@ public class UtilsManager {
 		list.add(clone);
 		utils.put(name, list);
 		
+		Console.debug("UTIL_CLONED [" + new SystemUtils().getTime() + "][" + util.hashCode() + "][" + clone.hashCode() + "][" + name.getName() + "][" + util.getData() + "]");
+		
 		return clone;
 	}
 	
@@ -100,6 +105,8 @@ public class UtilsManager {
 		}
 		
 		utils.put(name, new ArrayList<Utils>());
+		
+		Console.debug("UTIL_ADDED [" + new SystemUtils().getTime() + "][" + name.getName() + "]");
 	}
 	
 	public void removeUtil(Class<? extends Utils> name) {
@@ -109,6 +116,8 @@ public class UtilsManager {
 		}
 		
 		utils.remove(name);
+		
+		Console.debug("UTIL_REMOVED [" + new SystemUtils().getTime() + "][" + name.getName() + "]");
 	}
 	
 	public List<Utils> getUtils(Class<? extends Utils> name) {
