@@ -1,7 +1,7 @@
 package nl.jortenmilo.close;
 
 import nl.jortenmilo.command.CommandManager;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 
 /**
  * You extend Closable when you want to close stuff when the program is closed. You will need to add the class to the CloseManager
@@ -32,7 +32,7 @@ public abstract class Closable {
 	 */
 	public void setPriority(ClosablePriority priority) {
 		if(priority == null) {
-			new NullableParameterError("ClosablePriority", "priority").print();
+			new NonNullableParameterError("ClosablePriority", "priority").print();
 			return;
 		}
 		

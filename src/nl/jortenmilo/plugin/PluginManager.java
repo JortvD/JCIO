@@ -10,7 +10,7 @@ import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleManager;
 import nl.jortenmilo.error.ErrorManager;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
@@ -40,7 +40,7 @@ public class PluginManager {
 	
 	public void removePlugin(LoadedPlugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("LoadedPlugin", "plugin").print();
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
 			return;
 		}
 		
@@ -60,7 +60,7 @@ public class PluginManager {
 	
 	public void enable(LoadedPlugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("LoadedPlugin", "plugin").print();
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
 			return;
 		}
 		
@@ -97,7 +97,7 @@ public class PluginManager {
 	
 	public void disable(LoadedPlugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("LoadedPlugin", "plugin").print();
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
 			return;
 		}
 		
@@ -140,7 +140,7 @@ public class PluginManager {
 	
 	public void load(LoadedPlugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("LoadedPlugin", "plugin").print();
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
 			return;
 		}
 		
@@ -160,7 +160,7 @@ public class PluginManager {
 	
 	public void unload(LoadedPlugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("LoadedPlugin", "plugin").print();
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
 			return;
 		}
 		
@@ -180,7 +180,7 @@ public class PluginManager {
 	
 	public void reload(LoadedPlugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("LoadedPlugin", "plugin").print();
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
 			return;
 		}
 		

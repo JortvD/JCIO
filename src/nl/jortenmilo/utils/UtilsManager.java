@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.plugin.Plugin;
@@ -31,11 +31,11 @@ public class UtilsManager {
 	
 	public Utils createUtils(Class<? extends Utils> name, Plugin plugin) {
 		if(name == null) {
-			new NullableParameterError("Class<? extends Utils>", "name").print();
+			new NonNullableParameterError("Class<? extends Utils>", "name").print();
 			return null;
 		}
 		if(plugin == null) {
-			new NullableParameterError("Plugin", "plugin").print();
+			new NonNullableParameterError("Plugin", "plugin").print();
 			return null;
 		}
 		
@@ -70,11 +70,11 @@ public class UtilsManager {
 	
 	public Utils cloneUtils(Class<? extends Utils> name, Utils util) {
 		if(name == null) {
-			new NullableParameterError("Class<? extends Utils>", "name").print();
+			new NonNullableParameterError("Class<? extends Utils>", "name").print();
 			return null;
 		}
 		if(util == null) {
-			new NullableParameterError("Utils", "util").print();
+			new NonNullableParameterError("Utils", "util").print();
 			return null;
 		}
 		
@@ -100,7 +100,7 @@ public class UtilsManager {
 	
 	public void addUtil(Class<? extends Utils> name) {
 		if(name == null) {
-			new NullableParameterError("Class<? extends Utils>", "name").print();
+			new NonNullableParameterError("Class<? extends Utils>", "name").print();
 			return;
 		}
 		
@@ -111,7 +111,7 @@ public class UtilsManager {
 	
 	public void removeUtil(Class<? extends Utils> name) {
 		if(name == null) {
-			new NullableParameterError("Class<? extends Utils>", "name").print();
+			new NonNullableParameterError("Class<? extends Utils>", "name").print();
 			return;
 		}
 		
@@ -122,7 +122,7 @@ public class UtilsManager {
 	
 	public List<Utils> getUtils(Class<? extends Utils> name) {
 		if(name == null) {
-			new NullableParameterError("Class<? extends Utils>", "name").print();
+			new NonNullableParameterError("Class<? extends Utils>", "name").print();
 			return null;
 		}
 		
@@ -131,7 +131,7 @@ public class UtilsManager {
 	
 	public List<Utils> getUtils(Plugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("Plugin", "plugin").print();
+			new NonNullableParameterError("Plugin", "plugin").print();
 			return null;
 		}
 		
@@ -148,11 +148,11 @@ public class UtilsManager {
 	
 	public List<Utils> getUtils(Plugin plugin, Class<? extends Utils> name) {
 		if(name == null) {
-			new NullableParameterError("Class<? extends Utils>", "name").print();
+			new NonNullableParameterError("Class<? extends Utils>", "name").print();
 			return null;
 		}
 		if(plugin == null) {
-			new NullableParameterError("Plugin", "plugin").print();
+			new NonNullableParameterError("Plugin", "plugin").print();
 			return null;
 		}
 		

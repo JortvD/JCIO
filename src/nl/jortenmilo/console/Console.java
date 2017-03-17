@@ -33,7 +33,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyledDocument;
 
 import nl.jortenmilo.close.CloseManager;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.keyboard.KeyboardInput;
@@ -63,6 +63,10 @@ public class Console {
 	public static PrintStream dout; //DEBUG OUT
 	public static InputStream din; //DEBUG IN
 	
+	/**
+	 * The initialization method for the console. This method won't do anything, don't use it. Please.
+	 * @throws NullPointerException
+	 */
 	public static void init() throws NullPointerException {
 		if(!inited) {
 			inited = true;
@@ -294,9 +298,13 @@ public class Console {
 		}
 	}
 	
+	/**
+	 * Use this message to debug something to the logging file. When logging is off, it won't log anything.
+	 * @param text The text to debug
+	 */
 	public static void debug(String text) {
 		if(text == null) {
-			new NullableParameterError("String", "text").print();
+			new NonNullableParameterError("String", "text").print();
 			return;
 		}
 		
@@ -515,13 +523,18 @@ public class Console {
 		private boolean Waiting = false;
 	}
 	
+	/**
+	 * Print text to the console and end it with a new line.
+	 * @param user The user that prints the line
+	 * @param text The text to print
+	 */
 	public static void println(String user, String text) {
 		if(text == null) {
-			new NullableParameterError("String", "text").print();
+			new NonNullableParameterError("String", "text").print();
 			return;
 		}
 		if(user == null) {
-			new NullableParameterError("String", "user").print();
+			new NonNullableParameterError("String", "user").print();
 			return;
 		}
 		
@@ -543,13 +556,21 @@ public class Console {
 		debug("PRINTLN [" + time + "][" + user + "][" + text + "]");
 	}
 	
+	/**
+	 * Print text to the console and end it with a new line.
+	 * @param text The text to print
+	 */
 	public static void println(String text) {
 		println(ConsoleUser.System, text);
 	}
 	
+	/**
+	 * Write text to the console. Writing it means it won't add a prefix.
+	 * @param text The text to write
+	 */
 	public static void write(String text) {
 		if(text == null) {
-			new NullableParameterError("String", "text").print();
+			new NonNullableParameterError("String", "text").print();
 			return;
 		}
 		
@@ -560,9 +581,13 @@ public class Console {
 		}
 	}
 	
+	/**
+	 * Write text to the console and end it with a new line. Writing it means it won't add a prefix.
+	 * @param text The text to write
+	 */
 	public static void writeln(String text) {
 		if(text == null) {
-			new NullableParameterError("String", "text").print();
+			new NonNullableParameterError("String", "text").print();
 			return;
 		}
 		
@@ -571,6 +596,10 @@ public class Console {
 		debug("WRITELN [" + new SystemUtils().getTime() + "][" + text + "]");
 	}
 	
+	/**
+	 * Read the keypresses until the user types and enter. And start it with the prefix.
+	 * @return The text the user has typed
+	 */
 	public static String readln() {
 		if(settings == null) {
 			cps.print("[YOU " + new SystemUtils().getTime() + "]: ");
@@ -592,10 +621,17 @@ public class Console {
 		return "";
 	}
 	
+	/**
+	 * Read the keypresses until the user types and enter.
+	 * @return The text the user has typed
+	 */
 	public static String read() {
 		return cis.waitUntilDone();
 	}
-
+	
+	/**
+	 * Clears the console and executes all of the ConsoleClearedEvents.
+	 */
 	public static void clear() {
 		debug("CLEAR [" + new SystemUtils().getTime() + "]");
 		
@@ -612,6 +648,9 @@ public class Console {
 		}
 	}
 	
+	/**
+	 * Updates the console with the newest settings.
+	 */
 	public static void update() {
 		if(settings == null) {
 			return;
@@ -664,30 +703,54 @@ public class Console {
 			}
 		}
 	}
-
+	
+	/**
+	 * Closes the console.
+	 * @throws IOException
+	 */
 	public static void close() throws IOException {
 		debug("");
 		debug("-----!JCIO!-----");
 		
 		bw.close();
 	}
-
+	
+	/**
+	 * Returns the KeyboardInput class that is used by the console.
+	 * @return The keyboardinput class
+	 */
 	public static KeyboardInput getKeyboardInput() {
 		return ki;
 	}
 	
+	/**
+	 * Returns the MouseInput class that is used by the console.
+	 * @return The mouseinput class
+	 */
 	public static MouseInput getMouseInput() {
 		return mi;
 	}
-
+	
+	/**
+	 * Sets the settingsmanager for the console. Please don't use it.
+	 * @param settings The settingsmanager
+	 */
 	public static void setSettingsManager(SettingsManager settings) {
 		Console.settings = settings;
 	}
-
+	
+	/**
+	 * Sets the eventmanager for the console. Please don't use it.
+	 * @param events The eventmanager
+	 */
 	public static void setEventManager(EventManager events) {
 		Console.events = events;
 	}
-
+	
+	/**
+	 * Sets the closemanager for the console. Please don't use it.
+	 * @param close The closemanager
+	 */
 	public static void setCloseManager(CloseManager close) {
 		Console.close = close;
 	}

@@ -1,6 +1,6 @@
 package nl.jortenmilo.command;
 
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 
 /**
  * The CommandDecorder contains some methods to get the parameters from a String.
@@ -14,7 +14,7 @@ public class CommandDecoder {
 	 */
 	public static String[] getParameters(String command) {
 		if(command == null) {
-			new NullableParameterError("String", "command").print();
+			new NonNullableParameterError("String", "command").print();
 			return null;
 		}
 		

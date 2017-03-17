@@ -7,17 +7,17 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 
 public class SettingsLoader {
 
 	public void load(File file, SettingsManager manager) throws IOException {
 		if(file == null) {
-			new NullableParameterError("File", "file").print();
+			new NonNullableParameterError("File", "file").print();
 			return;
 		}
 		if(manager == null) {
-			new NullableParameterError("SettingsManager", "manager").print();
+			new NonNullableParameterError("SettingsManager", "manager").print();
 			return;
 		}
 		
@@ -49,11 +49,11 @@ public class SettingsLoader {
 	
 	public void save(File file, SettingsManager manager) throws IOException {
 		if(file == null) {
-			new NullableParameterError("File", "file").print();
+			new NonNullableParameterError("File", "file").print();
 			return;
 		}
 		if(manager == null) {
-			new NullableParameterError("SettingsManager", "manager").print();
+			new NonNullableParameterError("SettingsManager", "manager").print();
 			return;
 		}
 		

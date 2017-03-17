@@ -5,25 +5,25 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
-public class NullableParameterError extends Error {
+public class NonNullableParameterError extends Error {
 	
 	/* This error is thrown when:
-	 * A method is called with a parameter that is null.
+	 * A method is called with a parameter that is null that is not allowed to be null.
 	 */
 	
 	private String value1;
 	private String value2;
 	
-	public NullableParameterError(String value1, String value2) {
+	public NonNullableParameterError(String value1, String value2) {
 		this.value1 = value1;
 		this.value2 = value2;
 	}
 	
 	@Override
 	public void print() {
-		Console.debug("ERROR [" + new SystemUtils().getTime() + "][NullableParameter][" + value1 + ", " + value2 + "]");
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][NonNullableParameter][" + value1 + ", " + value2 + "]");
 		
-		Console.println(ConsoleUser.Error, "NullableParameterError: The parameter " + value1 + "#" + value2 + " is null!");
+		Console.println(ConsoleUser.Error, "NonNullableParameterError: The parameter " + value1 + "#" + value2 + " is null!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();
 		StackTraceElement[] es2 = new StackTraceElement[es.length-2];

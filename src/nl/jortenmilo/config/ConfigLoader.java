@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.ConfigLoadingError;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
 /**
@@ -23,7 +23,7 @@ public class ConfigLoader {
 	@SuppressWarnings("resource")
 	public void load(ConfigFile config) {
 		if(config == null) {
-			new NullableParameterError("ConfigFile", "config").print();
+			new NonNullableParameterError("ConfigFile", "config").print();
 			return;
 		}
 		
@@ -99,7 +99,7 @@ public class ConfigLoader {
 	 */
 	public void save(ConfigFile config) {
 		if(config == null) {
-			new NullableParameterError("ConfigFile", "config").print();
+			new NonNullableParameterError("ConfigFile", "config").print();
 			return;
 		}
 		

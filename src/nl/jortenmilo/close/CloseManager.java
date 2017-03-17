@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.plugin.Plugin;
@@ -33,11 +33,11 @@ public class CloseManager {
 	 */
 	public void addClosable(Closable closable, Plugin plugin) {
 		if(closable == null) {
-			new NullableParameterError("Closable", "closable").print();
+			new NonNullableParameterError("Closable", "closable").print();
 			return;
 		}
 		if(plugin == null) {
-			new NullableParameterError("Plugin", "plugin").print();
+			new NonNullableParameterError("Plugin", "plugin").print();
 			return;
 		}
 		
@@ -65,7 +65,7 @@ public class CloseManager {
 	
 	public void addClosable(Closable closable) {
 		if(closable == null) {
-			new NullableParameterError("Closable", "closable").print();
+			new NonNullableParameterError("Closable", "closable").print();
 			return;
 		}
 		
@@ -83,7 +83,7 @@ public class CloseManager {
 	
 	public void removeClosable(Closable closable) {
 		if(closable == null) {
-			new NullableParameterError("Closable", "closable").print();
+			new NonNullableParameterError("Closable", "closable").print();
 			return;
 		}
 		
@@ -108,7 +108,7 @@ public class CloseManager {
 	
 	public void removeClosables(Plugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("Plugin", "plugin").print();
+			new NonNullableParameterError("Plugin", "plugin").print();
 			return;
 		}
 		
@@ -134,7 +134,7 @@ public class CloseManager {
 	
 	public List<Closable> getClosables(Plugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("Plugin", "plugin").print();
+			new NonNullableParameterError("Plugin", "plugin").print();
 			return null;
 		}
 		
@@ -143,7 +143,7 @@ public class CloseManager {
 	
 	public Plugin getPlugin(Closable closable) {
 		if(closable == null) {
-			new NullableParameterError("Closable", "closable").print();
+			new NonNullableParameterError("Closable", "closable").print();
 			return null;
 		}
 		
@@ -160,7 +160,7 @@ public class CloseManager {
 	
 	public void close(ClosablePriority priority) {
 		if(priority == null) {
-			new NullableParameterError("ClosablePriority", "priority").print();
+			new NonNullableParameterError("ClosablePriority", "priority").print();
 			return;
 		}
 		
@@ -173,7 +173,7 @@ public class CloseManager {
 	
 	public void close(Closable closable) {
 		if(closable == null) {
-			new NullableParameterError("Closable", "closable").print();
+			new NonNullableParameterError("Closable", "closable").print();
 			return;
 		}
 		

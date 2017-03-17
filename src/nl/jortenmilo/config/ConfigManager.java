@@ -4,7 +4,7 @@ import java.io.File;
 
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.MissingObjectError;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.utils.defaults.SystemUtils;
@@ -50,7 +50,7 @@ public class ConfigManager {
 	 */
 	public ConfigFile loadConfig(File file) {
 		if(file == null) {
-			new NullableParameterError("File", "file").print();
+			new NonNullableParameterError("File", "file").print();
 			return null;
 		}
 		
@@ -76,7 +76,7 @@ public class ConfigManager {
 	 */
 	public void saveConfig(ConfigFile config) {
 		if(config == null) {
-			new NullableParameterError("ConfigFile", "config").print();
+			new NonNullableParameterError("ConfigFile", "config").print();
 			return;
 		}
 		if(config.getFile() == null) {

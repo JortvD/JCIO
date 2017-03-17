@@ -16,7 +16,7 @@ import java.util.zip.ZipInputStream;
 
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.MissingFileError;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.error.SyntaxError;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
@@ -24,7 +24,7 @@ public class PluginLoader {
 	
 	public void loadAll(PluginManager manager) {
 		if(manager == null) {
-			new NullableParameterError("PluginManager", "manager").print();
+			new NonNullableParameterError("PluginManager", "manager").print();
 			return;
 		}
 		
@@ -41,11 +41,11 @@ public class PluginLoader {
 	@SuppressWarnings("resource")
 	public void load(File file, PluginManager manager) {
 		if(manager == null) {
-			new NullableParameterError("PluginManager", "manager").print();
+			new NonNullableParameterError("PluginManager", "manager").print();
 			return;
 		}
 		if(file == null) {
-			new NullableParameterError("File", "File").print();
+			new NonNullableParameterError("File", "File").print();
 			return;
 		}
 		
@@ -136,7 +136,7 @@ public class PluginLoader {
 	
 	public void unloadAll(PluginManager manager) {
 		if(manager == null) {
-			new NullableParameterError("PluginManager", "manager").print();
+			new NonNullableParameterError("PluginManager", "manager").print();
 			return;
 		}
 		
@@ -150,7 +150,7 @@ public class PluginLoader {
 	
 	public void unload(LoadedPlugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("LoadedPlugin", "plugin").print();
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
 			return;
 		}
 		

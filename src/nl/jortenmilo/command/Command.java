@@ -1,10 +1,12 @@
 package nl.jortenmilo.command;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import nl.jortenmilo.error.InvalidParameterError;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
+import nl.jortenmilo.plugin.Plugin;
 
 /**
  * Command is the class that you use for creating your own commands. When you add an instance of this class to the CommandManager 
@@ -17,7 +19,8 @@ public class Command {
 	
 	private String command;
 	private String desc = "";
-	private CommandExecutor ce;
+	private List<CommandExecutor> executors = new ArrayList<CommandExecutor>();
+	private HashMap<Plugin, List<CommandExecutor>> pexecutors = new HashMap<Plugin, List<CommandExecutor>>();
 	private List<String> aliasses = new ArrayList<String>();
 	
 	/**
@@ -33,18 +36,13 @@ public class Command {
 	 * @param ce The CommandExecutor that is called when the command is used.
 	 * @see CommandExecutor
 	 */
-	public Command(String command, CommandExecutor ce) {
+	public Command(String command) {
 		if(command == null) {
-			new NullableParameterError("Command", "command").print();
-			return;
-		}
-		if(ce == null) {
-			new NullableParameterError("CommandExecutor", "ce").print();
+			new NonNullableParameterError("Command", "command").print();
 			return;
 		}
 		
 		this.command = command;
-		this.ce = ce;
 	}
 	
 	/**
@@ -62,11 +60,11 @@ public class Command {
 	 */
 	public void setCommand(String command) {
 		if(command == null) {
-			new NullableParameterError("String", "command").print();
+			new NonNullableParameterError("String", "command").print();
 			return;
 		}
 		if(command.equals("")) {
-			new NullableParameterError("String", "command").print();
+			new NonNullableParameterError("String", "command").print();
 			return;
 		}
 		
@@ -78,8 +76,8 @@ public class Command {
 	 * @return The CommandExecutor
 	 * @see CommandExecutor
 	 */
-	public CommandExecutor getCommandExecutor() {
-		return ce;
+	public List<CommandExecutor> getCommandExecutors() {
+		return executors;
 	}
 	
 	/**
@@ -87,8 +85,100 @@ public class Command {
 	 * @param ce The CommandExecutor
 	 * @see CommandExecutor
 	 */
-	public void setCommandExecutor(CommandExecutor ce) {
-		this.ce = ce;
+	public void addCommandExecutor(CommandExecutor ce) {
+		if(ce == null) {
+			new NonNullableParameterError("CommandExecutor", "ce").print();
+			return;
+		}
+		
+		executors.add(ce);
+	}
+	
+	public void clearCommandExecutors() {
+		executors.clear();
+		
+		for(Plugin plugin : pexecutors.keySet()) {
+			pexecutors.put(plugin, null);
+		}
+	}
+	
+	public void addCommandExecutor(CommandExecutor ce, Plugin plugin) {
+		if(ce == null) {
+			new NonNullableParameterError("CommandExecutor", "ce").print();
+			return;
+		}
+		else if(plugin == null) {
+			new NonNullableParameterError("Plugin", "plugin").print();
+			return;
+		}
+		
+		executors.add(ce);
+		
+		if(pexecutors.get(plugin) == null) {
+			pexecutors.put(plugin, new ArrayList<CommandExecutor>());
+		}
+		
+		List<CommandExecutor> l = pexecutors.get(plugin);
+		l.add(ce);
+		
+		pexecutors.put(plugin, l);
+	}
+	
+	public void removeCommandExecutor(CommandExecutor ce) {
+		if(ce == null) {
+			new NonNullableParameterError("CommandExecutor", "ce").print();
+			return;
+		}
+		
+		executors.remove(ce);
+	}
+	
+	public void removeCommandExecutors(Plugin plugin) {
+		if(plugin == null) {
+			new NonNullableParameterError("Plugin", "plugin").print();
+			return;
+		}
+		
+		for(CommandExecutor ce : pexecutors.get(plugin)) {
+			executors.remove(ce);
+		}
+		
+		pexecutors.put(plugin, null);
+	}
+	
+	public List<CommandExecutor> getCommands(Plugin plugin) {
+		if(plugin == null) {
+			new NonNullableParameterError("Plugin", "plugin").print();
+			return null;
+		}
+		
+		return pexecutors.get(plugin);
+	}
+	
+	public Plugin getPlugin(CommandExecutor ce) {
+		if(ce == null) {
+			new NonNullableParameterError("CommandExecutor", "ce").print();
+			return null;
+		}
+		
+		for(Plugin plugin : pexecutors.keySet()) {
+			for(CommandExecutor c : pexecutors.get(plugin)) {
+				if(c == ce) {
+					return plugin;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	public boolean containsCommandExecutor(CommandExecutor ce) {
+		if(ce == null) {
+			new NonNullableParameterError("CommandExecutor", "ce").print();
+			return false;
+		}
+		
+		return executors.contains(ce);
 	}
 	
 	/**
@@ -116,15 +206,41 @@ public class Command {
 	 */
 	public void addAlias(String alias) {
 		if(alias == null) {
-			new NullableParameterError("String", "alias").print();
+			new NonNullableParameterError("String", "alias").print();
 			return;
 		}
 		if(alias.equals("")) {
-			new NullableParameterError("String", "alias").print();
+			new NonNullableParameterError("String", "alias").print();
 			return;
 		}
 		
 		aliasses.add(alias);
+	}
+	
+	public void removeAlias(String alias) {
+		if(alias == null) {
+			new NonNullableParameterError("String", "alias").print();
+			return;
+		}
+		if(alias.equals("")) {
+			new NonNullableParameterError("String", "alias").print();
+			return;
+		}
+		
+		aliasses.remove(alias);
+	}
+	
+	public boolean containsAlias(String alias) {
+		if(alias == null) {
+			new NonNullableParameterError("String", "alias").print();
+			return false;
+		}
+		if(alias.equals("")) {
+			new NonNullableParameterError("String", "alias").print();
+			return false;
+		}
+		
+		return aliasses.contains(alias);
 	}
 	
 	/**

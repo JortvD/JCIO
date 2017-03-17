@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.plugin.Plugin;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
@@ -17,7 +17,7 @@ public class EventHandler {
 	
 	public void execute(Event event) {
 		if(event == null) {
-			new NullableParameterError("Event", "event").print();
+			new NonNullableParameterError("Event", "event").print();
 			return;
 		}
 		

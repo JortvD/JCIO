@@ -7,7 +7,7 @@ import java.util.List;
 
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.ExistingSettingError;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.error.UnknownSettingError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
@@ -26,7 +26,7 @@ public class SettingsManager {
 	
 	public String get(String key) {
 		if(key == null) {
-			new NullableParameterError("String", "key").print();
+			new NonNullableParameterError("String", "key").print();
 			return null;
 		}
 		
@@ -39,11 +39,11 @@ public class SettingsManager {
 	
 	public void set(String key, String value) {
 		if(key == null) {
-			new NullableParameterError("String", "key").print();
+			new NonNullableParameterError("String", "key").print();
 			return;
 		}
 		if(value == null) {
-			new NullableParameterError("String", "value").print();
+			new NonNullableParameterError("String", "value").print();
 			return;
 		}
 		
@@ -68,7 +68,7 @@ public class SettingsManager {
 	
 	public void create(String key) {
 		if(key == null) {
-			new NullableParameterError("String", "key").print();
+			new NonNullableParameterError("String", "key").print();
 			return;
 		}
 		
@@ -92,7 +92,7 @@ public class SettingsManager {
 	
 	public boolean contains(String key) {
 		if(key == null) {
-			new NullableParameterError("String", "key").print();
+			new NonNullableParameterError("String", "key").print();
 			return false;
 		}
 		
@@ -101,7 +101,7 @@ public class SettingsManager {
 	
 	public void remove(String key) {
 		if(key == null) {
-			new NullableParameterError("String", "key").print();
+			new NonNullableParameterError("String", "key").print();
 			return;
 		}
 		

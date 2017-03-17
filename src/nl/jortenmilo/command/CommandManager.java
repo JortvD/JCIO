@@ -8,7 +8,7 @@ import java.util.List;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.error.CommandUsedError;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.plugin.Plugin;
@@ -36,19 +36,19 @@ public class CommandManager {
 	 */
 	public void addCommand(Command command, Plugin plugin) {
 		if(command == null) {
-			new NullableParameterError("Command", "command").print();
+			new NonNullableParameterError("Command", "command").print();
 			return;
 		}
 		if(command.getCommand() == null) {
-			new NullableParameterError("String", "command.getCommand()").print();
+			new NonNullableParameterError("String", "command.getCommand()").print();
 			return;
 		}
 		if(plugin == null) {
-			new NullableParameterError("Plugin", "plugin").print();
+			new NonNullableParameterError("Plugin", "plugin").print();
 			return;
 		}
 		
-		Console.debug("COMMAND_ADDED [" + new SystemUtils().getTime() + "][" + command.getCommand() + "][" + command.getDescription() + "][" + command.getCommandExecutor().getClass().getName() + "][" + Arrays.toString(command.getAliasses().toArray()) + "][" + plugin.getLoadedPlugin().getName() + "]");
+		Console.debug("COMMAND_ADDED [" + new SystemUtils().getTime() + "][" + command.getCommand() + "][" + command.getDescription() + "][" + executorsToString(command.getCommandExecutors()) + "][" + Arrays.toString(command.getAliasses().toArray()) + "][" + plugin.getLoadedPlugin().getName() + "]");
 		
 		boolean exists = false;
 		
@@ -113,11 +113,11 @@ public class CommandManager {
 	 */
 	public void addCommand(Command command) {
 		if(command == null) {
-			new NullableParameterError("Command", "command").print();
+			new NonNullableParameterError("Command", "command").print();
 			return;
 		}
 		
-		Console.debug("COMMAND_ADDED [" + new SystemUtils().getTime() + "][" + command.getCommand() + "][" + command.getDescription() + "][" + command.getCommandExecutor().getClass().getName() + "][" + Arrays.toString(command.getAliasses().toArray()) + "][null]");
+		Console.debug("COMMAND_ADDED [" + new SystemUtils().getTime() + "][" + command.getCommand() + "][" + command.getDescription() + "][" + executorsToString(command.getCommandExecutors()) + "][" + Arrays.toString(command.getAliasses().toArray()) + "][null]");
 		
 		boolean exists = false;
 		
@@ -172,7 +172,7 @@ public class CommandManager {
 	 */
 	public void removeCommand(Command command) {
 		if(command == null) {
-			new NullableParameterError("Command", "command").print();
+			new NonNullableParameterError("Command", "command").print();
 			return;
 		}
 		
@@ -201,7 +201,7 @@ public class CommandManager {
 	 */
 	public void removeCommands(Plugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("Plugin", "plugin").print();
+			new NonNullableParameterError("Plugin", "plugin").print();
 			return;
 		}
 		
@@ -236,7 +236,7 @@ public class CommandManager {
 	 */
 	public List<Command> getCommands(Plugin plugin) {
 		if(plugin == null) {
-			new NullableParameterError("Plugin", "plugin").print();
+			new NonNullableParameterError("Plugin", "plugin").print();
 			return null;
 		}
 		
@@ -250,7 +250,7 @@ public class CommandManager {
 	 */
 	public Plugin getPlugin(Command command) {
 		if(command == null) {
-			new NullableParameterError("Command", "command").print();
+			new NonNullableParameterError("Command", "command").print();
 			return null;
 		}
 		
@@ -272,7 +272,7 @@ public class CommandManager {
 	 */
 	public Command getCommand(String command) {
 		if(command == null) {
-			new NullableParameterError("String", "command").print();
+			new NonNullableParameterError("String", "command").print();
 			return null;
 		}
 		
@@ -297,11 +297,11 @@ public class CommandManager {
 	 */
 	public void executeCommand(Command command, String[] args) {
 		if(command == null) {
-			new NullableParameterError("Command", "command").print();
+			new NonNullableParameterError("Command", "command").print();
 			return;
 		}
 		if(args == null) {
-			new NullableParameterError("String[]", "args").print();
+			new NonNullableParameterError("String[]", "args").print();
 			return;
 		}
 		
@@ -325,7 +325,7 @@ public class CommandManager {
 	 */
 	public void executeCommand(String[] args) {
 		if(args == null) {
-			new NullableParameterError("String[]", "args").print();
+			new NonNullableParameterError("String[]", "args").print();
 			return;
 		}
 		
@@ -356,7 +356,9 @@ public class CommandManager {
 				
 				//Run the command executor.
 				try {
-					c.getCommandExecutor().execute(command, c, params);
+					for(CommandExecutor ce : c.getCommandExecutors()) {
+						ce.execute(command, c, params);
+					}
 				} 
 				catch(Error | Exception e) {
 					new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
@@ -392,7 +394,9 @@ public class CommandManager {
 					}
 					
 					try {
-						c.getCommandExecutor().execute(command, c, params);
+						for(CommandExecutor ce : c.getCommandExecutors()) {
+							ce.execute(command, c, params);
+						}
 					} 
 					catch(Error | Exception e) {
 						new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
@@ -412,6 +416,16 @@ public class CommandManager {
 		}
 		
 		Console.println(ConsoleUser.Error, "Unknown command. Try 'help' for a list of all the commands.");
+	}
+	
+	private String executorsToString(List<CommandExecutor> executors) {
+		String str = "";
+		
+		for(CommandExecutor ce : executors) {
+			str += ce.getClass().getName() + ", ";
+		}
+		
+		return str.substring(0, str.length()-2);
 	}
 	
 }

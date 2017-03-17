@@ -12,7 +12,11 @@ import nl.jortenmilo.event.Event;
 public abstract class ConfigEvent extends Event {
 	
 	private ConfigFile config;
-
+	
+	/**
+	 * Returns the config this event is executed for.
+	 * @return the config
+	 */
 	public ConfigFile getConfig() {
 		return config;
 	}

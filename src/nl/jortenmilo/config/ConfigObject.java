@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import nl.jortenmilo.error.MissingConfigObjectError;
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 
 public class ConfigObject {
 	
@@ -18,9 +18,9 @@ public class ConfigObject {
 		return name;
 	}
 	
-	public void setName(String name) {
+	protected void setName(String name) {
 		if(name == null) {
-			new NullableParameterError("String", "name").print();
+			new NonNullableParameterError("String", "name").print();
 			return;
 		}
 		
@@ -33,7 +33,7 @@ public class ConfigObject {
 	
 	public void setValue(String value) {
 		if(value == null) {
-			new NullableParameterError("String", "value").print();
+			new NonNullableParameterError("String", "value").print();
 			return;
 		}
 		
@@ -46,11 +46,11 @@ public class ConfigObject {
 	
 	public void set(ConfigObject object, String path) {
 		if(object == null) {
-			new NullableParameterError("ConfigObject", "object").print();
+			new NonNullableParameterError("ConfigObject", "object").print();
 			return;
 		}
 		if(path == null) {
-			new NullableParameterError("String", "path").print();
+			new NonNullableParameterError("String", "path").print();
 			return;
 		}
 		
@@ -73,7 +73,7 @@ public class ConfigObject {
 
 	public ConfigObject get(String path) {
 		if(path == null) {
-			new NullableParameterError("String", "path").print();
+			new NonNullableParameterError("String", "path").print();
 			return null;
 		}
 		

@@ -3,28 +3,37 @@ package nl.jortenmilo.keyboard;
 import java.awt.AWTException;
 import java.awt.Robot;
 
-import nl.jortenmilo.error.NullableParameterError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.event.EventManager;
 
 public class KeyboardManager {
 	
 	private KeyboardInput input;
+	private Robot r;
 	
 	public KeyboardManager(KeyboardInput input, EventManager events) {
 		this.input = input;
 		
+		try {
+			r = new Robot();
+		} catch (AWTException e) {
+			e.printStackTrace();
+		}
+		
 		input.setEventManager(events);
 	}
 	
-	public void simulateKey(int key) {
-		try {
-			Robot r = new Robot();
-			r.keyPress(key);
-			r.keyRelease(key);
-		} 
-		catch (AWTException e) {
-			e.printStackTrace();
-		}
+	public void simulateKeyPress(int key) {
+		r.keyPress(key);
+		r.keyRelease(key);
+	}
+	
+	public void simulateKeyHold(int key) {
+		r.keyPress(key);
+	}
+	
+	public void simulateKeyRelease(int key) {
+		r.keyRelease(key);
 	}
 	
 	public int waitUntilTyped() {
@@ -33,7 +42,7 @@ public class KeyboardManager {
 	
 	public int waitUntilTyped(int[] keys) {
 		if(keys == null) {
-			new NullableParameterError("int[]", "keys").print();
+			new NonNullableParameterError("int[]", "keys").print();
 			return 0;
 		}
 		
