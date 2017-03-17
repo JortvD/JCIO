@@ -11,7 +11,7 @@ public class ConfigLoadedEvent extends ConfigEvent {
 	
 	/**
 	 * Returns the file the config is loaded from.
-	 * @return
+	 * @return The file
 	 */
 	public File getFile() {
 		return file;

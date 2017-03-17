@@ -65,7 +65,7 @@ public class Console {
 	
 	/**
 	 * The initialization method for the console. This method won't do anything, don't use it. Please.
-	 * @throws NullPointerException
+	 * @throws NullPointerException When something is null but still called
 	 */
 	public static void init() throws NullPointerException {
 		if(!inited) {
@@ -706,7 +706,7 @@ public class Console {
 	
 	/**
 	 * Closes the console.
-	 * @throws IOException
+	 * @throws IOException The debugging writer may throw an error while closing
 	 */
 	public static void close() throws IOException {
 		debug("");

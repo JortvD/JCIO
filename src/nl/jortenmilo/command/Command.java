@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import nl.jortenmilo.error.InvalidParameterError;
 import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.plugin.Plugin;
 
@@ -31,10 +30,8 @@ public class Command {
 	public Command() {}
 	
 	/**
-	 * Creates an instance of this class, you have to set the the Command String and the CommandExecutor.
-	 * @param command The command that will call this class' CommandExecutor.
-	 * @param ce The CommandExecutor that is called when the command is used.
-	 * @see CommandExecutor
+	 * Creates an instance of this class, you have to set the the Command string.
+	 * @param command The command that will call this class' CommandExecutors.
 	 */
 	public Command(String command) {
 		if(command == null) {
@@ -54,9 +51,8 @@ public class Command {
 	}
 	
 	/**
-	 * Sets the command that will call the CommandExecutor when it is used.
-	 * @param command The command that will call this class' CommandExecutor.
-	 * @see InvalidParameterError
+	 * Sets the command that causes the CommandExecutors to execute when it was used.
+	 * @param command The command
 	 */
 	public void setCommand(String command) {
 		if(command == null) {
@@ -81,7 +77,8 @@ public class Command {
 	}
 	
 	/**
-	 * Sets the CommandExecutor that will be called when the command of this class is used.
+	 * Adds a CommandExecutor that will be called when this class' command is used.
+	 * Please don't use this CommandExecutor, for it is anonymous.
 	 * @param ce The CommandExecutor
 	 * @see CommandExecutor
 	 */
@@ -94,14 +91,14 @@ public class Command {
 		executors.add(ce);
 	}
 	
-	public void clearCommandExecutors() {
-		executors.clear();
-		
-		for(Plugin plugin : pexecutors.keySet()) {
-			pexecutors.put(plugin, null);
-		}
-	}
-	
+	/**
+	 * Adds a CommandExecutor that will be called when this class' command is used.
+	 * This method needs a Plugin for debugging purposes.
+	 * @param ce The CommandExecutor
+	 * @param plugin The Plugin
+	 * @see Plugin
+	 * @see CommandExecutor
+	 */
 	public void addCommandExecutor(CommandExecutor ce, Plugin plugin) {
 		if(ce == null) {
 			new NonNullableParameterError("CommandExecutor", "ce").print();
@@ -124,6 +121,23 @@ public class Command {
 		pexecutors.put(plugin, l);
 	}
 	
+	/**
+	 * Clears all the CommandExecuters there are for this command.
+	 * @see CommandExecutor
+	 */
+	public void clearCommandExecutors() {
+		executors.clear();
+		
+		for(Plugin plugin : pexecutors.keySet()) {
+			pexecutors.put(plugin, null);
+		}
+	}
+	
+	/**
+	 * Removes a CommandExecutor.
+	 * @param ce The CommandExecutor
+	 * @see CommandExecutor
+	 */
 	public void removeCommandExecutor(CommandExecutor ce) {
 		if(ce == null) {
 			new NonNullableParameterError("CommandExecutor", "ce").print();
@@ -133,6 +147,12 @@ public class Command {
 		executors.remove(ce);
 	}
 	
+	/**
+	 * Removes all the CommandExecutors that were added by a certain Plugin.
+	 * @param plugin The plugin
+	 * @see Plugin
+	 * @see CommandExecutor
+	 */
 	public void removeCommandExecutors(Plugin plugin) {
 		if(plugin == null) {
 			new NonNullableParameterError("Plugin", "plugin").print();
@@ -146,7 +166,14 @@ public class Command {
 		pexecutors.put(plugin, null);
 	}
 	
-	public List<CommandExecutor> getCommands(Plugin plugin) {
+	/**
+	 * Returns a list of all the CommandExecutors that were added by the specified Plugin.
+	 * @param plugin The Plugin
+	 * @return The list of CommandExecutors
+	 * @see CommandExecutor
+	 * @see Plugin
+	 */
+	public List<CommandExecutor> getCommandExecutors(Plugin plugin) {
 		if(plugin == null) {
 			new NonNullableParameterError("Plugin", "plugin").print();
 			return null;
@@ -155,6 +182,13 @@ public class Command {
 		return pexecutors.get(plugin);
 	}
 	
+	/**
+	 * Returns the Plugin that added the specified CommandExecutor.
+	 * @param ce The CommandExecutor
+	 * @return the Plugin
+	 * @see Plugin
+	 * @see CommandExecutor
+	 */
 	public Plugin getPlugin(CommandExecutor ce) {
 		if(ce == null) {
 			new NonNullableParameterError("CommandExecutor", "ce").print();
@@ -172,6 +206,11 @@ public class Command {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param ce
+	 * @return
+	 */
 	public boolean containsCommandExecutor(CommandExecutor ce) {
 		if(ce == null) {
 			new NonNullableParameterError("CommandExecutor", "ce").print();

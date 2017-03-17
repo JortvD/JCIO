@@ -123,6 +123,7 @@ public class PluginManager {
 		
 		command.removeCommands(plugin.getPlugin());
 		event.unregisterPlugin(plugin.getPlugin());
+		close.removeClosables(plugin.getPlugin());
 		
 		PluginDisabledEvent event = new PluginDisabledEvent();
 		event.setPlugin(plugin);

@@ -12,7 +12,7 @@ import nl.jortenmilo.plugin.Plugin;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
 /**
- * This is the manager for all of the closable related stuff. You can add Closables, remove them and call them.
+ * This is the manager for all of the Closable related stuff. You can add Closables, remove them and/or call them.
  */
 public class CloseManager {
 	
@@ -26,10 +26,12 @@ public class CloseManager {
 	}
 	
 	/**
-	 * Used to register a new closable. It also needs the plugin for debugging purposes.
+	 * Used to register a new Closable. It also needs the Plugin for debugging purposes.
 	 * This method executes all of the ClosableAddedEvents when it successfully registered.
-	 * @param closable The closable to register
-	 * @param plugin The plugin this closable is from
+	 * @param closable The Closable to register
+	 * @param plugin The Plugin this closable is from
+	 * @see Closable
+	 * @see Plugin
 	 */
 	public void addClosable(Closable closable, Plugin plugin) {
 		if(closable == null) {
@@ -63,6 +65,12 @@ public class CloseManager {
 		}
 	}
 	
+	/**
+	 * Used to register a new Closable. It is better to use the other method to add a Closable, since this method is anonymous.
+	 * This method executes all of the ClosableAddedEvents when it successfully registered.
+	 * @param closable The Closable to register
+	 * @see Closable
+	 */
 	public void addClosable(Closable closable) {
 		if(closable == null) {
 			new NonNullableParameterError("Closable", "closable").print();
@@ -81,6 +89,12 @@ public class CloseManager {
 		closables.add(closable);
 	}
 	
+	/**
+	 * Used to remove a Closable.
+	 * This method executes all of the ClosableRemovedEvents when it successfully removed.
+	 * @param closable The Closable to remove
+	 * @see Closable
+	 */
 	public void removeClosable(Closable closable) {
 		if(closable == null) {
 			new NonNullableParameterError("Closable", "closable").print();
@@ -109,6 +123,12 @@ public class CloseManager {
 		}
 	}
 	
+	/**
+	 * This method removes all the Closables from a certain Plugin.
+	 * It will execute a ClosableRemovedEvent for every Closable that was removed.
+	 * @param plugin The Plugin which Closables need to be removed
+	 * @see Plugin
+	 */
 	public void removeClosables(Plugin plugin) {
 		if(plugin == null) {
 			new NonNullableParameterError("Plugin", "plugin").print();
@@ -132,6 +152,11 @@ public class CloseManager {
 		pclosables.remove(plugin);
 	}
 	
+	/**
+	 * Returns a list of all the Closables there are.
+	 * @return The list of Closables
+	 * @see Closable
+	 */
 	public List<Closable> getClosables() {
 		List<Closable> clone = new ArrayList<Closable>();
 		clone.addAll(closables);
@@ -139,6 +164,12 @@ public class CloseManager {
 		return clone;
 	}
 	
+	/**
+	 * Returns the list of Closables that were registered by a certain Plugin.
+	 * @param plugin The plugin
+	 * @return The list of Closables
+	 * @see Plugin
+	 */
 	public List<Closable> getClosables(Plugin plugin) {
 		if(plugin == null) {
 			new NonNullableParameterError("Plugin", "plugin").print();
@@ -148,6 +179,12 @@ public class CloseManager {
 		return pclosables.get(plugin);
 	}
 	
+	/**
+	 * Returns a list of Closables that all have a certain priority.
+	 * @param priority The priority
+	 * @return The list of Closables
+	 * @see ClosablePriority
+	 */
 	public List<Closable> getClosables(ClosablePriority priority) {
 		if(priority == null) {
 			new NonNullableParameterError("ClosablePriority", "priority").print();
@@ -165,6 +202,12 @@ public class CloseManager {
 		return cs;
 	}
 	
+	/**
+	 * Returns the Plugin that registered the specified Closable.
+	 * @param closable The Closable
+	 * @return The Plugin
+	 * @see Closable
+	 */
 	public Plugin getPlugin(Closable closable) {
 		if(closable == null) {
 			new NonNullableParameterError("Closable", "closable").print();
@@ -182,6 +225,12 @@ public class CloseManager {
 		return null;
 	}
 	
+	/**
+	 * Calls all the Closables with the specified priority.
+	 * It will execute a ClosableCalledEvent for every Closable that was called.
+	 * @param priority The priority
+	 * @see ClosablePriority
+	 */
 	public void close(ClosablePriority priority) {
 		if(priority == null) {
 			new NonNullableParameterError("ClosablePriority", "priority").print();
@@ -195,6 +244,12 @@ public class CloseManager {
 		}
 	}
 	
+	/**
+	 * Calls the specified Closable.
+	 * It will execute a ClosableCalledEvent when the Closable was called.
+	 * @param closable The Closable
+	 * @see Closable
+	 */
 	public void close(Closable closable) {
 		if(closable == null) {
 			new NonNullableParameterError("Closable", "closable").print();
@@ -209,8 +264,20 @@ public class CloseManager {
 		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
+		
+		ClosableCalledEvent event = new ClosableCalledEvent();
+		event.setClosable(closable);
+		event.setPlugin(getPlugin(closable));
+		
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
+		}
 	}
 	
+	/**
+	 * Calls all of the Closables in order. Closables with higher priorities will be called after the Closables with a lower priority.
+	 * It will execute a ClosableCalledEvent for every Closable that was called.
+	 */
 	public void close() {
 		close(ClosablePriority.LOW);
 		close(ClosablePriority.MEDIUM);

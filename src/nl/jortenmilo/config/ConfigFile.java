@@ -27,7 +27,7 @@ public class ConfigFile {
 	
 	/**
 	 * Sets the file the config will be in. When you change this when the config is already loaded, nothing will happen.
-	 * @param The file
+	 * @param file The file
 	 */
 	public void setFile(File file) {
 		if(file == null) {

@@ -1,7 +1,8 @@
 package nl.jortenmilo.close;
 
 /**
- * This event is executed when a single Closable is called.
+ * This event is executed when a Closable is called.
+ * @see Closable
  */
 public class ClosableCalledEvent extends ClosableEvent {
 

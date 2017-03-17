@@ -12,9 +12,9 @@ public class DefaultCommands {
 	
 	/**
 	 * The method used to create all of the commands.
-	 * @param cm The CommandManager
+	 * @param command The CommandManager
 	 * @param keyboard The KeyboardManager
-	 * @param close 
+	 * @param close The CloseManager
 	 */
 	public void create(CommandManager command, KeyboardManager keyboard, CloseManager close) {
 		Command c1 = new Command();

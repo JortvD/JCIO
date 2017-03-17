@@ -4,8 +4,8 @@ import nl.jortenmilo.event.Event;
 import nl.jortenmilo.plugin.Plugin;
 
 /**
- * This is the general Close event. All ClsoeEvents instantiate this class since it contains the general information about a CloseEvent.
- * @see CloseManager
+ * This is the general Closable event. All ClosableEvents instantiate this class since it contains the general information about a ClosableEvent.
+ * @see Closable
  */
 public abstract class ClosableEvent extends Event {
 	
@@ -13,8 +13,9 @@ public abstract class ClosableEvent extends Event {
 	private Plugin plugin;
 	
 	/**
-	 * Returns the Closable that was called.
-	 * @return The closable
+	 * Returns the Closable that this event is executed for.
+	 * @return The Closable
+	 * @see Closable
 	 */
 	public Closable getClosable() {
 		return closable;
@@ -25,8 +26,9 @@ public abstract class ClosableEvent extends Event {
 	}
 	
 	/**
-	 * Returns the plugin where the Closable is from. This may return null if the Closable is anonymous.
-	 * @return
+	 * Returns the Plugin where the Closable is from. This may return null if the Closable was added anonymously to the CloseManager.
+	 * @return The Plugin
+	 * @see Plugin
 	 */
 	public Plugin getPlugin() {
 		return plugin;

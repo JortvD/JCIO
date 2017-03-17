@@ -9,7 +9,7 @@ public class CommandDecoder {
 	
 	/**
 	 * This method parses a String into a list of Strings. It sees a space as the beginning of a new String.
-	 * @param s The string you want to parse.
+	 * @param command The string you want to parse.
 	 * @return The outcome of the parse
 	 */
 	public static String[] getParameters(String command) {

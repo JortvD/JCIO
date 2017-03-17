@@ -3,8 +3,9 @@ package nl.jortenmilo.command;
 import nl.jortenmilo.plugin.Plugin;
 
 /**
- * This event is executed when a command is added to the CommandManager.
+ * This event is executed when a Command is added to the CommandManager.
  * @see CommandManager
+ * @see Command
  */
 public class CommandAddedEvent extends CommandEvent {
 	
