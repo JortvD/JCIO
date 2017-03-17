@@ -92,18 +92,21 @@ public class CloseManager {
 		Console.debug("CLOSABLE_REMOVED [" + new SystemUtils().getTime() + "][" + closable.getClass().getName() + "]");
 		
 		Plugin plugin = getPlugin(closable);
-		List<Closable> l = pclosables.get(plugin);
-		l.remove(closable);
 		
-		pclosables.put(plugin, l);
+		if(plugin != null) {
+			List<Closable> l = pclosables.get(plugin);
+			l.remove(closable);
+		
+			pclosables.put(plugin, l);
+		}
 		
 		ClosableRemovedEvent event = new ClosableRemovedEvent();
 		event.setClosable(closable);
+		event.setPlugin(plugin);
 		
 		for(EventHandler handler : events.getHandlers(event.getClass())) {
 			handler.execute(event);
 		}
-		
 	}
 	
 	public void removeClosables(Plugin plugin) {
@@ -119,6 +122,7 @@ public class CloseManager {
 			
 			ClosableRemovedEvent event = new ClosableRemovedEvent();
 			event.setClosable(closable);
+			event.setPlugin(plugin);
 			
 			for(EventHandler handler : events.getHandlers(event.getClass())) {
 				handler.execute(event);
@@ -128,8 +132,11 @@ public class CloseManager {
 		pclosables.remove(plugin);
 	}
 	
-	public List<Closable> getCommands() {
-		return closables;
+	public List<Closable> getClosables() {
+		List<Closable> clone = new ArrayList<Closable>();
+		clone.addAll(closables);
+		
+		return clone;
 	}
 	
 	public List<Closable> getClosables(Plugin plugin) {
@@ -139,6 +146,23 @@ public class CloseManager {
 		}
 		
 		return pclosables.get(plugin);
+	}
+	
+	public List<Closable> getClosables(ClosablePriority priority) {
+		if(priority == null) {
+			new NonNullableParameterError("ClosablePriority", "priority").print();
+			return null;
+		}
+		
+		List<Closable> cs = new ArrayList<Closable>();
+		
+		for(Closable closable : closables) {
+			if(closable.getPriority() == priority) {
+				cs.add(closable);
+			}
+		}
+		
+		return cs;
 	}
 	
 	public Plugin getPlugin(Closable closable) {

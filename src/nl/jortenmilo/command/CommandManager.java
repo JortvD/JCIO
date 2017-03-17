@@ -181,10 +181,13 @@ public class CommandManager {
 		commands.remove(command);
 		
 		Plugin plugin = getPlugin(command);
-		List<Command> l = pcommands.get(plugin);
-		l.remove(command);
 		
-		pcommands.put(plugin, l);
+		if(plugin != null) {
+			List<Command> l = pcommands.get(plugin);
+			l.remove(command);
+		
+			pcommands.put(plugin, l);
+		}
 		
 		CommandRemovedEvent event = new CommandRemovedEvent();
 		event.setCommand(command);
@@ -226,7 +229,10 @@ public class CommandManager {
 	 * @return A list of the commands
 	 */
 	public List<Command> getCommands() {
-		return commands;
+		List<Command> clone = new ArrayList<Command>();
+		clone.addAll(commands);
+		
+		return clone;
 	}
 	
 	/**
@@ -383,7 +389,7 @@ public class CommandManager {
 						params[i] = args[i+1];
 					}
 					
-					Console.debug("COMMAND [" + new SystemUtils().getTime() + "][" + c.getCommand() + "][" + Arrays.toString(params) + "]");
+					Console.debug("COMMAND [" + new SystemUtils().getTime() + "][" + s + "][" + Arrays.toString(params) + "]");
 					
 					CommandPreExecuteEvent event = new CommandPreExecuteEvent();
 					event.setArguments(params);

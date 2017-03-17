@@ -68,6 +68,9 @@ public class Launcher extends Closable {
 	}
 	
 	private void init() {
+		this.setPriority(ClosablePriority.LAUNCHER);
+		close.addClosable(this);
+		
 		plugin = new PluginManager();
 		
 		PluginLoader pl = new PluginLoader();
@@ -79,9 +82,6 @@ public class Launcher extends Closable {
 		config = new ConfigManager(event);
 		error = new ErrorManager(event);
 		utils = new UtilsManager(event);
-		
-		this.setPriority(ClosablePriority.LAUNCHER);
-		close.addClosable(this);
 		
 		plugin.setMouseManager(mouse);
 		plugin.setConsoleManager(console);
@@ -108,9 +108,9 @@ public class Launcher extends Closable {
 	@Override
 	public void close() {
 		try {
-			settings.save();
-			
 			plugin.disableAll();
+			
+			settings.save();
 			
 			Console.close();
 			System.exit(0);
