@@ -20,6 +20,10 @@ import nl.jortenmilo.plugin.PluginManager;
 import nl.jortenmilo.settings.SettingsManager;
 import nl.jortenmilo.utils.UtilsManager;
 
+/**
+ * This is the Launcher. It starts and created the Console. It also inits all the managers and loads all the plugins.
+ * @see Console
+ */
 public class Launcher extends Closable {
 	
 	private File[] files = {

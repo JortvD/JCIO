@@ -5,6 +5,11 @@ import java.io.IOException;
 
 import nl.jortenmilo.settings.SettingsManager;
 
+/**
+ * This is the Installer. It installs files if they weren't installed already.
+ * @author Jort
+ *
+ */
 public class Installer {
 	
 	private File[] files;
@@ -15,6 +20,9 @@ public class Installer {
 		this.s = s;
 	}
 	
+	/**
+	 * Checks if all the files were installed. If they weren't it will install them.
+	 */
 	public void check() {
 		boolean install = false;
 		int missing = 0;
@@ -38,7 +46,7 @@ public class Installer {
 		}
 	}
 	
-	public void install() throws IOException {
+	private void install() throws IOException {
 		for(File file : files) {
 			if(!file.exists()) {
 				switch(file.getPath()) {
