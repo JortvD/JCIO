@@ -1,13 +1,10 @@
 package nl.jortenmilo.config;
 
-import nl.jortenmilo.command.Command;
-import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.event.Event;
 
 /**
  * This is the general ConfigEvent. All ConfigEvents instantiate this class since it contains the general information about a ConfigEvent.
- * @see CommandManager
- * @see Command
+ * @see ConfigManager
  */
 public abstract class ConfigEvent extends Event {
 	
