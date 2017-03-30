@@ -42,6 +42,9 @@ import nl.jortenmilo.settings.SettingsManager;
 import nl.jortenmilo.utils.defaults.ObjectUtils;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This is the Console class. It contains all the methods to print text to the console, read from the console and/or debug information.
+ */
 public class Console {
 	
 	private static boolean inited = false;
@@ -330,6 +333,10 @@ public class Console {
 		}
 	}
 	
+	/**
+	 * This is the PrintStream for the console.
+	 * @see Console
+	 */
 	static class ConsolePrintStream extends PrintStream {
 
 		private ConsolePrintStream(OutputStream out) {
@@ -337,6 +344,10 @@ public class Console {
 		}
 	}
 	
+	/**
+	 * This is the OutputStream for the console.
+	 * @see Console
+	 */
 	static class ConsoleOutputStream extends OutputStream {
 		
 		private String lineText = "";
@@ -406,6 +417,10 @@ public class Console {
 		}
 	}
 	
+	/**
+	 * This is the InputStream for the console.
+	 * @see Console
+	 */
 	static class ConsoleInputStream implements KeyListener {
 		
 		private ConsoleOutputStream cos;
