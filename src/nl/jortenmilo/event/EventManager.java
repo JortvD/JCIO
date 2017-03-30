@@ -12,10 +12,19 @@ import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.plugin.Plugin;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This is the EventManager. It contains all the general methods to work with events.
+ * @see Event
+ */
 public class EventManager {
 	
 	private Map<Class<? extends Event>, List<EventHandler>> events = new HashMap<Class<? extends Event>, List<EventHandler>>();
 	
+	/**
+	 * This method is used to register a listener and all it's events.
+	 * @param listener The listener you want to register
+	 * @param plugin The plugin the listener is from
+	 */
 	public void registerListener(EventListener listener, Plugin plugin) {
 		if(listener == null) {
 			new NonNullableParameterError("EventListener", "listener").print();
@@ -59,6 +68,10 @@ public class EventManager {
 		}
 	}
 	
+	/**
+	 * Used to unregister a listener and all it's events.
+	 * @param listener The listener you want to unregister
+	 */
 	public void unregisterListener(EventListener listener) {
 		if(listener == null) {
 			new NonNullableParameterError("EventListener", "listener").print();
@@ -92,6 +105,10 @@ public class EventManager {
 		}
 	}
 	
+	/**
+	 * Unregisters all the listener from the specified plugin.
+	 * @param plugin The plugin
+	 */
 	public void unregisterPlugin(Plugin plugin) {
 		if(plugin == null) {
 			new NonNullableParameterError("Plugin", "plugin").print();
@@ -113,6 +130,11 @@ public class EventManager {
 		}
 	}
 	
+	/**
+	 * Returns a list of all the handlers with the specified event.
+	 * @param event The event
+	 * @return The list of handlers
+	 */
 	public List<EventHandler> getHandlers(Class<? extends Event> event) {
 		if(event == null) {
 			new NonNullableParameterError("Class<? extends Event>", "event").print();

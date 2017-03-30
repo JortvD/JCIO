@@ -8,6 +8,10 @@ import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.plugin.Plugin;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This class handles the events for every single event method.
+ * @see Event
+ */
 public class EventHandler {
 	
 	private Method method;
@@ -15,6 +19,10 @@ public class EventHandler {
 	private Plugin plugin;
 	private EventListener listener;
 	
+	/**
+	 * This method let's you execute a event.
+	 * @param event Needs the event to execute.
+	 */
 	public void execute(Event event) {
 		if(event == null) {
 			new NonNullableParameterError("Event", "event").print();
@@ -30,7 +38,11 @@ public class EventHandler {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
-
+	
+	/**
+	 * Returns the method for this EventHandler.
+	 * @return The method
+	 */
 	public Method getMethod() {
 		return method;
 	}
@@ -38,7 +50,12 @@ public class EventHandler {
 	protected void setMethod(Method method) {
 		this.method = method;
 	}
-
+	
+	/**
+	 * Returns the plugin for this EventHandler.
+	 * @return The plugin
+	 * @see Plugin
+	 */
 	public Plugin getPlugin() {
 		return plugin;
 	}
@@ -46,7 +63,11 @@ public class EventHandler {
 	protected void setPlugin(Plugin plugin) {
 		this.plugin = plugin;
 	}
-
+	
+	/**
+	 * Returns the class of this event.
+	 * @return The class
+	 */
 	public Class<? extends Event> getEvent() {
 		return event;
 	}
@@ -54,7 +75,12 @@ public class EventHandler {
 	protected void setEvent(Class<? extends Event> event) {
 		this.event = event;
 	}
-
+	
+	/**
+	 * Returns the listener this event is from.
+	 * @return The listener
+	 * @see EventListener
+	 */
 	public EventListener getListener() {
 		return listener;
 	}
