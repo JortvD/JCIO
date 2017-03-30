@@ -5,17 +5,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import nl.jortenmilo.console.Console;
 import nl.jortenmilo.error.ExistingSettingError;
+import nl.jortenmilo.error.NonNullableParameterError;
 import nl.jortenmilo.error.UnknownSettingError;
+import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.event.EventManager;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class SettingsManager {
 	
 	private HashMap<String, String> settings = new HashMap<String, String>();
 	private List<String> keys = new ArrayList<String>();
-	private List<SettingsEventListener> listeners = new ArrayList<SettingsEventListener>();
 	private SettingsLoader loader = new SettingsLoader();
+	private EventManager events;
+	
+	public SettingsManager(EventManager events) {
+		this.events = events;
+	}
 	
 	public String get(String key) {
+		if(key == null) {
+			new NonNullableParameterError("String", "key").print();
+			return null;
+		}
+		
 		if(!settings.containsKey(key)) {
 			new UnknownSettingError(key).print();
 		}
@@ -24,24 +38,45 @@ public class SettingsManager {
 	}
 	
 	public void set(String key, String value) {
+		if(key == null) {
+			new NonNullableParameterError("String", "key").print();
+			return;
+		}
+		if(value == null) {
+			new NonNullableParameterError("String", "value").print();
+			return;
+		}
+		
 		if(!keys.contains(key)) {
 			new UnknownSettingError(key).print();
 		}
+		
+		Console.debug("SETTING_SET [" + new SystemUtils().getTime() + "][" + key + "][" + value + "]");
 		
 		settings.put(key, value);
 		
 		SettingsChangedEvent event = new SettingsChangedEvent();
 		event.setKey(key);
 		event.setValue(value);
-		for(SettingsEventListener listener : listeners) {
-			listener.onSettingsChanged(event);
+		
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
+		
+		Console.update();
 	}
 	
 	public void create(String key) {
+		if(key == null) {
+			new NonNullableParameterError("String", "key").print();
+			return;
+		}
+		
 		if(keys.contains(key)) {
 			new ExistingSettingError(key).print();
 		}
+		
+		Console.debug("SETTING_CREATE [" + new SystemUtils().getTime() + "][" + key + "]");
 		
 		keys.add(key);
 		settings.put(key, "");
@@ -49,31 +84,41 @@ public class SettingsManager {
 		SettingsCreatedEvent event = new SettingsCreatedEvent();
 		event.setKey(key);
 		event.setValue(settings.get(key));
-		for(SettingsEventListener listener : listeners) {
-			listener.onSettingsCreated(event);
+		
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 	
 	public boolean contains(String key) {
-		if(keys.contains(key)) {
-			new ExistingSettingError(key).print();
+		if(key == null) {
+			new NonNullableParameterError("String", "key").print();
+			return false;
 		}
 		
 		return keys.contains(key);
 	}
 	
 	public void remove(String key) {
+		if(key == null) {
+			new NonNullableParameterError("String", "key").print();
+			return;
+		}
+		
 		if(!keys.contains(key)) {
 			new UnknownSettingError(key).print();
 		}
+		
+		Console.debug("SETTING_REMOVE [" + new SystemUtils().getTime() + "][" + key + "]");
 		
 		keys.remove(key);
 		
 		SettingsRemovedEvent event = new SettingsRemovedEvent();
 		event.setKey(key);
 		event.setValue(settings.get(key));
-		for(SettingsEventListener listener : listeners) {
-			listener.onSettingsRemoved(event);
+		
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 	
@@ -82,6 +127,8 @@ public class SettingsManager {
 	}
 	
 	public void reset() {
+		Console.debug("SETTING_RESET [" + new SystemUtils().getTime() + "]");
+		
 		keys.clear();
 		settings.clear();
 		
@@ -92,10 +139,10 @@ public class SettingsManager {
 		set("log", "true");
 		
 		create("foreground");
-		set("foreground", "light_gray");
+		set("foreground", "192_192_192");
 		
 		create("background");
-		set("background", "black");
+		set("background", "0_0_0");
 		
 		create("default_width");
 		set("default_width", "1600");
@@ -107,30 +154,46 @@ public class SettingsManager {
 		set("default_title", "JCIO");
 		
 		SettingsResetEvent event = new SettingsResetEvent();
-		event.setKey(null);
-		event.setValue(null);
-		for(SettingsEventListener listener : listeners) {
-			listener.onSettingsReset(event);
+		
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 	
-	public void addListener(SettingsEventListener listener) {
-		listeners.add(listener);
-	}
-	
 	public void save() {
+		Console.debug("SETTING_SAVE [" + new SystemUtils().getTime() + "]");
+		
 		try {
 			loader.save(new File("settings.jcio"), this);
-		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			
+			SettingsSavedEvent event = new SettingsSavedEvent();
+			
+			for(EventHandler handler : events.getHandlers(event.getClass())) {
+				handler.execute(event);
+			}
+			
+		} 
+		catch(Error | Exception e) {
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 	
 	public void load() {
+		Console.debug("SETTING_LOAD [" + new SystemUtils().getTime() + "]");
+		
 		try {
 			loader.load(new File("settings.jcio"), this);
-		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+			
+			SettingsLoadedEvent event = new SettingsLoadedEvent();
+			
+			for(EventHandler handler : events.getHandlers(event.getClass())) {
+				handler.execute(event);
+			}
+			
+		} 
+		catch(Error | Exception e) {
+			e.printStackTrace();
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 	

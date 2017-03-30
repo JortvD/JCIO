@@ -1,3 +1,6 @@
 /bin/
-.project
-.classpath
+/logs/
+/javadoc/
+*.project
+*.classpath
+*.jcio

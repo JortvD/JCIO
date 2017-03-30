@@ -1,8 +1,14 @@
 package nl.jortenmilo.error;
 
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.console.ConsoleUser;
+import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when a plugin file doesn't contain all needed information.
+ * @see Error
+ */
 public class UnspecifiedError extends Error {
 	
 	private String value1;
@@ -15,6 +21,8 @@ public class UnspecifiedError extends Error {
 	
 	@Override
 	public void print() {
+		Console.debug("ERROR [" + new SystemUtils().getTime() + "][UnspecifiedError][" + value1 + ", " + value2 + "]");
+		
 		Console.println(ConsoleUser.Error, "UnspecifiedError: The plugin '" + value1 + "' has no '" + value2+ "' specified!");
 		
 		StackTraceElement[] es = Thread.currentThread().getStackTrace();
@@ -27,7 +35,15 @@ public class UnspecifiedError extends Error {
 		for(StackTraceElement e : es2) {
 			Console.println(ConsoleUser.Error, " at: " + e.getClassName() + "." + e.getMethodName() + " (Line: " + e.getLineNumber() + " in " + e.getFileName() + ")");
 		}
+		
 		Console.println(ConsoleUser.Error, "If you don't know what to do, please contact us at: goo.gl/1ROGMh.");
+		
+		ErrorThrownEvent event = new ErrorThrownEvent();
+		event.setError(this);
+		
+		for(EventHandler handler : getEventManager().getHandlers(event.getClass())) {
+			handler.execute(event);
+		}
 	}
 	
 }

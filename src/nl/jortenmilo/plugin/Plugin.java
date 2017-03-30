@@ -2,12 +2,14 @@ package nl.jortenmilo.plugin;
 
 import java.io.File;
 
+import nl.jortenmilo.close.CloseManager;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.ConsoleManager;
+import nl.jortenmilo.error.ErrorManager;
+import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
-import nl.jortenmilo.plugin.PluginManager.LoadedPlugin;
 import nl.jortenmilo.settings.SettingsManager;
 import nl.jortenmilo.utils.UtilsManager;
 
@@ -21,6 +23,9 @@ public abstract class Plugin {
 	private ConfigManager config;
 	private SettingsManager settings;
 	private UtilsManager utils;
+	private ErrorManager error;
+	private EventManager event;
+	private CloseManager close;
 	
 	private LoadedPlugin lp;
 	private File sf;
@@ -48,6 +53,7 @@ public abstract class Plugin {
 	
 	protected void setLoadedPlugin(LoadedPlugin lp) {
 		this.lp = lp;
+		
 		sf = new File("plugins/" + lp.getName());
 	}
 	
@@ -111,5 +117,29 @@ public abstract class Plugin {
 	
 	protected void setUtilsManager(UtilsManager utils) {
 		this.utils = utils;
+	}
+	
+	public ErrorManager getErrorManager() {
+		return error;
+	}
+	
+	protected void setErrorManager(ErrorManager error) {
+		this.error = error;
+	}
+	
+	public EventManager getEventManager() {
+		return event;
+	}
+	
+	protected void setEventManager(EventManager event) {
+		this.event = event;
+	}
+	
+	public CloseManager getCloseManager() {
+		return close;
+	}
+	
+	protected void setCloseManager(CloseManager close) {
+		this.close = close;
 	}
 }

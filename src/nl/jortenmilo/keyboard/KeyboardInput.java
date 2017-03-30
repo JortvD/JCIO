@@ -8,11 +8,19 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.console.ConsoleUser;
+import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.event.EventManager;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This is the KeyboardInput class. It instantiates the KeyListener and is thereby the core class for key logging.
+ * @see KeyManager
+ */
 public class KeyboardInput implements KeyListener {
 	
-	private List<KeyboardEventListener> kels = new ArrayList<KeyboardEventListener>();
+	private EventManager events;
+	
 	private HashMap<Integer, Boolean> pressed = new HashMap<Integer, Boolean>();
 	private List<Integer> wait = new ArrayList<Integer>();
 	private CountDownLatch latch;
@@ -20,18 +28,22 @@ public class KeyboardInput implements KeyListener {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		for(KeyboardEventListener kel : kels) {
-			KeyboardPressedEvent event = new KeyboardPressedEvent();
-			event.setKeyChar(e.getKeyChar());
-			event.setKeyCode(e.getKeyCode());
-			event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
-			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
-			
-			try {
-				kel.onPressed(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-			}
+		char c = e.getKeyChar();
+		
+		if(c=='\n') {
+			Console.debug("KEY_PRESSED [" + new SystemUtils().getTime() + "][][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		} else {
+			Console.debug("KEY_PRESSED [" + new SystemUtils().getTime() + "][" + e.getKeyChar() + "][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		}
+		
+		KeyboardPressedEvent event = new KeyboardPressedEvent();
+		event.setKeyChar(e.getKeyChar());
+		event.setKeyCode(e.getKeyCode());
+		event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
+		event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
+		
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		pressed.put(e.getKeyCode(), true);
@@ -39,18 +51,22 @@ public class KeyboardInput implements KeyListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		for(KeyboardEventListener kel : kels) {
-			KeyboardReleasedEvent event = new KeyboardReleasedEvent();
-			event.setKeyChar(e.getKeyChar());
-			event.setKeyCode(e.getKeyCode());
-			event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
-			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
+		char c = e.getKeyChar();
+		
+		if(c=='\n') {
+			Console.debug("KEY_RELEASED [" + new SystemUtils().getTime() + "][][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		} else {
+			Console.debug("KEY_RELEASED [" + new SystemUtils().getTime() + "][" + e.getKeyChar() + "][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		}
 			
-			try {
-				kel.onReleased(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-			}
+		KeyboardReleasedEvent event = new KeyboardReleasedEvent();
+		event.setKeyChar(e.getKeyChar());
+		event.setKeyCode(e.getKeyCode());
+		event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
+		event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
+		
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
 		pressed.put(e.getKeyCode(), false);
@@ -58,21 +74,25 @@ public class KeyboardInput implements KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		for(KeyboardEventListener kel : kels) {
-			KeyboardTypedEvent event = new KeyboardTypedEvent();
-			event.setKeyChar(e.getKeyChar());
-			event.setKeyCode(e.getKeyCode());
-			event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
-			event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
+		char c = e.getKeyChar();
+		
+		if(c=='\n') {
+			Console.debug("KEY_TYPED [" + new SystemUtils().getTime() + "][][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		} else {
+			Console.debug("KEY_TYPED [" + new SystemUtils().getTime() + "][" + e.getKeyChar() + "][" + e.getKeyCode() + "][" + KeyEvent.getKeyModifiersText(e.getModifiers()) + "][" + KeyEvent.getKeyText(e.getKeyCode()) + "]");
+		}
 			
-			try {
-				kel.onTyped(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-			}
+		KeyboardTypedEvent event = new KeyboardTypedEvent();
+		event.setKeyChar(e.getKeyChar());
+		event.setKeyCode(e.getKeyCode());
+		event.setKeyText(KeyEvent.getKeyText(e.getKeyCode()));
+		event.setModifiersText(KeyEvent.getKeyModifiersText(e.getModifiers()));
+		
+		for(EventHandler handler : events.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 		
-		if(wait.size()==1) {
+		if(wait.size() == 1) {
 			if(wait.get(0) == 0) {
 				typed = e.getKeyChar();
 				countDown();
@@ -99,11 +119,8 @@ public class KeyboardInput implements KeyListener {
 				latch.countDown();
 			}
 		});
+		
 		t.start();
-	}
-	
-	protected void addEventListener(KeyboardEventListener e) {
-		kels.add(e);
 	}
 	
 	protected int waitUntilTyped() {
@@ -118,9 +135,11 @@ public class KeyboardInput implements KeyListener {
 		
 		try {
 			latch.await();
-		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+		} 
+		catch(Error | Exception e) {
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
+		
 		int typed2 = typed;
 		typed = -1;
 		return typed2;
@@ -138,8 +157,9 @@ public class KeyboardInput implements KeyListener {
 		
 		try {
 			latch.await();
-		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+		} 
+		catch(Error | Exception e) {
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 	}
 	
@@ -160,19 +180,17 @@ public class KeyboardInput implements KeyListener {
 		
 		try {
 			latch.await();
-		} catch(Error | Exception e) {
-			new nl.jortenmilo.error.UnknownError(e.getMessage()).print();
+		} 
+		catch(Error | Exception e) {
+			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
 		
 		int typed2 = typed;
 		typed = -1;
 		return typed2;
 	}
-
-	public List<KeyboardEventListener> getListeners() {
-		return kels;
+	
+	protected void setEventManager(EventManager events) {
+		this.events = events;
 	}
-	
-	
-
 }

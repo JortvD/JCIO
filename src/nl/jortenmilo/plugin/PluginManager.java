@@ -1,23 +1,27 @@
 package nl.jortenmilo.plugin;
 
 import java.io.File;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.jortenmilo.close.CloseManager;
 import nl.jortenmilo.command.CommandManager;
 import nl.jortenmilo.config.ConfigManager;
 import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleManager;
+import nl.jortenmilo.error.ErrorManager;
+import nl.jortenmilo.error.NonNullableParameterError;
+import nl.jortenmilo.event.EventHandler;
+import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.keyboard.KeyboardManager;
 import nl.jortenmilo.mouse.MouseManager;
 import nl.jortenmilo.settings.SettingsManager;
 import nl.jortenmilo.utils.UtilsManager;
+import nl.jortenmilo.utils.defaults.SystemUtils;
 
 public class PluginManager {
 	
 	private List<LoadedPlugin> plugins = new ArrayList<LoadedPlugin>();
-	private List<PluginEventListener> listeners = new ArrayList<PluginEventListener>();
 	private PluginLoader loader;
 	private CommandManager command;
 	private ConsoleManager console;
@@ -26,12 +30,20 @@ public class PluginManager {
 	private ConfigManager config;
 	private SettingsManager settings;
 	private UtilsManager utils;
+	private ErrorManager error;
+	private EventManager event;
+	private CloseManager close;
 	
 	protected void addPlugin(LoadedPlugin plugin) {
 		plugins.add(plugin);
 	}
 	
 	public void removePlugin(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
 		plugins.remove(plugin);
 	}
 	
@@ -39,6 +51,17 @@ public class PluginManager {
 		return plugins;
 	}
 	
+	public Plugin getPlugin(Class<? extends Plugin> c) {
+		for(LoadedPlugin plugin : plugins) {
+			if(plugin.getPlugin().getClass() == c) {
+				return plugin.getPlugin();
+			}
+		}
+		
+		return null;
+	}
+	
+	// TODO: Create the dependency system
 	public void enableAll() {
 		for(LoadedPlugin plugin : plugins) {
 			enable(plugin);
@@ -46,7 +69,13 @@ public class PluginManager {
 	}
 	
 	public void enable(LoadedPlugin plugin) {
-		Console.println("Enabling: " + plugin.getName());
+		if(plugin == null) {
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
+		Console.debug("PLUGIN_ENABLED [" + new SystemUtils().getTime() + "][" + plugin.getName() + "]");
+		
 		plugin.getPlugin().setCommandManager(command);
 		plugin.getPlugin().setPluginManager(this);
 		plugin.getPlugin().setConsoleManager(console);
@@ -55,34 +84,62 @@ public class PluginManager {
 		plugin.getPlugin().setMouseManager(mouse);
 		plugin.getPlugin().setSettingsManager(settings);
 		plugin.getPlugin().setUtilsManager(utils);
+		plugin.getPlugin().setErrorManager(error);
+		plugin.getPlugin().setEventManager(event);
+		plugin.getPlugin().setCloseManager(close);
+		
 		plugin.getPlugin().setLoadedPlugin(plugin);
-		plugin.getPlugin().enable();
-		Console.println("Enabled: " + plugin.getName());
+		
+		try {
+			plugin.getPlugin().enable();
+		} 
+		catch(Error | Exception e2) {
+			new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+		}
 		
 		PluginEnabledEvent event = new PluginEnabledEvent();
 		event.setPlugin(plugin);
-		for(PluginEventListener listener : listeners) {
-			try {
-				listener.onPluginEnabled(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-			}
+		
+		for(EventHandler handler : this.event.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 	
 	public void disable(LoadedPlugin plugin) {
-		Console.println("Disabling: " + plugin.getName());
-		plugin.getPlugin().disable();
-		Console.println("Disabled: " + plugin.getName());
+		if(plugin == null) {
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
+		Console.debug("PLUGIN_DISABLED [" + new SystemUtils().getTime() + "][" + plugin.getName() + "]");
+		
+		try {
+			plugin.getPlugin().disable();
+		} 
+		catch(Error | Exception e2) {
+			new nl.jortenmilo.error.UnknownError(e2.toString(), e2.getMessage()).print();
+		}
+		
+		plugin.getPlugin().setCommandManager(null);
+		plugin.getPlugin().setPluginManager(null);
+		plugin.getPlugin().setConsoleManager(null);
+		plugin.getPlugin().setKeyboardManager(null);
+		plugin.getPlugin().setConfigManager(null);
+		plugin.getPlugin().setMouseManager(null);
+		plugin.getPlugin().setSettingsManager(null);
+		plugin.getPlugin().setUtilsManager(null);
+		plugin.getPlugin().setErrorManager(null);
+		plugin.getPlugin().setEventManager(null);
+		
+		command.removeCommands(plugin.getPlugin());
+		event.unregisterPlugin(plugin.getPlugin());
+		close.removeClosables(plugin.getPlugin());
 		
 		PluginDisabledEvent event = new PluginDisabledEvent();
 		event.setPlugin(plugin);
-		for(PluginEventListener listener : listeners) {
-			try {
-				listener.onPluginDisabled(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-			}
+		
+		for(EventHandler handler : this.event.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 	
@@ -93,16 +150,18 @@ public class PluginManager {
 	}
 	
 	public void load(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
 		loader.load(new File("plugins/" + plugin.getPath()), this);
 		
 		PluginLoadedEvent event = new PluginLoadedEvent();
 		event.setPlugin(plugin);
-		for(PluginEventListener listener : listeners) {
-			try {
-				listener.onPluginLoaded(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-			}
+		
+		for(EventHandler handler : this.event.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 	
@@ -111,16 +170,18 @@ public class PluginManager {
 	}
 	
 	public void unload(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
 		loader.unload(plugin);
 		
 		PluginUnloadedEvent event = new PluginUnloadedEvent();
 		event.setPlugin(plugin);
-		for(PluginEventListener listener : listeners) {
-			try {
-				listener.onPluginUnloaded(event);
-			} catch(Error | Exception e2) {
-				new nl.jortenmilo.error.UnknownError(e2.getMessage()).print();
-			}
+		
+		for(EventHandler handler : this.event.getHandlers(event.getClass())) {
+			handler.execute(event);
 		}
 	}
 	
@@ -129,6 +190,13 @@ public class PluginManager {
 	}
 	
 	public void reload(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
+		Console.debug("PLUGIN_RELOADED [" + new SystemUtils().getTime() + "][" + plugin.getName() + "]");
+		
 		loader.unload(plugin);
 		loader.load(new File("plugins/" + plugin.getPath()), this);
 	}
@@ -165,52 +233,32 @@ public class PluginManager {
 	public void setUtilsManager(UtilsManager utils) {
 		this.utils = utils;
 	}
-	
-	public void addListener(PluginEventListener listener) {
-		listeners.add(listener);
-	}
 
 	public void setPluginLoader(PluginLoader loader) {
 		this.loader = loader;
 	}
 
-	public class LoadedPlugin {
-		private Plugin plugin;
-		private String name;
-		private String path;
-		private URLClassLoader loader;
-		
-		public Plugin getPlugin() {
-			return plugin;
-		}
-		
-		protected void setPlugin(Plugin plugin) {
-			this.plugin = plugin;
-		}
-		
-		public String getName() {
-			return name;
-		}
-		
-		protected void setName(String name) {
-			this.name = name;
-		}
-		
-		public String getPath() {
-			return path;
-		}
-		
-		protected void setPath(String path) {
-			this.path = path;
-		}
-
-		public URLClassLoader getClassLoader() {
-			return loader;
-		}
-
-		protected void setClassLoader(URLClassLoader loader) {
-			this.loader = loader;
-		}
+	public ErrorManager getErrorManager() {
+		return error;
 	}
 
+	public void setErrorManager(ErrorManager error) {
+		this.error = error;
+	}
+
+	public EventManager getEventManager() {
+		return event;
+	}
+
+	public void setEventManager(EventManager event) {
+		this.event = event;
+	}
+
+	public CloseManager getCloseManager() {
+		return close;
+	}
+
+	public void setCloseManager(CloseManager close) {
+		this.close = close;
+	}
 }

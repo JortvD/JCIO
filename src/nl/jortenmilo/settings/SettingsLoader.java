@@ -7,16 +7,24 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import nl.jortenmilo.console.Console;
+import nl.jortenmilo.error.NonNullableParameterError;
 
 public class SettingsLoader {
 
-	public void load(File f, SettingsManager settings) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(f));
-		String line = "";
-		int amount = 0;
+	public void load(File file, SettingsManager manager) throws IOException {
+		if(file == null) {
+			new NonNullableParameterError("File", "file").print();
+			return;
+		}
+		if(manager == null) {
+			new NonNullableParameterError("SettingsManager", "manager").print();
+			return;
+		}
 		
-		while((line=br.readLine())!=null) {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		String line = "";
+		
+		while((line = br.readLine()) != null) {
 			if(line.startsWith("#") || line.equals("")) {
 				continue;
 			} 
@@ -32,20 +40,27 @@ public class SettingsLoader {
 				} 
 			}
 			
-			settings.create(key);
-			settings.set(key, value);
-			amount++;
+			manager.create(key);
+			manager.set(key, value);
 		}
 		
 		br.close();
-		Console.println("There were " + amount + " settings loaded.");
 	}
 	
-	public void save(File f, SettingsManager settings) throws IOException {
-		BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+	public void save(File file, SettingsManager manager) throws IOException {
+		if(file == null) {
+			new NonNullableParameterError("File", "file").print();
+			return;
+		}
+		if(manager == null) {
+			new NonNullableParameterError("SettingsManager", "manager").print();
+			return;
+		}
 		
-		for(String key : settings.getSettings().keySet()) {
-			String value = settings.get(key);
+		BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+		
+		for(String key : manager.getSettings().keySet()) {
+			String value = manager.get(key);
 			bw.write(key + ": " + value);
 			bw.newLine();
 		}

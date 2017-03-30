@@ -1,10 +1,22 @@
 package nl.jortenmilo.command;
 
-public class CommandEvent {
+import nl.jortenmilo.event.Event;
+
+/**
+ * This is the general CommandEvent. All CommandEvents instantiate this class since it contains the general information about a CommandEvent.
+ * @see CommandManager
+ * @see Command
+ */
+public abstract class CommandEvent extends Event {
 	
 	private Command command;
-	private String[] arguments;
 	
+	protected CommandEvent() {}
+	
+	/**
+	 * Returns the command that was used when this event was created.
+	 * @return The command
+	 */
 	public Command getCommand() {
 		return command;
 	}
@@ -13,12 +25,4 @@ public class CommandEvent {
 		this.command = command;
 	}
 
-	public String[] getArguments() {
-		return arguments;
-	}
-
-	protected void setArguments(String[] arguments) {
-		this.arguments = arguments;
-	}
-	
 }

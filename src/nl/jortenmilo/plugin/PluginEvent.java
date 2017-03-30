@@ -1,8 +1,8 @@
 package nl.jortenmilo.plugin;
 
-import nl.jortenmilo.plugin.PluginManager.LoadedPlugin;
+import nl.jortenmilo.event.Event;
 
-public class PluginEvent {
+public abstract class PluginEvent extends Event {
 	
 	private LoadedPlugin plugin;
 	

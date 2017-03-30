@@ -1,6 +1,12 @@
 package nl.jortenmilo.mouse;
 
-public class MouseEvent {
+import nl.jortenmilo.event.Event;
+
+/**
+ * This is the MouseEvent. It contains all the general information for all the events.
+ * @see CommandManager
+ */
+public abstract class MouseEvent extends Event {
 	
 	private int x;
 	private int y;
@@ -8,43 +14,63 @@ public class MouseEvent {
 	private int yOnScreen;
 	private int modifiers;
 	
+	/**
+	 * Returns the x-position of the mouse.
+	 * @return The x-position
+	 */
 	public int getX() {
 		return x;
 	}
 	
-	public void setX(int x) {
+	protected void setX(int x) {
 		this.x = x;
 	}
 
+	/**
+	 * Returns the y-position of the mouse.
+	 * @return The y-position
+	 */
 	public int getY() {
 		return y;
 	}
 
-	public void setY(int y) {
+	protected void setY(int y) {
 		this.y = y;
 	}
-
+	
+	/**
+	 * Returns the x-position on the screen.
+	 * @return The x-position
+	 */
 	public int getXOnScreen() {
 		return xOnScreen;
 	}
 
-	public void setXOnScreen(int xOnScreen) {
+	protected void setXOnScreen(int xOnScreen) {
 		this.xOnScreen = xOnScreen;
 	}
-
+	
+	/**
+	 * Returns the y-position on the screen.
+	 * @return The y-position
+	 */
 	public int getYOnScreen() {
 		return yOnScreen;
 	}
 
-	public void setYOnScreen(int yOnScreen) {
+	protected void setYOnScreen(int yOnScreen) {
 		this.yOnScreen = yOnScreen;
 	}
-
+	
+	/**
+	 * Returns the current modifiers.
+	 * @return The modifiers
+	 */
 	public int getModifiers() {
 		return modifiers;
 	}
 
-	public void setModifiers(int modifiers) {
+	protected void setModifiers(int modifiers) {
 		this.modifiers = modifiers;
 	}
 	

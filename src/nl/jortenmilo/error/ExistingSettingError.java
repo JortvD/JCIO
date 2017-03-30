@@ -1,8 +1,13 @@
 package nl.jortenmilo.error;
 
 import nl.jortenmilo.console.Console;
-import nl.jortenmilo.console.Console.ConsoleUser;
+import nl.jortenmilo.console.ConsoleUser;
+import nl.jortenmilo.event.EventHandler;
 
+/**
+ * This error is thrown when a settings is created that already exists.
+ * @see Error
+ */
 public class ExistingSettingError extends Error {
 	
 	private String value;
@@ -25,7 +30,15 @@ public class ExistingSettingError extends Error {
 		for(StackTraceElement e : es2) {
 			Console.println(ConsoleUser.Error, " at: " + e.getClassName() + "." + e.getMethodName() + " (Line: " + e.getLineNumber() + " in " + e.getFileName() + ")");
 		}
+		
 		Console.println(ConsoleUser.Error, "If you don't know what to do, please contact us at: goo.gl/1ROGMh.");
+		
+		ErrorThrownEvent event = new ErrorThrownEvent();
+		event.setError(this);
+		
+		for(EventHandler handler : getEventManager().getHandlers(event.getClass())) {
+			handler.execute(event);
+		}
 	}
 	
 }
