@@ -13,6 +13,10 @@ import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This is the KeyboardInput class. It instantiates the KeyListener and is thereby the core class for key logging.
+ * @see KeyManager
+ */
 public class KeyboardInput implements KeyListener {
 	
 	private EventManager events;
