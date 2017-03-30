@@ -5,11 +5,11 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when a setting is called that doesn't exist.
+ * @see Error
+ */
 public class UnknownSettingError extends Error{
-	
-	/* This error is thrown when:
-	 * A setting is called that doesn't exist.
-	 */
 	
 	private String value;
 	

@@ -5,6 +5,10 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when the object is called that doesn't exist.
+ * @see Error
+ */
 public class MissingConfigObjectError extends Error {
 	
 	private String value1;

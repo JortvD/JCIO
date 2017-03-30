@@ -4,11 +4,11 @@ import nl.jortenmilo.console.Console;
 import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 
+/**
+ * This error is thrown when a settings is created that already exists.
+ * @see Error
+ */
 public class ExistingSettingError extends Error {
-	
-	/* This error is thrown when:
-	 * A settings is created that already exists.
-	 */
 	
 	private String value;
 	

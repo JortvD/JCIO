@@ -5,11 +5,11 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when a method is called with a parameter that is null while it wasn't allowed to.
+ * @see Error
+ */
 public class NonNullableParameterError extends Error {
-	
-	/* This error is thrown when:
-	 * A method is called with a parameter that is null that is not allowed to be null.
-	 */
 	
 	private String value1;
 	private String value2;

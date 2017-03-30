@@ -51,6 +51,16 @@ public class PluginManager {
 		return plugins;
 	}
 	
+	public Plugin getPlugin(Class<? extends Plugin> c) {
+		for(LoadedPlugin plugin : plugins) {
+			if(plugin.getPlugin().getClass() == c) {
+				return plugin.getPlugin();
+			}
+		}
+		
+		return null;
+	}
+	
 	// TODO: Create the dependency system
 	public void enableAll() {
 		for(LoadedPlugin plugin : plugins) {

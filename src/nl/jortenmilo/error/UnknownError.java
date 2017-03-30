@@ -5,11 +5,11 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when a error is thrown, but it isn't casted to a specific error.
+ * @see Error
+ */
 public class UnknownError extends Error {
-	
-	/* This error is thrown when:
-	 * A error is thrown, but it isn't casted to a specific error.
-	 */
 	
 	private String value1;
 	private String value2;

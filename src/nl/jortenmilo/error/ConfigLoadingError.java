@@ -5,6 +5,10 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when there was an error while loading a config.
+ * @see Error
+ */
 public class ConfigLoadingError extends Error {
 	
 	private String value1; //File

@@ -5,11 +5,11 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when a file is missing from a plugin that was loaded.
+ * @see Error
+ */
 public class MissingFileError extends Error {
-	
-	/* This error is thrown when:
-	 * A file is missing from a plugin that is loaded in.
-	 */
 	
 	private String value1;
 	private String value2;

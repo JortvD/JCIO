@@ -5,11 +5,11 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when a object is missing from a class.
+ * @see Error
+ */
 public class MissingObjectError extends Error {
-	
-	/* This error is thrown when:
-	 * A object is missing from a class.
-	 */
 	
 	private String value1;
 	private String value2;

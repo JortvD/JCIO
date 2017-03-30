@@ -5,11 +5,11 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when there are unknown symbols in a String.
+ * @see Error
+ */
 public class SyntaxError extends Error {
-	
-	/* This error is thrown when:
-	 * There are unknown symbols in a String.
-	 */
 	
 	private String value1;
 	private String value2;

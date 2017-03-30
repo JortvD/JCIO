@@ -5,11 +5,11 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when the main class in the plugin.jcio wasn't found.
+ * @see Error
+ */
 public class ClassNotFoundError extends Error {
-	
-	/* This error is thrown when:
-	 * A class has not been found that is called in a plugin.
-	 */
 	
 	private String value1;
 	private String value2;

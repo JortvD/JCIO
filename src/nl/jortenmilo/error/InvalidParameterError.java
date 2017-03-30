@@ -5,11 +5,11 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when a method is called with an invalid parameter.
+ * @see Error
+ */
 public class InvalidParameterError extends Error {
-	
-	/* This error is thrown when:
-	 * A method is called and an invalid parameter is used.
-	 */
 	
 	private String value;
 	

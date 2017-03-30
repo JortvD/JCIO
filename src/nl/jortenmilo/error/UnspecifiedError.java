@@ -5,11 +5,11 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when a plugin file doesn't contain all needed information.
+ * @see Error
+ */
 public class UnspecifiedError extends Error {
-	
-	/* This error is thrown when:
-	 * A plugin file doesn't contain all needed information.
-	 */
 	
 	private String value1;
 	private String value2;

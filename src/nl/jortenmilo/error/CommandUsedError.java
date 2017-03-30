@@ -5,11 +5,11 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when a command is created while it already exists.
+ * @see Error
+ */
 public class CommandUsedError extends Error {
-	
-	/* This error is thrown when:
-	 * A command is created with an command that already exists.
-	 */
 	
 	private String value;
 	

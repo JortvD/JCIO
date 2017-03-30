@@ -5,6 +5,10 @@ import nl.jortenmilo.console.ConsoleUser;
 import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This error is thrown when there was an error while parsing a object into another object.
+ * @see Error
+ */
 public class ParsingError extends Error {
 	
 	private String value1;
