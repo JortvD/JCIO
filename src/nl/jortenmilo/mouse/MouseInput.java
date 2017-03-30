@@ -12,6 +12,10 @@ import nl.jortenmilo.event.EventHandler;
 import nl.jortenmilo.event.EventManager;
 import nl.jortenmilo.utils.defaults.SystemUtils;
 
+/**
+ * This is the MouseInput class. It implements the listeners and thereby logs all the mouse presses.
+ * @see MouseManager
+ */
 public class MouseInput implements MouseListener, MouseWheelListener, MouseMotionListener {
 	
 	private EventManager events;
