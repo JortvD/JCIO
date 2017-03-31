@@ -145,23 +145,4 @@ public class UtilsManager {
 		
 		return list;
 	}
-	
-	public List<Utils> getUtils(Plugin plugin, Class<? extends Utils> name) {
-		if(name == null) {
-			new NonNullableParameterError("Class<? extends Utils>", "name").print();
-			return null;
-		}
-		if(plugin == null) {
-			new NonNullableParameterError("Plugin", "plugin").print();
-			return null;
-		}
-		
-		List<Utils> list = new ArrayList<Utils>();
-		
-		for(Utils util : utils.get(name)) {
-			list.add(util);
-		}
-		
-		return list;
-	}
 }
