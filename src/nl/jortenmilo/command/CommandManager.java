@@ -86,6 +86,8 @@ public class CommandManager {
 		else {
 			//Add the command to the list.
 			commands.add(command);
+			command.setPlugin(plugin);
+			command.setAdded(true);
 			
 			if(pcommands.get(plugin) == null) {
 				pcommands.put(plugin, new ArrayList<Command>());
@@ -155,6 +157,7 @@ public class CommandManager {
 		else {
 			//Add the command to the list.
 			commands.add(command);
+			command.setAdded(true);
 			
 			CommandAddedEvent event = new CommandAddedEvent();
 			event.setCommand(command);
@@ -179,6 +182,8 @@ public class CommandManager {
 		Console.debug("COMMAND_REMOVED [" + new SystemUtils().getTime() + "][" + command.getCommand() + "]");
 		
 		commands.remove(command);
+		command.setAdded(false);
+		command.setPlugin(null);
 		
 		Plugin plugin = getPlugin(command);
 		
@@ -210,6 +215,8 @@ public class CommandManager {
 		
 		for(Command command : pcommands.get(plugin)) {
 			commands.remove(command);
+			command.setAdded(false);
+			command.setPlugin(null);
 			
 			Console.debug("COMMAND_REMOVED [" + new SystemUtils().getTime() + "][" + command.getCommand() + "]");
 			
