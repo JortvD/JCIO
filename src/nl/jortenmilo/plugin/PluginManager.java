@@ -34,44 +34,6 @@ public class PluginManager {
 	private EventManager event;
 	private CloseManager close;
 	
-	protected void addPlugin(LoadedPlugin plugin) {
-		plugins.add(plugin);
-	}
-	
-	protected void removePlugin(LoadedPlugin plugin) {
-		if(plugin == null) {
-			new NonNullableParameterError("LoadedPlugin", "plugin").print();
-			return;
-		}
-		
-		plugins.remove(plugin);
-	}
-	
-	public List<LoadedPlugin> getLoadedPlugins() {
-		return plugins;
-	}
-	
-	public List<Plugin> getPlugins() {
-		List<Plugin> ps = new ArrayList<Plugin>();
-		
-		for(LoadedPlugin plugin : plugins) {
-			ps.add(plugin.getPlugin());
-		}
-		
-		return ps;
-	}
-	
-	public Plugin getPlugin(Class<? extends Plugin> c) {
-		for(LoadedPlugin plugin : plugins) {
-			if(plugin.getPlugin().getClass() == c) {
-				return plugin.getPlugin();
-			}
-		}
-		
-		return null;
-	}
-	
-	// TODO: Create the dependency system
 	public void enableAll() {
 		for(LoadedPlugin plugin : plugins) {
 			enable(plugin);
@@ -229,6 +191,43 @@ public class PluginManager {
 	public void reloadAll() {
 		loader.unloadAll(this);
 		loader.loadAll(this);
+	}
+	
+	protected void addPlugin(LoadedPlugin plugin) {
+		plugins.add(plugin);
+	}
+	
+	protected void removePlugin(LoadedPlugin plugin) {
+		if(plugin == null) {
+			new NonNullableParameterError("LoadedPlugin", "plugin").print();
+			return;
+		}
+		
+		plugins.remove(plugin);
+	}
+	
+	public List<LoadedPlugin> getLoadedPlugins() {
+		return plugins;
+	}
+	
+	public List<Plugin> getPlugins() {
+		List<Plugin> ps = new ArrayList<Plugin>();
+		
+		for(LoadedPlugin plugin : plugins) {
+			ps.add(plugin.getPlugin());
+		}
+		
+		return ps;
+	}
+	
+	public Plugin getPlugin(Class<? extends Plugin> c) {
+		for(LoadedPlugin plugin : plugins) {
+			if(plugin.getPlugin().getClass() == c) {
+				return plugin.getPlugin();
+			}
+		}
+		
+		return null;
 	}
 	
 	public void setCommandManager(CommandManager command) {
