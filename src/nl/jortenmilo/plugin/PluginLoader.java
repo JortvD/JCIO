@@ -113,6 +113,7 @@ public class PluginLoader {
 						lp.setVersion(version);
 					}
 					else if(line.startsWith("depends: ")) {
+						Console.println("TEST");
 						String dependencies = line.replaceAll("depends: ", "").replaceAll("[", "").replace("]", "");
 						List<String> ds = Arrays.asList(dependencies.split("\\s*,\\s*"));
 						
@@ -133,7 +134,7 @@ public class PluginLoader {
 					new MissingFileError(file.getName(), "path").print();
 				}
 				
-				Console.debug("PLUGIN_LOADED [" + new SystemUtils().getTime() + "][" + lp.getName() + "][" + lp.getPlugin().getClass().getName() + "][" + lp.getVersion() + "][" + lp.getAuthor() + "][" + lp.getWebsite() + "]["+ Arrays.toString(lp.getDependencies().toArray()) + "]");
+				Console.debug("PLUGIN_LOADED [" + new SystemUtils().getTime() + "][" + lp.getName() + "][" + lp.getPlugin().getClass().getName() + "][" + lp.getVersion() + "][" + lp.getAuthor() + "][" + lp.getWebsite() + "]["+ ((lp.getDependencies() == null) ? "": Arrays.toString(lp.getDependencies().toArray())) + "]");
 				
 				manager.addPlugin(lp);
 				lp.getPlugin().load();

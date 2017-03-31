@@ -144,13 +144,19 @@ public class PluginManager {
 		plugins.clear();
 		
 		for(LoadedPlugin plugin : clone) {
-			if(plugin.getDependencies().size() == 0) {
+			if(plugin.getDependencies() == null) {
+				plugins.add(plugin);
+			}
+			else if(plugin.getDependencies().size() == 0) {
 				plugins.add(plugin);
 			}
 		}
 		
 		for(LoadedPlugin plugin : clone) {
-			if(plugin.getDependencies().size() > 0) {
+			if(plugin.getDependencies() == null) {
+				continue;
+			}
+			else if(plugin.getDependencies().size() > 0) {
 				plugins.add(plugin);
 			}
 		}
