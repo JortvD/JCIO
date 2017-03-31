@@ -136,6 +136,9 @@ public class CloseManager {
 			new NonNullableParameterError("Plugin", "plugin").print();
 			return;
 		}
+		else if(pclosables.get(plugin) == null) {
+			return;
+		}
 		
 		for(Closable closable : pclosables.get(plugin)) {
 			closables.remove(closable);

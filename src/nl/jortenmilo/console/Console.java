@@ -612,7 +612,7 @@ public class Console {
 	}
 	
 	/**
-	 * Read the keypresses until the user types and enter. And start it with the prefix.
+	 * Reads the keypresses until the user types and enter. And start it with the prefix.
 	 * @return The text the user has typed
 	 */
 	public static String readln() {
@@ -730,43 +730,23 @@ public class Console {
 		bw.close();
 	}
 	
-	/**
-	 * Returns the KeyboardInput class that is used by the console.
-	 * @return The keyboardinput class
-	 */
-	public static KeyboardInput getKeyboardInput() {
+	protected static KeyboardInput getKeyboardInput() {
 		return ki;
 	}
 	
-	/**
-	 * Returns the MouseInput class that is used by the console.
-	 * @return The mouseinput class
-	 */
-	public static MouseInput getMouseInput() {
+	protected static MouseInput getMouseInput() {
 		return mi;
 	}
 	
-	/**
-	 * Sets the settingsmanager for the console. Please don't use it.
-	 * @param settings The settingsmanager
-	 */
-	public static void setSettingsManager(SettingsManager settings) {
+	protected static void setSettingsManager(SettingsManager settings) {
 		Console.settings = settings;
 	}
 	
-	/**
-	 * Sets the eventmanager for the console. Please don't use it.
-	 * @param events The eventmanager
-	 */
-	public static void setEventManager(EventManager events) {
+	protected static void setEventManager(EventManager events) {
 		Console.events = events;
 	}
 	
-	/**
-	 * Sets the closemanager for the console. Please don't use it.
-	 * @param close The closemanager
-	 */
-	public static void setCloseManager(CloseManager close) {
+	protected static void setCloseManager(CloseManager close) {
 		Console.close = close;
 	}
 	

@@ -61,14 +61,13 @@ public class Launcher extends Closable {
 		
 		settings.load();
 		
-		Console.setSettingsManager(settings);
-		Console.init();
+		console = new ConsoleManager(settings);
 		
-		keyboard = new KeyboardManager(Console.getKeyboardInput(), event);
+		keyboard = new KeyboardManager(console.getKeyboardInput(), event);
 		close = new CloseManager(event);
 		
-		Console.setEventManager(event);
-		Console.setCloseManager(close);
+		console.setEventManager(event);
+		console.setCloseManager(close);
 	}
 	
 	private void init() {
@@ -81,8 +80,7 @@ public class Launcher extends Closable {
 		plugin.setPluginLoader(pl);
 		
 		command = new CommandManager(event);
-		mouse = new MouseManager(Console.getMouseInput(), event);
-		console = new ConsoleManager();
+		mouse = new MouseManager(console.getMouseInput(), event);
 		config = new ConfigManager(event);
 		error = new ErrorManager(event);
 		utils = new UtilsManager(event);
@@ -118,7 +116,7 @@ public class Launcher extends Closable {
 			
 			Console.close();
 			System.exit(0);
-		} 
+		}
 		catch(Error | Exception e) {
 			new nl.jortenmilo.error.UnknownError(e.toString(), e.getMessage()).print();
 		}
