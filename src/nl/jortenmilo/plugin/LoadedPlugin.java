@@ -12,7 +12,7 @@ public class LoadedPlugin {
 	private String website;
 	private String version;
 	private URLClassLoader loader;
-	private List<LoadedPlugin> dependencies;
+	private List<String> dependencies;
 	
 	public Plugin getPlugin() {
 		return plugin;
@@ -46,11 +46,11 @@ public class LoadedPlugin {
 		this.loader = loader;
 	}
 	
-	protected void addDependency(LoadedPlugin plugin) {
+	protected void addDependency(String plugin) {
 		dependencies.add(plugin);
 	}
 	
-	public List<LoadedPlugin> getDependencies() {
+	public List<String> getDependencies() {
 		return dependencies;
 	}
 

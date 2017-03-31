@@ -38,7 +38,7 @@ public class PluginManager {
 		plugins.add(plugin);
 	}
 	
-	public void removePlugin(LoadedPlugin plugin) {
+	protected void removePlugin(LoadedPlugin plugin) {
 		if(plugin == null) {
 			new NonNullableParameterError("LoadedPlugin", "plugin").print();
 			return;
@@ -47,8 +47,18 @@ public class PluginManager {
 		plugins.remove(plugin);
 	}
 	
-	public List<LoadedPlugin> getPlugins() {
+	public List<LoadedPlugin> getLoadedPlugins() {
 		return plugins;
+	}
+	
+	public List<Plugin> getPlugins() {
+		List<Plugin> ps = new ArrayList<Plugin>();
+		
+		for(LoadedPlugin plugin : plugins) {
+			ps.add(plugin.getPlugin());
+		}
+		
+		return ps;
 	}
 	
 	public Plugin getPlugin(Class<? extends Plugin> c) {
@@ -167,6 +177,21 @@ public class PluginManager {
 	
 	public void loadAll() {
 		loader.loadAll(this);
+		
+		List<LoadedPlugin> clone = new ArrayList<LoadedPlugin>(plugins);
+		plugins.clear();
+		
+		for(LoadedPlugin plugin : clone) {
+			if(plugin.getDependencies().size() == 0) {
+				plugins.add(plugin);
+			}
+		}
+		
+		for(LoadedPlugin plugin : clone) {
+			if(plugin.getDependencies().size() > 0) {
+				plugins.add(plugin);
+			}
+		}
 	}
 	
 	public void unload(LoadedPlugin plugin) {

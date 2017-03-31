@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Scanner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -110,6 +112,14 @@ public class PluginLoader {
 						String version = line.replaceAll("version: ", "");
 						lp.setVersion(version);
 					}
+					else if(line.startsWith("depends: ")) {
+						String dependencies = line.replaceAll("depends: ", "").replaceAll("[", "").replace("]", "");
+						List<String> ds = Arrays.asList(dependencies.split("\\s*,\\s*"));
+						
+						for(String dependency : ds) {
+							lp.addDependency(dependency);
+						}
+					}
 					else {
 						new SyntaxError(line, "the plugin.jcio file (Plugin: " + file.getName() + ")").print();
 					}
@@ -140,7 +150,7 @@ public class PluginLoader {
 			return;
 		}
 		
-		for(LoadedPlugin plugin : manager.getPlugins()) {
+		for(LoadedPlugin plugin : manager.getLoadedPlugins()) {
 			unload(plugin);
 			
 			manager.removePlugin(plugin);
