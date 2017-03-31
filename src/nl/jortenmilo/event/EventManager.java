@@ -150,7 +150,7 @@ public class EventManager {
 	
 	/**
 	 * Returns a list of all the handlers in the specified listener.
-	 * @param listener
+	 * @param listener The listener
 	 * @return The list of handlers
 	 */
 	public List<EventHandler> getHandlers(EventListener listener) {
@@ -174,7 +174,7 @@ public class EventManager {
 	
 	/**
 	 * Returns a list of all the handlers in the specified plugin.
-	 * @param listener
+	 * @param plugin The plugin
 	 * @return The list of handlers
 	 */
 	public List<EventHandler> getHandlers(Plugin plugin) {
