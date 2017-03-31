@@ -147,5 +147,53 @@ public class EventManager {
 		
 		return events.get(event);
 	}
+	
+	/**
+	 * Returns a list of all the handlers in the specified listener.
+	 * @param listener
+	 * @return The list of handlers
+	 */
+	public List<EventHandler> getHandlers(EventListener listener) {
+		if(listener == null) {
+			new NonNullableParameterError("EventListener", "listener").print();
+			return null;
+		}
+		
+		List<EventHandler> handlers = new ArrayList<EventHandler>();
+		
+		for(Class<? extends Event> event : events.keySet()) {
+			for(EventHandler handler : events.get(event)) {
+				if(handler.getListener() == listener) {
+					handlers.add(handler);
+				}
+			}
+		}
+		
+		return handlers;
+	}
+	
+	/**
+	 * Returns a list of all the handlers in the specified plugin.
+	 * @param listener
+	 * @return The list of handlers
+	 */
+	public List<EventHandler> getHandlers(Plugin plugin) {
+		if(plugin == null) {
+			new NonNullableParameterError("Plugin", "plugin").print();
+			return null;
+		}
+		
+		List<EventHandler> handlers = new ArrayList<EventHandler>();
+		
+		for(Class<? extends Event> event : events.keySet()) {
+			for(EventHandler handler : events.get(event)) {
+				if(handler.getPlugin() == plugin) {
+					handlers.add(handler);
+				}
+			}
+		}
+		
+		return handlers;
+	}
 
 }
