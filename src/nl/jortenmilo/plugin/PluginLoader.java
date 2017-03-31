@@ -133,7 +133,7 @@ public class PluginLoader {
 					new MissingFileError(file.getName(), "path").print();
 				}
 				
-				Console.debug("PLUGIN_LOADED [" + new SystemUtils().getTime() + "][" + lp.getName() + "][" + lp.getPlugin().getClass().getName() + "][" + lp.getVersion() + "][" + lp.getAuthor() + "][" + lp.getWebsite() + "]");
+				Console.debug("PLUGIN_LOADED [" + new SystemUtils().getTime() + "][" + lp.getName() + "][" + lp.getPlugin().getClass().getName() + "][" + lp.getVersion() + "][" + lp.getAuthor() + "][" + lp.getWebsite() + "]["+ Arrays.toString(lp.getDependencies().toArray()) + "]");
 				
 				manager.addPlugin(lp);
 				lp.getPlugin().load();

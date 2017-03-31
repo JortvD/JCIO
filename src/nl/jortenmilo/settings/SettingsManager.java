@@ -109,7 +109,7 @@ public class SettingsManager {
 			new UnknownSettingError(key).print();
 		}
 		
-		Console.debug("SETTING_REMOVE [" + new SystemUtils().getTime() + "][" + key + "]");
+		Console.debug("SETTING_REMOVED [" + new SystemUtils().getTime() + "][" + key + "]");
 		
 		keys.remove(key);
 		
@@ -161,7 +161,7 @@ public class SettingsManager {
 	}
 	
 	public void save() {
-		Console.debug("SETTING_SAVE [" + new SystemUtils().getTime() + "]");
+		Console.debug("SETTING_SAVED [" + new SystemUtils().getTime() + "]");
 		
 		try {
 			loader.save(new File("settings.jcio"), this);
@@ -179,7 +179,7 @@ public class SettingsManager {
 	}
 	
 	public void load() {
-		Console.debug("SETTING_LOAD [" + new SystemUtils().getTime() + "]");
+		Console.debug("SETTING_LOADED [" + new SystemUtils().getTime() + "]");
 		
 		try {
 			loader.load(new File("settings.jcio"), this);
