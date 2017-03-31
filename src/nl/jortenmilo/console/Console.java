@@ -76,10 +76,10 @@ public class Console {
 			
 			if(new File("logs").exists()) {
 				File f = new File("logs/" + new SimpleDateFormat("MM-dd-yyyy HH-mm-ss").format(System.currentTimeMillis()) + ".gzip");
+				
 				try {
-					
 					f.createNewFile();
-					//bw = new BufferedWriter(new PrintWriter(f));
+					
 					bw = new GZIPOutputStream(new FileOutputStream(f));
 					
 					debug("----- JCIO -----");
