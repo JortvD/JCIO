@@ -70,7 +70,7 @@ public class PluginLoader {
 						continue;
 					}
 					else if(line.startsWith("path: ")) {
-						String path = line.substring(6);
+						String path = line.replaceAll("path: ", "");
 						JarFile jarFile = new JarFile(file.getPath());
 						Enumeration<JarEntry> e = jarFile.entries();
 						URL[] urls = { new URL("jar:file:" + file.getPath() +"!/") };
@@ -95,6 +95,8 @@ public class PluginLoader {
 								break;
 							}
 						}
+						
+						lp.setMainClass(path);
 					}
 					else if(line.startsWith("name: ")) {
 						String name = line.replaceAll("name: ", "");

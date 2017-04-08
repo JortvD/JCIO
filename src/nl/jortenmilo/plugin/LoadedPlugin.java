@@ -4,6 +4,7 @@ import java.net.URLClassLoader;
 import java.util.List;
 
 /**
+ * The LoadedPlugin class contains all the information about a plugin. It is created when a plugin was loaded.
  */
 public class LoadedPlugin {
 	
@@ -13,6 +14,7 @@ public class LoadedPlugin {
 	private String author;
 	private String website;
 	private String version;
+	private String mainClass;
 	private URLClassLoader loader;
 	private List<String> dependencies;
 	
@@ -42,7 +44,7 @@ public class LoadedPlugin {
 	}
 	
 	/**
-	 * Returns the path of the main class of this plugin. The main class will be loaded first and instantiated.
+	 * Returns the path to the plugin jar.
 	 * @return The path
 	 */
 	public String getPath() {
@@ -113,4 +115,20 @@ public class LoadedPlugin {
 	protected void setVersion(String version) {
 		this.version = version;
 	}
+	
+	/**
+	 * Returns the path to the main class of this plugin. 
+	 * The main class is the class that extends Plugin and will be instantiated to create this plugin.
+	 * @return
+	 */
+	public String getMainClass() {
+		return mainClass;
+	}
+
+	protected void setMainClass(String mainClass) {
+		this.mainClass = mainClass;
+	}
+	
+	
+	
 }
