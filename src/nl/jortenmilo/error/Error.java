@@ -17,7 +17,7 @@ public abstract class Error {
 	 */
 	public abstract void print();
 	
-	public void event() {
+	protected void event() {
 		ErrorThrownEvent event = new ErrorThrownEvent();
 		event.setError(this);
 		
