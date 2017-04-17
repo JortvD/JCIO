@@ -672,7 +672,7 @@ public class Console {
 		}
 		
 		if(settings.contains("foreground")) {
-			Color fg = new ObjectUtils().StringToColor(settings.get("foreground"));
+			Color fg = new ObjectUtils().codeToColor(settings.get("foreground"));
 			
 			if(t.getForeground() != fg) {
 				debug("UPDATE [" + new SystemUtils().getTime() + "][FOREGROUND][" + settings.get("foreground") + "]");
@@ -681,7 +681,7 @@ public class Console {
 			}
 		}
 		if(settings.contains("background")) {
-			Color bg = new ObjectUtils().StringToColor(settings.get("background"));
+			Color bg = new ObjectUtils().codeToColor(settings.get("background"));
 			
 			if(t.getBackground() != bg) {
 				debug("UPDATE [" + new SystemUtils().getTime() + "][BACKGROUND][" + settings.get("background") + "]");
@@ -700,7 +700,7 @@ public class Console {
 			}
 		}
 		if(settings.contains("default_width")) {
-			int dw = new ObjectUtils().StringToInteger(settings.get("default_width"));
+			int dw = new ObjectUtils().codeToInteger(settings.get("default_width"));
 			
 			if(frame.getWidth() != dw) {
 				debug("UPDATE [" + new SystemUtils().getTime() + "][DEFAULT_WIDTH][" + settings.get("default_width") + "]");
@@ -709,7 +709,7 @@ public class Console {
 			}
 		}
 		if(settings.contains("default_height")) {
-			int dh = new ObjectUtils().StringToInteger(settings.get("default_height"));
+			int dh = new ObjectUtils().codeToInteger(settings.get("default_height"));
 			
 			if(frame.getHeight() != dh) {
 				debug("UPDATE [" + new SystemUtils().getTime() + "][DEFAULT_HEIGHT][" + settings.get("default_height") + "]");
