@@ -7,7 +7,9 @@ import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Scanner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -68,7 +70,7 @@ public class PluginLoader {
 						continue;
 					}
 					else if(line.startsWith("path: ")) {
-						String path = line.substring(6);
+						String path = line.replaceAll("path: ", "");
 						JarFile jarFile = new JarFile(file.getPath());
 						Enumeration<JarEntry> e = jarFile.entries();
 						URL[] urls = { new URL("jar:file:" + file.getPath() +"!/") };
@@ -93,6 +95,8 @@ public class PluginLoader {
 								break;
 							}
 						}
+						
+						lp.setMainClass(path);
 					}
 					else if(line.startsWith("name: ")) {
 						String name = line.replaceAll("name: ", "");
@@ -110,6 +114,15 @@ public class PluginLoader {
 						String version = line.replaceAll("version: ", "");
 						lp.setVersion(version);
 					}
+					else if(line.startsWith("depends: ")) {
+						Console.println("TEST");
+						String dependencies = line.replaceAll("depends: ", "").replaceAll("[", "").replace("]", "");
+						List<String> ds = Arrays.asList(dependencies.split("\\s*,\\s*"));
+						
+						for(String dependency : ds) {
+							lp.addDependency(dependency);
+						}
+					}
 					else {
 						new SyntaxError(line, "the plugin.jcio file (Plugin: " + file.getName() + ")").print();
 					}
@@ -123,7 +136,7 @@ public class PluginLoader {
 					new MissingFileError(file.getName(), "path").print();
 				}
 				
-				Console.debug("PLUGIN_LOADED [" + new SystemUtils().getTime() + "][" + lp.getName() + "][" + lp.getPlugin().getClass().getName() + "][" + lp.getVersion() + "][" + lp.getAuthor() + "][" + lp.getWebsite() + "]");
+				Console.debug("PLUGIN_LOADED [" + new SystemUtils().getTime() + "][" + lp.getName() + "][" + lp.getPlugin().getClass().getName() + "][" + lp.getVersion() + "][" + lp.getAuthor() + "][" + lp.getWebsite() + "]["+ ((lp.getDependencies() == null) ? "": Arrays.toString(lp.getDependencies().toArray())) + "]");
 				
 				manager.addPlugin(lp);
 				lp.getPlugin().load();
@@ -140,7 +153,7 @@ public class PluginLoader {
 			return;
 		}
 		
-		for(LoadedPlugin plugin : manager.getPlugins()) {
+		for(LoadedPlugin plugin : manager.getLoadedPlugins()) {
 			unload(plugin);
 			
 			manager.removePlugin(plugin);

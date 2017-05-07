@@ -25,7 +25,7 @@ public class SettingsLoader {
 		String line = "";
 		
 		while((line = br.readLine()) != null) {
-			if(line.startsWith("#") || line.equals("")) {
+			if(line.startsWith("#") || line.equals("") || line.replaceAll(" ", "").equals("")) {
 				continue;
 			} 
 			

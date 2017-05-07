@@ -21,6 +21,8 @@ public class Command {
 	private List<CommandExecutor> executors = new ArrayList<CommandExecutor>();
 	private HashMap<Plugin, List<CommandExecutor>> pexecutors = new HashMap<Plugin, List<CommandExecutor>>();
 	private List<String> aliasses = new ArrayList<String>();
+	private Plugin plugin;
+	private boolean added = false;
 	
 	/**
 	 * Creates an empty instance of this class, you will need to set the Command String and the CommandExecutor,
@@ -207,9 +209,10 @@ public class Command {
 	}
 	
 	/**
-	 * 
-	 * @param ce
-	 * @return
+	 * Returns if this command already contains that CommandExecutor.
+	 * @param ce The CommandExecutor
+	 * @return If this command contains that CommandExecutor
+	 * @see CommandExecutor
 	 */
 	public boolean containsCommandExecutor(CommandExecutor ce) {
 		if(ce == null) {
@@ -238,9 +241,7 @@ public class Command {
 	
 	/**
 	 * Adds an alias to the list of aliasses. An alias is almost the same as a command, but when it is used it will execute the 
-	 * general CommandExecutor instead of having a separate CommandExecutor. <p>
-	 * Throws: <p>
-	 * InvalidParameterError - When the command is null or "".
+	 * general CommandExecutor instead of having a separate CommandExecutor. 
 	 * @param alias The alias you want to add to the list
 	 */
 	public void addAlias(String alias) {
@@ -256,6 +257,10 @@ public class Command {
 		aliasses.add(alias);
 	}
 	
+	/**
+	 * Removes that alias from this command.
+	 * @param alias The alias you want to add
+	 */
 	public void removeAlias(String alias) {
 		if(alias == null) {
 			new NonNullableParameterError("String", "alias").print();
@@ -269,6 +274,11 @@ public class Command {
 		aliasses.remove(alias);
 	}
 	
+	/**
+	 * Returns if this command already contains this alias.
+	 * @param alias The alias
+	 * @return If this command contains that alias
+	 */
 	public boolean containsAlias(String alias) {
 		if(alias == null) {
 			new NonNullableParameterError("String", "alias").print();
@@ -283,11 +293,52 @@ public class Command {
 	}
 	
 	/**
+	 * Clears all of the aliasses.
+	 */
+	public void clearAliasses() {
+		aliasses.clear();
+	}
+	
+	/**
 	 * Returns all the aliasses that are used in this instance.
 	 * @return The list of aliasses
 	 */
 	public List<String> getAliasses() {
 		return aliasses;
+	}
+	
+	/**
+	 * Returns the plugin that registered this command.
+	 * @return The plugin
+	 * @see Plugin
+	 */
+	public Plugin getPlugin() {
+		return plugin;
+	}
+
+	protected void setPlugin(Plugin plugin) {
+		this.plugin = plugin;
+	}
+	
+	/**
+	 * Returns if this command is added to the CommandManager.
+	 * @return If this command is added to the CommandManager
+	 */
+	public boolean isAdded() {
+		return added;
+	}
+
+	protected void setAdded(boolean added) {
+		this.added = added;
+	}
+	
+	/**
+	 * Returns if this command is anonymous. This means that it was added to the CommandManager without a plugin assigned to it. When this plugin 
+	 * hasn't been added to the CommandManager yet it will also return false.
+	 * @return If this command is anonymous
+	 */
+	public boolean isAnonymous() {
+		return (plugin == null && added);
 	}
 	
 }

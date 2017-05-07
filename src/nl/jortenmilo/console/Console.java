@@ -76,10 +76,10 @@ public class Console {
 			
 			if(new File("logs").exists()) {
 				File f = new File("logs/" + new SimpleDateFormat("MM-dd-yyyy HH-mm-ss").format(System.currentTimeMillis()) + ".gzip");
+				
 				try {
-					
 					f.createNewFile();
-					//bw = new BufferedWriter(new PrintWriter(f));
+					
 					bw = new GZIPOutputStream(new FileOutputStream(f));
 					
 					debug("----- JCIO -----");
@@ -612,7 +612,7 @@ public class Console {
 	}
 	
 	/**
-	 * Read the keypresses until the user types and enter. And start it with the prefix.
+	 * Reads the keypresses until the user types and enter. And start it with the prefix.
 	 * @return The text the user has typed
 	 */
 	public static String readln() {
@@ -672,7 +672,7 @@ public class Console {
 		}
 		
 		if(settings.contains("foreground")) {
-			Color fg = new ObjectUtils().StringToColor(settings.get("foreground"));
+			Color fg = new ObjectUtils().codeToColor(settings.get("foreground"));
 			
 			if(t.getForeground() != fg) {
 				debug("UPDATE [" + new SystemUtils().getTime() + "][FOREGROUND][" + settings.get("foreground") + "]");
@@ -681,7 +681,7 @@ public class Console {
 			}
 		}
 		if(settings.contains("background")) {
-			Color bg = new ObjectUtils().StringToColor(settings.get("background"));
+			Color bg = new ObjectUtils().codeToColor(settings.get("background"));
 			
 			if(t.getBackground() != bg) {
 				debug("UPDATE [" + new SystemUtils().getTime() + "][BACKGROUND][" + settings.get("background") + "]");
@@ -700,7 +700,7 @@ public class Console {
 			}
 		}
 		if(settings.contains("default_width")) {
-			int dw = new ObjectUtils().StringToInteger(settings.get("default_width"));
+			int dw = new ObjectUtils().codeToInteger(settings.get("default_width"));
 			
 			if(frame.getWidth() != dw) {
 				debug("UPDATE [" + new SystemUtils().getTime() + "][DEFAULT_WIDTH][" + settings.get("default_width") + "]");
@@ -709,7 +709,7 @@ public class Console {
 			}
 		}
 		if(settings.contains("default_height")) {
-			int dh = new ObjectUtils().StringToInteger(settings.get("default_height"));
+			int dh = new ObjectUtils().codeToInteger(settings.get("default_height"));
 			
 			if(frame.getHeight() != dh) {
 				debug("UPDATE [" + new SystemUtils().getTime() + "][DEFAULT_HEIGHT][" + settings.get("default_height") + "]");
@@ -730,43 +730,23 @@ public class Console {
 		bw.close();
 	}
 	
-	/**
-	 * Returns the KeyboardInput class that is used by the console.
-	 * @return The keyboardinput class
-	 */
-	public static KeyboardInput getKeyboardInput() {
+	protected static KeyboardInput getKeyboardInput() {
 		return ki;
 	}
 	
-	/**
-	 * Returns the MouseInput class that is used by the console.
-	 * @return The mouseinput class
-	 */
-	public static MouseInput getMouseInput() {
+	protected static MouseInput getMouseInput() {
 		return mi;
 	}
 	
-	/**
-	 * Sets the settingsmanager for the console. Please don't use it.
-	 * @param settings The settingsmanager
-	 */
-	public static void setSettingsManager(SettingsManager settings) {
+	protected static void setSettingsManager(SettingsManager settings) {
 		Console.settings = settings;
 	}
 	
-	/**
-	 * Sets the eventmanager for the console. Please don't use it.
-	 * @param events The eventmanager
-	 */
-	public static void setEventManager(EventManager events) {
+	protected static void setEventManager(EventManager events) {
 		Console.events = events;
 	}
 	
-	/**
-	 * Sets the closemanager for the console. Please don't use it.
-	 * @param close The closemanager
-	 */
-	public static void setCloseManager(CloseManager close) {
+	protected static void setCloseManager(CloseManager close) {
 		Console.close = close;
 	}
 	

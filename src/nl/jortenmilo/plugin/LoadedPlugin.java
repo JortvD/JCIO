@@ -3,6 +3,9 @@ package nl.jortenmilo.plugin;
 import java.net.URLClassLoader;
 import java.util.List;
 
+/**
+ * The LoadedPlugin class contains all the information about a plugin. It is created when a plugin was loaded.
+ */
 public class LoadedPlugin {
 	
 	private Plugin plugin;
@@ -11,9 +14,15 @@ public class LoadedPlugin {
 	private String author;
 	private String website;
 	private String version;
+	private String mainClass;
 	private URLClassLoader loader;
-	private List<LoadedPlugin> dependencies;
+	private List<String> dependencies;
 	
+	/**
+	 * Returns the Plugin this class contains information about.
+	 * @return The Plugin
+	 * @see Plugin
+	 */
 	public Plugin getPlugin() {
 		return plugin;
 	}
@@ -22,6 +31,10 @@ public class LoadedPlugin {
 		this.plugin = plugin;
 	}
 	
+	/**
+	 * Returns the name of the Plugin.
+	 * @return The name
+	 */
 	public String getName() {
 		return name;
 	}
@@ -30,6 +43,10 @@ public class LoadedPlugin {
 		this.name = name;
 	}
 	
+	/**
+	 * Returns the path to the plugin jar.
+	 * @return The path
+	 */
 	public String getPath() {
 		return path;
 	}
@@ -37,7 +54,11 @@ public class LoadedPlugin {
 	protected void setPath(String path) {
 		this.path = path;
 	}
-
+	
+	/**
+	 * Returns the URLClassLoader of this plugin. The URLClassLoader is used to load the main class, the rest follows automatically.
+	 * @return The URLClassLoader
+	 */
 	public URLClassLoader getClassLoader() {
 		return loader;
 	}
@@ -46,14 +67,23 @@ public class LoadedPlugin {
 		this.loader = loader;
 	}
 	
-	protected void addDependency(LoadedPlugin plugin) {
+	protected void addDependency(String plugin) {
 		dependencies.add(plugin);
 	}
 	
-	public List<LoadedPlugin> getDependencies() {
+	/**
+	 * Returns a list of dependencies that this plugin uses. 
+	 * A dependency means that this plugin will load after the plugin it depends on.
+	 * @return A list of dependencies
+	 */
+	public List<String> getDependencies() {
 		return dependencies;
 	}
 
+	/**
+	 * Returns the name of the author of this plugin. May be null of it wasn't specified in the plugin.jcio file.
+	 * @return The name of the author
+	 */
 	public String getAuthor() {
 		return author;
 	}
@@ -61,7 +91,11 @@ public class LoadedPlugin {
 	protected void setAuthor(String author) {
 		this.author = author;
 	}
-
+	
+	/**
+	 * Returns the website of the author of this plugin. May be null of it wasn't specified in the plugin.jcio file.
+	 * @return The website of the author
+	 */
 	public String getWebsite() {
 		return website;
 	}
@@ -69,7 +103,11 @@ public class LoadedPlugin {
 	protected void setWebsite(String website) {
 		this.website = website;
 	}
-
+	
+	/**
+	 * Returns the version of this plugin. May be null of it wasn't specified in the plugin.jcio file.
+	 * @return The version
+	 */
 	public String getVersion() {
 		return version;
 	}
@@ -77,4 +115,20 @@ public class LoadedPlugin {
 	protected void setVersion(String version) {
 		this.version = version;
 	}
+	
+	/**
+	 * Returns the path to the main class of this plugin. 
+	 * The main class is the class that extends Plugin and will be instantiated to create this plugin.
+	 * @return
+	 */
+	public String getMainClass() {
+		return mainClass;
+	}
+
+	protected void setMainClass(String mainClass) {
+		this.mainClass = mainClass;
+	}
+	
+	
+	
 }

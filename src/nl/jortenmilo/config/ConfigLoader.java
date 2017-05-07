@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 import nl.jortenmilo.command.CommandDecoder;
 import nl.jortenmilo.console.Console;
@@ -35,7 +36,7 @@ public class ConfigLoader {
 			BufferedReader br = new BufferedReader(new FileReader(config.getFile()));
 			
 			while((line = br.readLine()) != null) {
-				if(line.equals("")) {
+				if(line.equals("") || line.replaceAll(" ", "").equals("")) {
 					continue;
 				}
 				
@@ -109,7 +110,7 @@ public class ConfigLoader {
 			for(ConfigObject object : config.getObjects()) {
 				bw.write(object.getName() + ": " + object.getValue());
 				bw.newLine();
-				object.writeText(bw, " ");
+				writeText(object, bw, " ");
 			}
 			
 			bw.close();
@@ -189,6 +190,15 @@ public class ConfigLoader {
 	
 	private String createLongerPath(String path, String a) {
 		return path + "." + a;
+	}
+	
+	private void writeText(ConfigObject o, BufferedWriter bw, String prefix) throws IOException {
+		for(ConfigObject object : o.getObjects()) {
+			bw.write(prefix + object.getName() + ": " + object.getValue());
+			bw.newLine();
+			
+			writeText(object, bw, prefix + " ");
+		}
 	}
 
 }

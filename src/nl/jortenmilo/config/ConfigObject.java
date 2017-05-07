@@ -1,7 +1,5 @@
 package nl.jortenmilo.config;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,14 +90,6 @@ public class ConfigObject {
 		
 		new MissingConfigObjectError(key, path).print();
 		return null;
-	}
-	
-	protected void writeText(BufferedWriter bw, String prefix) throws IOException {
-		for(ConfigObject object : objects) {
-			bw.write(prefix + object.getName() + ": " + object.getValue());
-			bw.newLine();
-			object.writeText(bw, prefix + " ");
-		}
 	}
 	
 }

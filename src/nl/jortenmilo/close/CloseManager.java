@@ -46,6 +46,7 @@ public class CloseManager {
 		Console.debug("CLOSABLE_ADDED [" + new SystemUtils().getTime() + "][" + closable.getClass().getName() + "][" + closable.getPriority() + "][" + plugin.getLoadedPlugin().getName() + "]");
 		
 		closables.add(closable);
+		closable.setPlugin(plugin);
 		
 		if(pclosables.get(plugin) == null) {
 			pclosables.put(plugin, new ArrayList<Closable>());
@@ -102,6 +103,7 @@ public class CloseManager {
 		}
 		
 		closables.remove(closable);
+		closable.setPlugin(null);
 		
 		Console.debug("CLOSABLE_REMOVED [" + new SystemUtils().getTime() + "][" + closable.getClass().getName() + "]");
 		
@@ -134,9 +136,13 @@ public class CloseManager {
 			new NonNullableParameterError("Plugin", "plugin").print();
 			return;
 		}
+		else if(pclosables.get(plugin) == null) {
+			return;
+		}
 		
 		for(Closable closable : pclosables.get(plugin)) {
 			closables.remove(closable);
+			closable.setPlugin(null);
 			
 			Console.debug("CLOSABLE_REMOVED [" + new SystemUtils().getTime() + "][" + closable.getClass().getName() + "]");
 			
@@ -158,10 +164,7 @@ public class CloseManager {
 	 * @see Closable
 	 */
 	public List<Closable> getClosables() {
-		List<Closable> clone = new ArrayList<Closable>();
-		clone.addAll(closables);
-		
-		return clone;
+		return new ArrayList<Closable>(closables);
 	}
 	
 	/**
@@ -176,7 +179,7 @@ public class CloseManager {
 			return null;
 		}
 		
-		return pclosables.get(plugin);
+		return new ArrayList<Closable>(pclosables.get(plugin));
 	}
 	
 	/**

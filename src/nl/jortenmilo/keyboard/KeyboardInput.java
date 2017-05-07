@@ -15,7 +15,7 @@ import nl.jortenmilo.utils.defaults.SystemUtils;
 
 /**
  * This is the KeyboardInput class. It instantiates the KeyListener and is thereby the core class for key logging.
- * @see KeyManager
+ * @see KeyboardManager
  */
 public class KeyboardInput implements KeyListener {
 	

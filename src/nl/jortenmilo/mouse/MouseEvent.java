@@ -4,7 +4,7 @@ import nl.jortenmilo.event.Event;
 
 /**
  * This is the MouseEvent. It contains all the general information for all the events.
- * @see CommandManager
+ * @see MouseManager
  */
 public abstract class MouseEvent extends Event {
 	
